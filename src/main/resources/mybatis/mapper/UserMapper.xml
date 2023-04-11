@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--这边的包路径和sql语句需要根据自身的表的写-->
+<mapper namespace="com.example.auto_warehouse.mapper.UserMapper">
+    <select id = "findById" resultType="com.example.auto_warehouse.bean.User">
+        select * from auto_warehouseDB.user where uid = #{uid}
+    </select>
+    <select id = "allUser" resultType="com.example.auto_warehouse.bean.User">
+        select * from auto_warehouseDB.user
+    </select>
+    <insert id = "addUser" parameterType="com.example.auto_warehouse.bean.User">
+        insert into auto_warehouseDB.user (uid,name,password,type)
+        values(#{uid},#{name},#{password},#{type})
+    </insert>
+    <update id = "modifyName" parameterType="com.example.auto_warehouse.bean.User">
+        update auto_warehouseDB.user set name = #{name} where uid = #{uid};
+    </update>
+    <update id="modifyPassword"  parameterType="com.example.auto_warehouse.bean.User">
+        update auto_warehouseDB.user set password = #{password} where uid = #{uid};
+    </update>
+</mapper>

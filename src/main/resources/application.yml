@@ -1,0 +1,15 @@
+spring:
+  datasource:
+    url: jdbc:mysql://bj-cynosdbmysql-grp-qzs817me.sql.tencentcdb.com:27204
+    username: root
+    password: Zjq123789
+server:
+  port: 8181
+
+mybatis:
+  #    config-location: classpath:mybatis/mybatis-config.xml
+  mapper-locations:
+    classpath:mybatis/mapper/*.xml
+  configuration:
+    map-underscore-to-camel-case: true
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
