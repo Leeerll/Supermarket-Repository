@@ -19,6 +19,8 @@ public class InputService {
     private SpeciesMapper speciesMapper;
     @Autowired
     private CargoMapper cargoMapper;
+    @Autowired
+    private CargoStatusMapper cargoStatusMapper;
 //    @Autowired
 //    private CellMapper cellMapper;
 //    @Autowired
