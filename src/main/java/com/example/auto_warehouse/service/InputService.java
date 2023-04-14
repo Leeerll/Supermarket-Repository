@@ -66,9 +66,6 @@ public class InputService {
     }
 
     // 不能入库，写入停滞区
-    private com.example.auto_warehouse.mapper.CargoStatusMapper CargoStatusMapper;
-
-    // 不能入库，写入停滞区
     public boolean notInput(List<Map<String,String>> list) {
         SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy-MM-dd");
         int insert_num = 0;
@@ -92,7 +89,7 @@ public class InputService {
         }catch (Exception e){
             e.printStackTrace();
         }
-        //111
+        //111111
         return insert_num == list.size();
     }
 
