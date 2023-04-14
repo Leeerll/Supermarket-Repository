@@ -28,7 +28,7 @@ public class InputService {
 //    private SaveMapper saveMapper;
 //    @Autowired
 //    private LogMapper logMapper;
-
+//khk
     public void check(List<Map<String,String>> data){
         // 不能入库的数据
         List<Map<String,String>> notInputData = new ArrayList<>();
