@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--这边的包路径和sql语句需要根据自身的表的写-->
+<mapper namespace="com.example.auto_warehouse.mapper.SupermarketMapper">
+    <select id = "findById" resultType="com.example.auto_warehouse.bean.Supermarket">
+        select * from auto_warehouseDB.supermarket where suid = #{suid}
+    </select>
+
+</mapper>
