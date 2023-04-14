@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--这边的包路径和sql语句需要根据自身的表的写-->
+<mapper namespace="com.example.auto_warehouse.mapper.CargoStatusMapper">
+    <select id = "allNotInput" resultType="com.example.auto_warehouse.bean.NotInput">
+        select * from auto_warehouseDB.user
+    </select>
+    <insert id = "addNotInput" parameterType="com.example.auto_warehouse.bean.NotInput">
+        insert into auto_warehouseDB.user (uid,name,password,type)
+        values(#{uid},#{name},#{password},#{type})
+    </insert>
+
+</mapper>
