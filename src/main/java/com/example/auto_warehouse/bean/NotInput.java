@@ -21,6 +21,17 @@ public class NotInput {
     private Date production_date;
     private int shelf_life;
     private String suid;
+    private String reason;
+
+    public String getReason() {
+        return reason;
+    }
+
+    public void setReason(String reason) {
+        this.reason = reason;
+    }
+
+
     public NotInput(){
 
     }
@@ -114,7 +125,7 @@ public class NotInput {
     }
 
 
-    public NotInput(String id, String name, String type, int num, double weight, double sh, double sw, double sd, Date production_date, int shelf_life, String suid) {
+    public NotInput(String id, String name, String type, int num, double weight, double sh, double sw, double sd, Date production_date, int shelf_life, String suid, String reason) {
         this.id = id;
         this.name = name;
         this.type = type;
@@ -126,6 +137,7 @@ public class NotInput {
         this.production_date = production_date;
         this.shelf_life = shelf_life;
         this.suid = suid;
+        this.reason = reason;
     }
 
 
