@@ -5,11 +5,11 @@
 <!--这边的包路径和sql语句需要根据自身的表的写-->
 <mapper namespace="com.example.auto_warehouse.mapper.CargoStatusMapper">
     <select id = "allNotInput" resultType="com.example.auto_warehouse.bean.NotInput">
-        select * from auto_warehouseDB.user
+        select * from auto_warehouseDB.notInput
     </select>
     <insert id = "addNotInput" parameterType="com.example.auto_warehouse.bean.NotInput">
-        insert into auto_warehouseDB.user (uid,name,password,type)
-        values(#{uid},#{name},#{password},#{type})
+        insert into auto_warehouseDB.notInput (id,name,type,num,weight,sh,sw,sd,productionDate,shelfLife,suid,reason)
+        values(#{id},#{name},#{type},#{num},#{weight},#{sh},#{sw},#{sd},#{productionDate},#{shelfLife},#{suid},#{reason})
     </insert>
 
 </mapper>

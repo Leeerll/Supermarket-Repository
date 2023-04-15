@@ -7,10 +7,12 @@ import com.example.auto_warehouse.mapper.CargoStatusMapper;
 import com.example.auto_warehouse.mapper.SpeciesMapper;
 import com.example.auto_warehouse.mapper.SupermarketMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.text.SimpleDateFormat;
 import java.util.*;
 
+@Service
 public class InputService {
 
     @Autowired
@@ -89,8 +91,11 @@ public class InputService {
         }catch (Exception e){
             e.printStackTrace();
         }
-        //111111
         return insert_num == list.size();
+    }
+
+    public List<NotInput> allNotInput(){
+        return cargoStatusMapper.allNotInput();
     }
 
     public void callInput(List<Map<String,String>> data){

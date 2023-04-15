@@ -18,8 +18,8 @@ public class NotInput {
     private double sh;
     private double sw;
     private double sd;
-    private Date production_date;
-    private int shelf_life;
+    private Date productionDate;
+    private int shelfLife;
     private String suid;
     private String reason;
 
@@ -101,19 +101,19 @@ public class NotInput {
     }
 
     public Date getProduction_date() {
-        return production_date;
+        return productionDate;
     }
 
-    public void setProduction_date(Date production_date) {
-        this.production_date = production_date;
+    public void setProduction_date(Date productionDate) {
+        this.productionDate = productionDate;
     }
 
     public int getShelf_life() {
-        return shelf_life;
+        return shelfLife;
     }
 
-    public void setShelf_life(int shelf_life) {
-        this.shelf_life = shelf_life;
+    public void setShelf_life(int shelfLife) {
+        this.shelfLife = shelfLife;
     }
 
     public String getSuid() {
@@ -125,7 +125,7 @@ public class NotInput {
     }
 
 
-    public NotInput(String id, String name, String type, int num, double weight, double sh, double sw, double sd, Date production_date, int shelf_life, String suid, String reason) {
+    public NotInput(String id, String name, String type, int num, double weight, double sh, double sw, double sd, Date productionDate, int shelfLife, String suid, String reason) {
         this.id = id;
         this.name = name;
         this.type = type;
@@ -134,8 +134,8 @@ public class NotInput {
         this.sh = sh;
         this.sw = sw;
         this.sd = sd;
-        this.production_date = production_date;
-        this.shelf_life = shelf_life;
+        this.productionDate = productionDate;
+        this.shelfLife = shelfLife;
         this.suid = suid;
         this.reason = reason;
     }
