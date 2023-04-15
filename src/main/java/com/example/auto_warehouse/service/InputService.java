@@ -10,6 +10,7 @@ import com.example.auto_warehouse.mapper.SpeciesMapper;
 import com.example.auto_warehouse.mapper.SupermarketMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -32,7 +33,7 @@ public class InputService {
 //    @Autowired
 //    private LogMapper logMapper;
 
-    public void check(List<Map<String,String>> data){
+    public void check(List<Map<String,String>> data) throws ParseException {
         // 不能入库的数据
         List<Map<String,String>> notInputData = new ArrayList<>();
         // 能入库的数据
@@ -95,7 +96,7 @@ public class InputService {
         return insert_num == list.size();
     }
 
-    public void callInput(List<Map<String,String>> data){
+    public void callInput(List<Map<String,String>> data) throws ParseException {
         // 调用好多个mapper
         for(Map map:data){
             // (1)对Species表的操作
@@ -107,8 +108,8 @@ public class InputService {
                 speciesMapper.addSpecies(species);
             }
             // (2)对Cargo表的操作
-            Cargo cargo = new Cargo((String) map.get("sid"), (String) map.get("sname"), map.get("productionDate"), map.get("shelfLife"), map.get("inputTime"), map.get("outputTime"), map.get("state"), map.get("suid"));
-//            cargoMapper.add
+            Cargo cargo = new Cargo((String) map.get("sid"), (String) map.get("sname"), (String) map.get("productionDate"), (Integer) map.get("shelfLife"), (String) map.get("suid"));
+            cargoMapper.addCargo(cargo);
         }
     }
 

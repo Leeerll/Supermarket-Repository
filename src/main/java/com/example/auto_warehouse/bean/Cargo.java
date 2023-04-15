@@ -4,6 +4,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import lombok.Data;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 @Data
@@ -19,12 +21,20 @@ public class Cargo {
     private Date inputTime;        // 货物入库时间
     private Date outputTime;       // 货物出库时间
     private String state;             // 状态
-    private String uid;             // 关联超市
+    private String suid;             // 关联超市
 
-    public Cargo(String sid, String sname, String productionDate, int shelfLife, String suid){
+    public Cargo(String sid, String sname, String productionDate, int shelfLife, String suid) throws ParseException {
         this.sid = sid;
         this.sname = sname;
-        setProduction_date(productionDate);
+        setProductionDate(productionDate);
+        this.shelfLife = shelfLife;
+        setInputTime();
+        this.state = "not expire";
+        this.suid = suid;
+    }
+
+    public Cargo() {
+
     }
 
     public String getSid() {
@@ -52,48 +62,55 @@ public class Cargo {
         return productionDate;
     }
 
-    public void setProduction_date(String productionDate) {
-
-        this.productionDate = productionDate;
+    public void setProductionDate(String productionDate) throws ParseException {
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+        this.productionDate = format.parse(productionDate);
     }
 
-    public int getShelf_life() {
-        return shelf_life;
+    public int getShelfLife() {
+        return shelfLife;
     }
 
-    public void setShelf_life(int shelf_life) {
-        this.shelf_life = shelf_life;
+    public void setShelfLife(int shelfLife) {
+        this.shelfLife = shelfLife;
     }
 
-    public Date getInput_time() {
-        return input_time;
+    public Date getInputTime() {
+        return inputTime;
     }
 
-    public void setInput_time(Date input_time) {
-        this.input_time = input_time;
+    public void setInputTime() throws ParseException {
+        Date now = new Date();
+        SimpleDateFormat tFormat = new SimpleDateFormat("yyyy-MM-dd");
+        this.inputTime = tFormat.parse(tFormat.format(now));
     }
 
     public Date getOutput_time() {
-        return output_time;
+        return outputTime;
     }
 
-    public void setOutput_time(Date output_time) {
-        this.output_time = output_time;
+    public void setOutput_time(Date outputTime) {
+        this.outputTime = outputTime;
     }
 
     public String getState() {
         return state;
     }
 
-    public void setState(String state) {
-        this.state = state;
+    public void setState() {
+//        if(this.inputTime+this.shelfLife>=new Date()){
+//            this.state="expire";
+//        }else {
+//            this.state = "not expire";
+//        }
+        this.state = "not expire";
     }
 
-    public String getUtype() {
-        return utype;
+    public String getSuid() {
+        return suid;
     }
 
-    public void setUtype(String utype) {
-        this.utype = utype;
+    public void setSuid(String suid) {
+        this.suid = suid;
     }
 }
