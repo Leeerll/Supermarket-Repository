@@ -9,24 +9,24 @@ import lombok.Data;
 public class Cell {
 
     @Id
-    private String rid;
+    private String crid;
     private String ceid;
     private String cetype;
     private double ch;
     private double cw;
     private double cd;
-    private double cost_t;
+    private double costT;
     private double maxWeight;
     private int isUsed;
 
-    public Cell(String rid, String ceid, String cetype, double ch, double cw, double cd, double cost_t, double maxWeight, int isUsed) {
-        this.rid = rid;
+    public Cell(String crid, String ceid, String cetype, double ch, double cw, double cd, double costT, double maxWeight, int isUsed) {
+        this.crid = crid;
         this.ceid = ceid;
         this.cetype = cetype;
         this.ch = ch;
         this.cw = cw;
         this.cd = cd;
-        this.cost_t = cost_t;
+        this.costT = costT;
         this.maxWeight = maxWeight;
         this.isUsed = isUsed;
     }
@@ -36,11 +36,11 @@ public class Cell {
     }
 
     public String getRid() {
-        return rid;
+        return crid;
     }
 
-    public void setRid(String rid) {
-        this.rid = rid;
+    public void setRid(String crid) {
+        this.crid = crid;
     }
 
     public String getCeid() {
@@ -84,11 +84,11 @@ public class Cell {
     }
 
     public double getCost_t() {
-        return cost_t;
+        return costT;
     }
 
-    public void setCost_t(double cost_t) {
-        this.cost_t = cost_t;
+    public void setCost_t(double costT) {
+        this.costT = costT;
     }
 
     public double getMaxWeight() {
