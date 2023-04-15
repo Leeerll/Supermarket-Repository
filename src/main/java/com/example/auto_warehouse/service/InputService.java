@@ -1,7 +1,9 @@
 package com.example.auto_warehouse.service;
 
+import com.example.auto_warehouse.bean.Cargo;
 import com.example.auto_warehouse.bean.NotInput;
 import com.example.auto_warehouse.bean.Repository;
+import com.example.auto_warehouse.bean.Species;
 import com.example.auto_warehouse.mapper.CargoMapper;
 import com.example.auto_warehouse.mapper.CargoStatusMapper;
 import com.example.auto_warehouse.mapper.SpeciesMapper;
@@ -95,6 +97,19 @@ public class InputService {
 
     public void callInput(List<Map<String,String>> data){
         // 调用好多个mapper
+        for(Map map:data){
+            // (1)对Species表的操作
+            // 如果该种类的货物已存在，则只需更改num，否则需要插入操作
+            if(speciesMapper.findById((String)(map.get("sid")))!=null){
+                speciesMapper.updateNum((String) map.get("sid"), (Integer) map.get("num"));
+            }else{
+                Species species = new Species((String) map.get("sid"), (String) map.get("sname"), (String) map.get("stype"), (Integer) map.get("num"), (Double) map.get("weight"), (Double) map.get("sh"), (Double) map.get("sw"), (Double) map.get("sd"));
+                speciesMapper.addSpecies(species);
+            }
+            // (2)对Cargo表的操作
+            Cargo cargo = new Cargo((String) map.get("sid"), (String) map.get("sname"), map.get("productionDate"), map.get("shelfLife"), map.get("inputTime"), map.get("outputTime"), map.get("state"), map.get("suid"));
+//            cargoMapper.add
+        }
     }
 
 }

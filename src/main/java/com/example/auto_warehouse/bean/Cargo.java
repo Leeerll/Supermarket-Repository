@@ -13,16 +13,18 @@ public class Cargo {
     @Id
     private String sid;               // 货物品类id
     private String sname;             // 货物品名
-    private String cid;               // 货物编号
-    private Date production_date;   // 货物生产日期
-    private int shelf_life;           // 货物保质期
-    private Date input_time;        // 货物入库时间
-    private Date output_time;       // 货物出库时间
+    private int cid;               // 货物编号
+    private Date productionDate;   // 货物生产日期
+    private int shelfLife;           // 货物保质期
+    private Date inputTime;        // 货物入库时间
+    private Date outputTime;       // 货物出库时间
     private String state;             // 状态
-    private String utype;             // 用户角色
+    private String uid;             // 关联超市
 
-    public Cargo(){
-
+    public Cargo(String sid, String sname, String productionDate, int shelfLife, String suid){
+        this.sid = sid;
+        this.sname = sname;
+        setProduction_date(productionDate);
     }
 
     public String getSid() {
@@ -41,20 +43,18 @@ public class Cargo {
         this.sname = sname;
     }
 
-    public String getCid() {
+    public int getCid() {
         return cid;
     }
 
-    public void setCid(String cid) {
-        this.cid = cid;
-    }
 
     public Date getProduction_date() {
-        return production_date;
+        return productionDate;
     }
 
-    public void setProduction_date(Date production_date) {
-        this.production_date = production_date;
+    public void setProduction_date(String productionDate) {
+
+        this.productionDate = productionDate;
     }
 
     public int getShelf_life() {

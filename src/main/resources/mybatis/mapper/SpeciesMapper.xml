@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.auto_warehouse.mapper.SpeciesMapper">
+    <select id="findById" resultType="com.example.auto_warehouse.bean.Species">
+        select * from auto_warehouseDB.species where sid = #{sid};
+    </select>
+
+    <insert id="addSpecies" parameterType="com.example.auto_warehouse.bean.Species">
+        insert into auto_warehouseDB.species
+        values(#{species.sid}, #{species.sname}, #{species.stype}, #{species.num}, #{species.weight}, #{species.sh}, #{species.sw}, #{species.sd});
+    </insert>
+
+    <update id="updateNum" parameterType="com.example.auto_warehouse.bean.Species">
+        update auto_warehouseDB.species set num = num + #{newNum} where sid=#{sid};
+    </update>
+
+</mapper>
