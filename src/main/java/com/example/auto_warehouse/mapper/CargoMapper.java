@@ -14,5 +14,5 @@ public interface CargoMapper {
 //    List<Cargo> findByState(String state);
 
     // 添加货物
-//    boolean addCargo(Cargo cargo);
+    boolean addCargo(Cargo cargo);
 }

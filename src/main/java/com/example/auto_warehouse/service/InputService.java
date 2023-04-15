@@ -1,18 +1,19 @@
 package com.example.auto_warehouse.service;
 
+import com.example.auto_warehouse.bean.Cargo;
 import com.example.auto_warehouse.bean.NotInput;
 import com.example.auto_warehouse.bean.Repository;
+import com.example.auto_warehouse.bean.Species;
 import com.example.auto_warehouse.mapper.CargoMapper;
 import com.example.auto_warehouse.mapper.CargoStatusMapper;
 import com.example.auto_warehouse.mapper.SpeciesMapper;
 import com.example.auto_warehouse.mapper.SupermarketMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-@Service
 public class InputService {
 
     @Autowired
@@ -32,7 +33,7 @@ public class InputService {
 //    @Autowired
 //    private LogMapper logMapper;
 
-    public void check(List<Map<String,String>> data){
+    public void check(List<Map<String,String>> data) throws ParseException {
         // 不能入库的数据
         List<Map<String,String>> notInputData = new ArrayList<>();
         // 能入库的数据
@@ -91,20 +92,25 @@ public class InputService {
         }catch (Exception e){
             e.printStackTrace();
         }
+        //111111
         return insert_num == list.size();
     }
 
-    public List<NotInput> allNotInput(){
-        return cargoStatusMapper.allNotInput();
-    }
-
-    public void callInput(List<Map<String,String>> data){
+    public void callInput(List<Map<String,String>> data) throws ParseException {
         // 调用好多个mapper
-
-        // 修改cell表 (这里后续可能会添加规则设置等)
-
-
-        // 修改仓库表
+        for(Map map:data){
+            // (1)对Species表的操作
+            // 如果该种类的货物已存在，则只需更改num，否则需要插入操作
+            if(speciesMapper.findById((String)(map.get("sid")))!=null){
+                speciesMapper.updateNum((String) map.get("sid"), (Integer) map.get("num"));
+            }else{
+                Species species = new Species((String) map.get("sid"), (String) map.get("sname"), (String) map.get("stype"), (Integer) map.get("num"), (Double) map.get("weight"), (Double) map.get("sh"), (Double) map.get("sw"), (Double) map.get("sd"));
+                speciesMapper.addSpecies(species);
+            }
+            // (2)对Cargo表的操作
+            Cargo cargo = new Cargo((String) map.get("sid"), (String) map.get("sname"), (String) map.get("productionDate"), (Integer) map.get("shelfLife"), (String) map.get("suid"));
+            cargoMapper.addCargo(cargo);
+        }
     }
 
 }

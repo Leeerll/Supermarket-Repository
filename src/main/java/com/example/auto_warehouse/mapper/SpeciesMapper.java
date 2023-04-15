@@ -1,14 +1,18 @@
 package com.example.auto_warehouse.mapper;
 
+
+
 import com.example.auto_warehouse.bean.Species;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
+import java.util.Map;
+
 
 @Mapper
 public interface SpeciesMapper {
     // 根据货物品类id找出全部该货物
-//    Species findById(String sid);
+    Species findById(String sid);
     // 根据货物品名sname找出全部该货物
 //    Species findByName(String sname);
     // 根据货物类型stype找出全部该类货物
@@ -17,9 +21,11 @@ public interface SpeciesMapper {
     // 全部货物品类
 //    List<Species> allSpecies();
 
+
+
+    // 更改货物存货
+    boolean updateNum(String sid, int newNum);
+
     // 添加货物品类
-
-    //
-
-
+    boolean addSpecies(Species species);
 }
