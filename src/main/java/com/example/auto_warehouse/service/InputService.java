@@ -100,6 +100,11 @@ public class InputService {
 
     public void callInput(List<Map<String,String>> data){
         // 调用好多个mapper
+
+        // 修改cell表 (这里后续可能会添加规则设置等)
+
+
+        // 修改仓库表
     }
 
 }
