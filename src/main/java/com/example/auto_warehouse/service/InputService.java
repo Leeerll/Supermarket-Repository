@@ -96,6 +96,10 @@ public class InputService {
         return insert_num == list.size();
     }
 
+    public List<NotInput> allNotInput(){
+        return cargoStatusMapper.allNotInput();
+    }
+
     public void callInput(List<Map<String,String>> data) throws ParseException {
         // 调用好多个mapper
         for(Map map:data){
