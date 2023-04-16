@@ -8,6 +8,7 @@ import com.example.auto_warehouse.mapper.CargoMapper;
 import com.example.auto_warehouse.mapper.CargoStatusMapper;
 import com.example.auto_warehouse.mapper.SpeciesMapper;
 import com.example.auto_warehouse.mapper.SupermarketMapper;
+import com.example.auto_warehouse.util.Id;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -103,6 +104,9 @@ public class InputService {
     }
 
     public void callInput(List<Map<String,String>> data) throws ParseException {
+        // 登录时的超市账号id
+        String shopID = Id.getShopID();
+
         // 调用好多个mapper
         for(Map map:data){
             // (1)对Species表的操作
@@ -116,6 +120,13 @@ public class InputService {
             // (2)对Cargo表的操作
             Cargo cargo = new Cargo((String) map.get("sid"), (String) map.get("sname"), (String) map.get("productionDate"), (Integer) map.get("shelfLife"), (String) map.get("suid"));
             cargoMapper.addCargo(cargo);
+
+            // (3)对Cell表的操作
+
+
+            // (4)对Repository表的操作
+
+            // (5)对save表的操作
         }
     }
 
