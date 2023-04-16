@@ -9,11 +9,13 @@ import com.example.auto_warehouse.mapper.CargoStatusMapper;
 import com.example.auto_warehouse.mapper.SpeciesMapper;
 import com.example.auto_warehouse.mapper.SupermarketMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
+@Service
 public class InputService {
 
     @Autowired
