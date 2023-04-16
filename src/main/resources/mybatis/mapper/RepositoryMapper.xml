@@ -5,7 +5,16 @@
 <!--这边的包路径和sql语句需要根据自身的表的写-->
 <mapper namespace="com.example.auto_warehouse.mapper.RepositoryMapper">
     <select id = "getCellAttr" resultType="com.example.auto_warehouse.bean.Cell">
-        select ch,cw,cd,maxWeight from auto_warehouseDB.cell where crid = #{crid} and cetype = #{cetype}
+        select ch,cw,cd,maxWeight from auto_warehouseDB.cell where crid = #{crid} and cetype = #{cetype} order by ceid LIMIT 1
     </select>
+    <select id = "getCellNum" resultType="java.lang.Integer">
+        select count(*) from auto_warehouseDB.cell where crid = #{crid} and cetype = #{cetype} and isUsed = #{isUsed}
+    </select>
+    <select id = "getCellList" resultType="com.example.auto_warehouse.bean.Cell">
+        select ceid from auto_warehouseDB.cell where crid = #{crid} and cetype = #{cetype} and isUsed = #{isUsed}
+    </select>
+    <update id = "modifyCellIsUsed" parameterType="com.example.auto_warehouse.bean.Cell">
+        update auto_warehouseDB.cell set isUsed = #{isUsed} where crid = #{crid} and ceid = #{ceid}
+    </update>
 
 </mapper>
