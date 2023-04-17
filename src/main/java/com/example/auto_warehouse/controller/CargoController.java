@@ -3,6 +3,7 @@ package com.example.auto_warehouse.controller;
 import com.example.auto_warehouse.bean.NotInput;
 import com.example.auto_warehouse.service.InputService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -19,6 +20,7 @@ public class CargoController {
     @Autowired
     private InputService inputService;
 
+    @CrossOrigin(origins = "*")
     @RequestMapping("/show_notInput")
     @ResponseBody
     public List<Map<String,String>> show_notInput(){
