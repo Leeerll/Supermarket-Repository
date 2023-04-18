@@ -62,6 +62,10 @@ public class InputService {
             callInput(inputData);
         }
     }
+    public List<NotInput> allNotInput(){
+        return cargoStatusMapper.allNotInput();
+    }
+
 
     // 不能入库，写入停滞区
     public boolean notInput(List<Map<String,String>> list) {
