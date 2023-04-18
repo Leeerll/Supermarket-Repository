@@ -16,5 +16,8 @@
     <update id = "modifyCellIsUsed" parameterType="com.example.auto_warehouse.bean.Cell">
         update auto_warehouseDB.cell set isUsed = #{isUsed} where crid = #{crid} and ceid = #{ceid}
     </update>
+    <select id = "getRestNum" resultType="java.lang.Integer">
+        select restNum from auto_warehouseDB.repository where rid = #{rid}
+    </select>
 
 </mapper>

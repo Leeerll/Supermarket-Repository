@@ -20,7 +20,7 @@ public class CargoController {
     @Autowired
     private InputService inputService;
 
-    @CrossOrigin(origins = "*")
+
     @RequestMapping("/show_notInput")
     @ResponseBody
     public List<Map<String,String>> show_notInput(){
@@ -33,10 +33,6 @@ public class CargoController {
             map.put("name",notInput.getName());
             map.put("type",notInput.getType());
             map.put("num",String.valueOf(notInput.getNum()));
-            map.put("weight",String.valueOf(notInput.getWeight()));
-            map.put("sh",String.valueOf(notInput.getSh()));
-            map.put("sw",String.valueOf(notInput.getSw()));
-            map.put("sd",String.valueOf(notInput.getSd()));
             map.put("production_date", sdf1.format(notInput.getProduction_date()));
             System.out.println("shelf_life:"+notInput.getShelf_life());
             map.put("shelf_life",String.valueOf(notInput.getShelf_life()));

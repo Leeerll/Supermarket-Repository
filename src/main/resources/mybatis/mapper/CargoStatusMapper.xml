@@ -8,8 +8,8 @@
         select * from auto_warehouseDB.notInput
     </select>
     <insert id = "addNotInput" parameterType="com.example.auto_warehouse.bean.NotInput">
-        insert into auto_warehouseDB.notInput (id,name,type,num,weight,sh,sw,sd,productionDate,shelfLife,suid,reason)
-        values(#{id},#{name},#{type},#{num},#{weight},#{sh},#{sw},#{sd},#{productionDate},#{shelfLife},#{suid},#{reason})
+        insert into auto_warehouseDB.notInput (id,name,type,num,productionDate,shelfLife,suid,reason)
+        values(#{id},#{name},#{type},#{num},#{productionDate},#{shelfLife},#{suid},#{reason})
     </insert>
 
 </mapper>
