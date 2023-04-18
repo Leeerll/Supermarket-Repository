@@ -38,12 +38,12 @@ public class InputService {
         // 遍历data
         for(Map map:data){
             // 检查体积
-            if(Double.parseDouble((String) map.get("sh"))>80 || Double.parseDouble((String) map.get("sw"))>70 || Double.parseDouble((String) map.get("sd"))>60){
+            if(Double.parseDouble((String) map.get("sh"))>1200 || Double.parseDouble((String) map.get("sw"))>800 || Double.parseDouble((String) map.get("sd"))>600){
                 map.put("reason","体积过大");
                 notInputData.add(map);
             }
             // 检查重量
-            else if(Double.parseDouble((String) map.get("weight"))>60){
+            else if(Double.parseDouble((String) map.get("weight"))>160){
                 map.put("reason","超重");
                 notInputData.add(map);
             }
@@ -109,6 +109,7 @@ public class InputService {
                 speciesMapper.addSpecies(species);
             }
             // (2)对Cargo表的操作
+
             Cargo cargo = new Cargo((String) map.get("sid"), (String) map.get("sname"), (String) map.get("productionDate"), (Integer) map.get("shelfLife"), (String) map.get("suid"));
             cargoMapper.addCargo(cargo);
             // (3)对Cell表的操作
