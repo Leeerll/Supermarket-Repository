@@ -12,6 +12,8 @@ public class User {
     private String uid;
     private String name;
     private String password;
+
+    /*1是仓库管理者，2是超市*/
     private String type;
 
     public User(String uid, String name, String password, String type) {
