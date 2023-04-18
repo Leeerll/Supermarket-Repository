@@ -2,8 +2,9 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper>
+<mapper namespace="com.example.auto_warehouse.mapper.CargoMapper">
     <insert id="addCargo" parameterType="com.example.auto_warehouse.bean.Cargo">
---         insert into auto_warehouseDB.cargo (sid, sname, productionDate, she)
+        insert into auto_warehouseDB.cargo (sid, sname, productionDate, shelfLife, inputTime, state, suid)
+        values (#{cargo.sid}, #{cargo.sname}, #{cargo.productionDate}, #{cargo.shelfLife}, #{cargo.inputTime}, #{cargo.state}, #{cargo.suid});
     </insert>
 </mapper>
