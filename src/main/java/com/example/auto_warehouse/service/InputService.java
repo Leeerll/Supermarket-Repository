@@ -92,7 +92,7 @@ public class InputService {
         }catch (Exception e){
             e.printStackTrace();
         }
-        //111111
+
         return insert_num == list.size();
     }
 
@@ -110,6 +110,7 @@ public class InputService {
             // (2)对Cargo表的操作
             Cargo cargo = new Cargo((String) map.get("sid"), (String) map.get("sname"), (String) map.get("productionDate"), (Integer) map.get("shelfLife"), (String) map.get("suid"));
             cargoMapper.addCargo(cargo);
+            // (3)
         }
     }
 
