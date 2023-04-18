@@ -4,11 +4,13 @@ import com.example.auto_warehouse.bean.*;
 import com.example.auto_warehouse.mapper.*;
 import com.example.auto_warehouse.util.Id;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
+@Service
 public class InputService {
 
     @Autowired
