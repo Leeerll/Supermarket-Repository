@@ -16,8 +16,9 @@ public class Species {
     private double sh;     // 货物长度
     private double sw;     // 货物宽度
     private double sd;     // 货物深度
+    private String size;   // 货物尺寸
 
-    public Species(String sid, String sname, String stype, int num, double weight, double sh, double sw, double sd) {
+    public Species(String sid, String sname, String stype, int num, double weight, double sh, double sw, double sd, String size) {
         this.sid = sid;
         this.sname = sname;
         this.stype = stype;
@@ -26,6 +27,7 @@ public class Species {
         this.sh = sh;
         this.sw = sw;
         this.sd = sd;
+        this.size = size;
     }
 
     public Species(){
