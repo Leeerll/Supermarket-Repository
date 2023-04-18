@@ -10,6 +10,8 @@ public class Supermarket {
     @Id
     private String suid;
     private String suregion;
+
+    private String password;
     private String rid;
     public Supermarket(){
 
