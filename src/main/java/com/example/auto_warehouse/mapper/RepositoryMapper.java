@@ -12,5 +12,6 @@ public interface RepositoryMapper {
     int getCellNum(String crid, String cetype, int isUsed);
     List<Cell> getCellList(String crid, String cetype, int isUsed);
     int modifyCellIsUsed(String crid, String ceid);
+    int getRestNum(String rid);
 
 }

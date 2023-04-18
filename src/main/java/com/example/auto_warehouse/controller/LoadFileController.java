@@ -20,10 +20,10 @@ public class LoadFileController {
     private FileService fileService;
     private static final Logger logger = LoggerFactory.getLogger(LoadFileController.class);
 
-    @CrossOrigin(origins = "*")
+
     @PostMapping("/importFileInput")
-    public JsonResult<String> importData_input(HttpServletRequest request) throws IOException {
-        MultipartFile file = ((MultipartHttpServletRequest)request).getFile("file");
+    public JsonResult<String> importData_input(MultipartFile file) throws IOException {
+        //MultipartFile file = ((MultipartHttpServletRequest)request).getFile("file");
         if (file == null) {
             return new JsonResult<>("0","文件为空，上传失败");
         }
@@ -39,7 +39,7 @@ public class LoadFileController {
 
     }
 
-    @CrossOrigin(origins = "*")
+
     @PostMapping("/importFileOutput")
     public JsonResult<String> importData_output(HttpServletRequest request) throws IOException {
         MultipartFile file = ((MultipartHttpServletRequest)request).getFile("file");

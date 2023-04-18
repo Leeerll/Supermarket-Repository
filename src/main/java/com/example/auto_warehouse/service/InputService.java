@@ -86,15 +86,11 @@ public class InputService {
                 String name = list.get(i).get("sname");
                 String type = list.get(i).get("stype");
                 int num = Integer.parseInt(list.get(i).get("num"));
-                double weight = Double.parseDouble(list.get(i).get("weight"));
-                double sh = Double.parseDouble(list.get(i).get("sh"));
-                double sw = Double.parseDouble(list.get(i).get("sw"));
-                double sd = Double.parseDouble(list.get(i).get("sd"));
                 Date production_date = sdf1.parse(list.get(i).get("production_date"));
                 int shelf_life = Integer.parseInt(list.get(i).get("shelf_life"));
                 String suid = list.get(i).get("suid");
                 String reason = list.get(i).get("reason");
-                NotInput notInput = new NotInput(id,name,type,num,weight,sh,sw,sd,production_date,shelf_life,suid,reason);
+                NotInput notInput = new NotInput(id,name,type,num,production_date,shelf_life,suid,reason);
                 insert_num += cargoStatusMapper.addNotInput(notInput);
             }
         }catch (Exception e){
