@@ -6,6 +6,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -22,6 +23,7 @@ public class LoadFileController {
     private FileService fileService;
     private static final Logger logger = LoggerFactory.getLogger(LoadFileController.class);
 
+    @CrossOrigin(origins = "*")
     @PostMapping("/importFileInput")
     public JsonResult<String> importData_input(HttpServletRequest request) throws IOException {
         MultipartFile file = ((MultipartHttpServletRequest)request).getFile("file");
@@ -40,6 +42,7 @@ public class LoadFileController {
 
     }
 
+    @CrossOrigin(origins = "*")
     @PostMapping("/importFileOutput")
     public JsonResult<String> importData_output(HttpServletRequest request) throws IOException {
         MultipartFile file = ((MultipartHttpServletRequest)request).getFile("file");
