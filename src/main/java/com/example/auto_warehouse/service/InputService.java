@@ -100,6 +100,8 @@ public class InputService {
     public void callInput(List<Map<String,String>> data) throws ParseException {
         // 调用好多个mapper
         for(Map map:data){
+            // 全局变量，传存的仓库柜，便于写save和log表
+
             // (1)对Species表的操作
             // 如果该种类的货物已存在，则只需更改num，否则需要插入操作
             if(speciesMapper.findById((String)(map.get("sid")))!=null){
