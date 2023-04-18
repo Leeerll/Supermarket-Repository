@@ -113,67 +113,71 @@ public class InputService {
             speciesMapper.addSpecies(species);
         }
 
-        // (2)对Cargo表的操作
+        for(int i=0; i<Double.parseDouble(map.get("num")); i++) {
 
-        Cargo cargo = new Cargo((String) map.get("sid"), (String) map.get("sname"), (String) map.get("productionDate"), (Integer) map.get("shelfLife"), (String) map.get("suid"));
-        cargoMapper.addCargo(cargo);
-        // (3)对Cell表的操作
-        Cell cells = repositoryMapper.getCellAttr(Id.getRepositoryID(),"s");
-        Cell cellm = repositoryMapper.getCellAttr(Id.getRepositoryID(),"m");
-        Cell celll = repositoryMapper.getCellAttr(Id.getRepositoryID(),"l");
-        String type;
-        if((Double)map.get("sh")<= cells.getCh() && (Double)map.get("sw")<= cells.getCw() && (Double)map.get("sd")<= cells.getCd() && (Double)map.get("weight")<= cells.getMaxWeight()){
-            type = "s";
-        }else if((Double)map.get("sh")<= cellm.getCh() && (Double)map.get("sw")<= cellm.getCw() && (Double)map.get("sd")<= cellm.getCd() && (Double)map.get("weight")<= cellm.getMaxWeight()){
-            type = "m";
-        }else{
-            type = "l";
-        }
-        // 这块的算法合并优化很重要！！！！！！！！！(未完成)
-        int num=(Integer) map.get("num");
-        if(type.equals("s")){
-            List<Cell> emptyCellList = repositoryMapper.getCellList(Id.getRepositoryID(),type,0);
-            if(emptyCellList.size()!=0){
-                int left = num-emptyCellList.size();
-                for(int i=0;i<Math.max(num,emptyCellList.size());i++){
-                    if(repositoryMapper.modifyCellIsUsed(Id.getRepositoryID(),emptyCellList.get(i).getCeid())==0){
-                        System.out.println("callInput函数更新cell表失败！");
-                    }
-                }
-                if(left>0){
-                    // 当需要写入更大cell时，就应该合并空间放入了,需要写个合并函数 (未完成)----------------------------------------------
-                    List<Cell> emptyCellListM = repositoryMapper.getCellList(Id.getRepositoryID(),"m",0);
-                    if(emptyCellListM.size()!=0){
-                        int left2 = left-emptyCellListM.size();
-                        for(int i=0;i<Math.max(left,emptyCellListM.size());i++){
-                            if(repositoryMapper.modifyCellIsUsed(Id.getRepositoryID(),emptyCellListM.get(i).getCeid())==0){
-                                System.out.println("callInput函数更新cell表失败！");
-                            }
+
+            // (2)对Cargo表的操作
+
+            Cargo cargo = new Cargo((String) map.get("sid"), (String) map.get("sname"), (String) map.get("productionDate"), (Integer) Double.parseDouble(map.get("shelfLife")), (String) map.get("suid"));
+            cargoMapper.addCargo(cargo);
+            // (3)对Cell表的操作
+            Cell cells = repositoryMapper.getCellAttr(Id.getRepositoryID(), "s");
+            Cell cellm = repositoryMapper.getCellAttr(Id.getRepositoryID(), "m");
+            Cell celll = repositoryMapper.getCellAttr(Id.getRepositoryID(), "l");
+            String type;
+            if ((Double) map.get("sh") <= cells.getCh() && (Double) map.get("sw") <= cells.getCw() && (Double) map.get("sd") <= cells.getCd() && (Double) map.get("weight") <= cells.getMaxWeight()) {
+                type = "s";
+            } else if ((Double) map.get("sh") <= cellm.getCh() && (Double) map.get("sw") <= cellm.getCw() && (Double) map.get("sd") <= cellm.getCd() && (Double) map.get("weight") <= cellm.getMaxWeight()) {
+                type = "m";
+            } else {
+                type = "l";
+            }
+            // 这块的算法合并优化很重要！！！！！！！！！(未完成)
+            int num = (Integer) map.get("num");
+            if (type.equals("s")) {
+                List<Cell> emptyCellList = repositoryMapper.getCellList(Id.getRepositoryID(), type, 0);
+                if (emptyCellList.size() != 0) {
+                    int left = num - emptyCellList.size();
+                    for (int i = 0; i < Math.max(num, emptyCellList.size()); i++) {
+                        if (repositoryMapper.modifyCellIsUsed(Id.getRepositoryID(), emptyCellList.get(i).getCeid()) == 0) {
+                            System.out.println("callInput函数更新cell表失败！");
                         }
-                        if(left2>0){
-                            List<Cell> emptyCellListL = repositoryMapper.getCellList(Id.getRepositoryID(),"l",0);
-                            if(emptyCellListL.size()!=0){
-                                int left3 = left2-emptyCellListL.size();
-                                for(int i=0;i<Math.max(left2,emptyCellListL.size());i++){
-                                    if(repositoryMapper.modifyCellIsUsed(Id.getRepositoryID(),emptyCellListL.get(i).getCeid())==0){
-                                        System.out.println("callInput函数更新cell表失败！");
+                    }
+                    if (left > 0) {
+                        // 当需要写入更大cell时，就应该合并空间放入了,需要写个合并函数 (未完成)----------------------------------------------
+                        List<Cell> emptyCellListM = repositoryMapper.getCellList(Id.getRepositoryID(), "m", 0);
+                        if (emptyCellListM.size() != 0) {
+                            int left2 = left - emptyCellListM.size();
+                            for (int i = 0; i < Math.max(left, emptyCellListM.size()); i++) {
+                                if (repositoryMapper.modifyCellIsUsed(Id.getRepositoryID(), emptyCellListM.get(i).getCeid()) == 0) {
+                                    System.out.println("callInput函数更新cell表失败！");
+                                }
+                            }
+                            if (left2 > 0) {
+                                List<Cell> emptyCellListL = repositoryMapper.getCellList(Id.getRepositoryID(), "l", 0);
+                                if (emptyCellListL.size() != 0) {
+                                    int left3 = left2 - emptyCellListL.size();
+                                    for (int i = 0; i < Math.max(left2, emptyCellListL.size()); i++) {
+                                        if (repositoryMapper.modifyCellIsUsed(Id.getRepositoryID(), emptyCellListL.get(i).getCeid()) == 0) {
+                                            System.out.println("callInput函数更新cell表失败！");
+                                        }
                                     }
-                                }
-                                if(left3>0){
-                                    // 所有柜子都满了，只能写入NotInput表
-                                }
-                            }else{
+                                    if (left3 > 0) {
+                                        // 所有柜子都满了，只能写入NotInput表
+                                    }
+                                } else {
 
+                                }
                             }
-                        }
-                    }else{
+                        } else {
 
+                        }
                     }
+                } else {
+
                 }
-            }else{
 
             }
-
         }
 
     }
