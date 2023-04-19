@@ -21,6 +21,7 @@ public class CargoController {
     private InputService inputService;
 
 
+
     @RequestMapping("/show_notInput")
     @ResponseBody
     public List<Map<String,String>> show_notInput(){
