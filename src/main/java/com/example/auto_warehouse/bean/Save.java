@@ -5,6 +5,62 @@ import jakarta.persistence.Id;
 import java.util.Date;
 
 public class Save {
+    public String getSid() {
+        return sid;
+    }
+
+    public void setSid(String sid) {
+        this.sid = sid;
+    }
+
+    public int getCid() {
+        return cid;
+    }
+
+    public void setCid(int cid) {
+        this.cid = cid;
+    }
+
+    public String getRid() {
+        return rid;
+    }
+
+    public void setRid(String rid) {
+        this.rid = rid;
+    }
+
+    public String getCeid() {
+        return ceid;
+    }
+
+    public void setCeid(String ceid) {
+        this.ceid = ceid;
+    }
+
+    public String getSuid() {
+        return suid;
+    }
+
+    public void setSuid(String suid) {
+        this.suid = suid;
+    }
+
+    public Date getInputTime() {
+        return inputTime;
+    }
+
+    public void setInputTime(Date inputTime) {
+        this.inputTime = inputTime;
+    }
+
+    public Date getOutputTime() {
+        return outputTime;
+    }
+
+    public void setOutputTime(Date outputTime) {
+        this.outputTime = outputTime;
+    }
+
     @Id
     private String sid;            // 货物品类id
     private int cid;               // 货物编号
@@ -14,12 +70,13 @@ public class Save {
     private Date inputTime;        // 入库时间
     private Date outputTime;       // 出库时间
 
-    public Save(String sid, int cid, String rid, String ceid, String suid, Date inputTime) {
+    public Save(String sid, int cid, String rid, String ceid, String suid, Date inputTime, Date outputTime) {
         this.sid = sid;
         this.cid = cid;
         this.rid = rid;
         this.ceid = ceid;
         this.suid = suid;
         this.inputTime = inputTime;
+        this.outputTime = outputTime;
     }
 }

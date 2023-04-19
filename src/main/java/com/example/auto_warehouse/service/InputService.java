@@ -1,8 +1,11 @@
 package com.example.auto_warehouse.service;
 
 import com.example.auto_warehouse.bean.*;
+import com.example.auto_warehouse.controller.LoadFileController;
 import com.example.auto_warehouse.mapper.*;
 import com.example.auto_warehouse.util.Id;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -29,6 +32,7 @@ public class InputService {
 //    private SaveMapper saveMapper;
 //    @Autowired
 //    private LogMapper logMapper;
+    private static final Logger logger = LoggerFactory.getLogger(LoadFileController.class);
 
     public void check(List<Map<String,String>> data) throws ParseException {
         // 不能入库的数据
@@ -102,7 +106,7 @@ public class InputService {
 
     public void callInput(Map<String,String> map) throws ParseException {
 
-        // 全局变量，传存的仓库柜，便于写save和log表
+
 
         // (1)对Species表的操作
         // 如果该种类的货物已存在，则只需更改num，否则需要插入操作
@@ -114,70 +118,79 @@ public class InputService {
         }
 
         for(int i=0; i<Double.parseDouble(map.get("num")); i++) {
-
+            // 这箱货物存放的仓库柜id
+            String ceid;
 
             // (2)对Cargo表的操作
 
             Cargo cargo = new Cargo((String) map.get("sid"), (String) map.get("sname"), (String) map.get("productionDate"), (Integer) Double.parseDouble(map.get("shelfLife")), (String) map.get("suid"));
             cargoMapper.addCargo(cargo);
+
             // (3)对Cell表的操作
-            Cell cells = repositoryMapper.getCellAttr(Id.getRepositoryID(), "s");
-            Cell cellm = repositoryMapper.getCellAttr(Id.getRepositoryID(), "m");
-            Cell celll = repositoryMapper.getCellAttr(Id.getRepositoryID(), "l");
-            String type;
-            if ((Double) map.get("sh") <= cells.getCh() && (Double) map.get("sw") <= cells.getCw() && (Double) map.get("sd") <= cells.getCd() && (Double) map.get("weight") <= cells.getMaxWeight()) {
-                type = "s";
-            } else if ((Double) map.get("sh") <= cellm.getCh() && (Double) map.get("sw") <= cellm.getCw() && (Double) map.get("sd") <= cellm.getCd() && (Double) map.get("weight") <= cellm.getMaxWeight()) {
-                type = "m";
-            } else {
-                type = "l";
-            }
-            // 这块的算法合并优化很重要！！！！！！！！！(未完成)
-            int num = (Integer) map.get("num");
-            if (type.equals("s")) {
-                List<Cell> emptyCellList = repositoryMapper.getCellList(Id.getRepositoryID(), type, 0);
-                if (emptyCellList.size() != 0) {
-                    int left = num - emptyCellList.size();
-                    for (int i = 0; i < Math.max(num, emptyCellList.size()); i++) {
-                        if (repositoryMapper.modifyCellIsUsed(Id.getRepositoryID(), emptyCellList.get(i).getCeid()) == 0) {
-                            System.out.println("callInput函数更新cell表失败！");
-                        }
-                    }
-                    if (left > 0) {
-                        // 当需要写入更大cell时，就应该合并空间放入了,需要写个合并函数 (未完成)----------------------------------------------
-                        List<Cell> emptyCellListM = repositoryMapper.getCellList(Id.getRepositoryID(), "m", 0);
-                        if (emptyCellListM.size() != 0) {
-                            int left2 = left - emptyCellListM.size();
-                            for (int i = 0; i < Math.max(left, emptyCellListM.size()); i++) {
-                                if (repositoryMapper.modifyCellIsUsed(Id.getRepositoryID(), emptyCellListM.get(i).getCeid()) == 0) {
-                                    System.out.println("callInput函数更新cell表失败！");
-                                }
-                            }
-                            if (left2 > 0) {
-                                List<Cell> emptyCellListL = repositoryMapper.getCellList(Id.getRepositoryID(), "l", 0);
-                                if (emptyCellListL.size() != 0) {
-                                    int left3 = left2 - emptyCellListL.size();
-                                    for (int i = 0; i < Math.max(left2, emptyCellListL.size()); i++) {
-                                        if (repositoryMapper.modifyCellIsUsed(Id.getRepositoryID(), emptyCellListL.get(i).getCeid()) == 0) {
-                                            System.out.println("callInput函数更新cell表失败！");
-                                        }
-                                    }
-                                    if (left3 > 0) {
-                                        // 所有柜子都满了，只能写入NotInput表
-                                    }
-                                } else {
-
-                                }
-                            }
-                        } else {
-
-                        }
-                    }
-                } else {
-
+            if(cargoStatusMapper.getSameSpecies(map.get("sid"),map.get("suid"),Id.getRepositoryID()).equals("null")){
+                // 该超市在仓库中无同类型产品
+                Cell empty_cell = repositoryMapper.getCellByType("null",Id.getRepositoryID());
+                ceid = empty_cell.getCeid();
+                empty_cell.setType(map.get("type"));
+                if(map.get("type").equals("s")){
+                    empty_cell.setRestNum(16-1);
+                }else if(map.get("type").equals("m")){
+                    empty_cell.setRestNum(8-1);
+                }else if(map.get("type").equals("l")){
+                    empty_cell.setRestNum(4-1);
+                }else{
+                    logger.warn("excel表中的type属性不是s/m/l");
                 }
-
+                int result = repositoryMapper.modifyCellTypeAndRestNumAndIsFull(empty_cell);
+                if(result==0){
+                    logger.warn("修改空cell属性失败");
+                }
+            }else{
+                // 该超市在仓库中有同类型产品
+                List<Save> list = cargoStatusMapper.getSameSpeciesAllCeid(map.get("sid"),map.get("suid"),Id.getRepositoryID());
+                Boolean have = false;
+                for(Save save:list){
+                    Cell cell = repositoryMapper.getCellByCeid(save.getCeid(), Id.getRepositoryID());
+                    if(cell.getIsFull()==1){
+                        continue;
+                    }else{
+                        have = true;
+                        // 匹配到了未填满的cell
+                        ceid = cell.getCeid();
+                        if(cell.getRestNum()-1==0){
+                            cell.setRestNum(0);
+                            cell.setIsFull(1);
+                        }else{
+                            cell.setRestNum(cell.getRestNum()-1);
+                        }
+                        int result = repositoryMapper.modifyCellTypeAndRestNumAndIsFull(cell);
+                        if(result==0){
+                            logger.warn("修改未填满同类cell属性失败");
+                        }
+                        break;
+                    }
+                }
+                if(!have){
+                    // 同类产品的柜子都满了
+                    Cell empty_cell = repositoryMapper.getCellByType("null",Id.getRepositoryID());
+                    ceid = empty_cell.getCeid();
+                    empty_cell.setType(map.get("type"));
+                    if(map.get("type").equals("s")){
+                        empty_cell.setRestNum(16-1);
+                    }else if(map.get("type").equals("m")){
+                        empty_cell.setRestNum(8-1);
+                    }else if(map.get("type").equals("l")){
+                        empty_cell.setRestNum(4-1);
+                    }else{
+                        logger.warn("excel表中的type属性不是s/m/l");
+                    }
+                    int result = repositoryMapper.modifyCellTypeAndRestNumAndIsFull(empty_cell);
+                    if(result==0){
+                        logger.warn("修改空cell属性失败");
+                    }
+                }
             }
+
         }
 
     }

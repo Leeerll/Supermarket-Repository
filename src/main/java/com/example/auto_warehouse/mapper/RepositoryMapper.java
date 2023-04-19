@@ -8,10 +8,9 @@ import java.util.List;
 @Mapper
 public interface RepositoryMapper {
 
-    Cell getCellAttr(String crid, String cetype);
-    int getCellNum(String crid, String cetype, int isUsed);
-    List<Cell> getCellList(String crid, String cetype, int isUsed);
-    int modifyCellIsUsed(String crid, String ceid);
+    Cell getCellByType(String type, String crid);
+    Cell getCellByCeid(String ceid, String crid);
+    int modifyCellTypeAndRestNumAndIsFull(Cell cell);
     int getRestNum(String rid);
 
 }

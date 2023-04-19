@@ -7,27 +7,16 @@ import lombok.Data;
 @Data
 @Entity
 public class Repository {
+    public Repository(String rid, int totalNum, int restNum) {
+        this.rid = rid;
+        this.totalNum = totalNum;
+        this.restNum = restNum;
+    }
+
     @Id
     private String rid;
-    private int aTotalNum;
-    private int bTotalNum;
-    private int cTotalNum;
-    private int aRestNum;
-    private int bRestNum;
-    private int cRestNum;
-
-    public Repository(){
-
-    }
-    public Repository(String rid, int aTotalNum, int bTotalNum, int cTotalNum, int aRestNum, int bRestNum, int cRestNum) {
-        this.rid = rid;
-        this.aTotalNum = aTotalNum;
-        this.bTotalNum = bTotalNum;
-        this.cTotalNum = cTotalNum;
-        this.aRestNum = aRestNum;
-        this.bRestNum = bRestNum;
-        this.cRestNum = cRestNum;
-    }
+    private int totalNum;
+    private int restNum;
 
     public String getRid() {
         return rid;
@@ -37,53 +26,27 @@ public class Repository {
         this.rid = rid;
     }
 
-    public int getaTotalNum() {
-        return aTotalNum;
+    public int getTotalNum() {
+        return totalNum;
     }
 
-    public void setaTotalNum(int aTotalNum) {
-        this.aTotalNum = aTotalNum;
+    public void setTotalNum(int totalNum) {
+        this.totalNum = totalNum;
     }
 
-    public int getbTotalNum() {
-        return bTotalNum;
+    public int getRestNum() {
+        return restNum;
     }
 
-    public void setbTotalNum(int bTotalNum) {
-        this.bTotalNum = bTotalNum;
+    public void setRestNum(int restNum) {
+        this.restNum = restNum;
     }
 
-    public int getcTotalNum() {
-        return cTotalNum;
+
+    public Repository(){
+
     }
 
-    public void setcTotalNum(int cTotalNum) {
-        this.cTotalNum = cTotalNum;
-    }
-
-    public int getaRestNum() {
-        return aRestNum;
-    }
-
-    public void setaRestNum(int aRestNum) {
-        this.aRestNum = aRestNum;
-    }
-
-    public int getbRestNum() {
-        return bRestNum;
-    }
-
-    public void setbRestNum(int bRestNum) {
-        this.bRestNum = bRestNum;
-    }
-
-    public int getcRestNum() {
-        return cRestNum;
-    }
-
-    public void setcRestNum(int cRestNum) {
-        this.cRestNum = cRestNum;
-    }
 
 
 

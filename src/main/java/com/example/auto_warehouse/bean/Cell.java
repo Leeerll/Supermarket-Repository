@@ -8,38 +8,30 @@ import lombok.Data;
 @Entity
 public class Cell {
 
+    public Cell(String crid, String ceid, double costT, double maxWeight, int isFull, String type, int restNum) {
+        this.crid = crid;
+        this.ceid = ceid;
+        this.costT = costT;
+        this.maxWeight = maxWeight;
+        this.isFull = isFull;
+        this.type = type;
+        this.restNum = restNum;
+    }
+
     @Id
     private String crid;
     private String ceid;
-    private String cetype;
-    private double ch;
-    private double cw;
-    private double cd;
     private double costT;
     private double maxWeight;
-    private int isUsed;
+    private int isFull;
+    private String type;
+    private int restNum;
 
-    public Cell(String crid, String ceid, String cetype, double ch, double cw, double cd, double costT, double maxWeight, int isUsed) {
-        this.crid = crid;
-        this.ceid = ceid;
-        this.cetype = cetype;
-        this.ch = ch;
-        this.cw = cw;
-        this.cd = cd;
-        this.costT = costT;
-        this.maxWeight = maxWeight;
-        this.isUsed = isUsed;
-    }
-
-    public Cell(){
-
-    }
-
-    public String getRid() {
+    public String getCrid() {
         return crid;
     }
 
-    public void setRid(String crid) {
+    public void setCrid(String crid) {
         this.crid = crid;
     }
 
@@ -51,43 +43,11 @@ public class Cell {
         this.ceid = ceid;
     }
 
-    public String getCetype() {
-        return cetype;
-    }
-
-    public void setCetype(String cetype) {
-        this.cetype = cetype;
-    }
-
-    public double getCh() {
-        return ch;
-    }
-
-    public void setCh(double ch) {
-        this.ch = ch;
-    }
-
-    public double getCw() {
-        return cw;
-    }
-
-    public void setCw(double cw) {
-        this.cw = cw;
-    }
-
-    public double getCd() {
-        return cd;
-    }
-
-    public void setCd(double cd) {
-        this.cd = cd;
-    }
-
-    public double getCost_t() {
+    public double getCostT() {
         return costT;
     }
 
-    public void setCost_t(double costT) {
+    public void setCostT(double costT) {
         this.costT = costT;
     }
 
@@ -99,12 +59,35 @@ public class Cell {
         this.maxWeight = maxWeight;
     }
 
-    public int getIsUsed() {
-        return isUsed;
+    public int getIsFull() {
+        return isFull;
     }
 
-    public void setIsUsed(int isUsed) {
-        this.isUsed = isUsed;
+    public void setIsFull(int isFull) {
+        this.isFull = isFull;
     }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public int getRestNum() {
+        return restNum;
+    }
+
+    public void setRestNum(int restNum) {
+        this.restNum = restNum;
+    }
+
+
+    public Cell(){
+
+    }
+
+
 
 }
