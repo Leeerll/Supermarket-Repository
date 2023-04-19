@@ -28,10 +28,10 @@ public class InputService {
 //    private CellMapper cellMapper;
     @Autowired
     private RepositoryMapper repositoryMapper;
-//    @Autowired
-//    private SaveMapper saveMapper;
-//    @Autowired
-//    private LogMapper logMapper;
+    @Autowired
+    private SaveMapper saveMapper;
+    @Autowired
+    private LogMapper logMapper;
     private static final Logger logger = LoggerFactory.getLogger(LoadFileController.class);
 
     public void check(List<Map<String,String>> data) throws ParseException {
@@ -106,14 +106,13 @@ public class InputService {
 
     public void callInput(Map<String,String> map) throws ParseException {
 
-
-
         // (1)对Species表的操作
         // 如果该种类的货物已存在，则只需更改num，否则需要插入操作
+        String sid = map.get("sid");
         if(speciesMapper.findById((String)(map.get("sid")))!=null){
-            speciesMapper.updateNum((String) map.get("sid"), (Integer) map.get("num"));
+            speciesMapper.updateNum((String) map.get("sid"), Integer.parseInt(map.get("num")));
         }else{
-            Species species = new Species((String) map.get("sid"), (String) map.get("sname"), (String) map.get("stype"), (Integer) map.get("num"), (Double) map.get("weight"), (Double) map.get("sh"), (Double) map.get("sw"), (Double) map.get("sd"), (String) map.get("size"));
+            Species species = new Species((String) map.get("sid"), (String) map.get("sname"), (String) map.get("stype"), Integer.parseInt(map.get("num")), Double.parseDouble(map.get("weight")), Double.parseDouble(map.get("sh")), Double.parseDouble(map.get("sw")), Double.parseDouble(map.get("sd")), (String) map.get("size"));
             speciesMapper.addSpecies(species);
         }
 
@@ -123,9 +122,9 @@ public class InputService {
 
             // (2)对Cargo表的操作
 
-            Cargo cargo = new Cargo((String) map.get("sid"), (String) map.get("sname"), (String) map.get("productionDate"), (Integer) Double.parseDouble(map.get("shelfLife")), (String) map.get("suid"));
+            Cargo cargo = new Cargo((String) map.get("sid"), (String) map.get("sname"), (String) map.get("productionDate"), Integer.parseInt(map.get("shelfLife")), (String) map.get("suid"));
             cargoMapper.addCargo(cargo);
-
+            int cid = cargoMapper.getNewCid();
             // (3)对Cell表的操作
             if(cargoStatusMapper.getSameSpecies(map.get("sid"),map.get("suid"),Id.getRepositoryID()).equals("null")){
                 // 该超市在仓库中无同类型产品
@@ -191,6 +190,13 @@ public class InputService {
                 }
             }
 
+            // (4)对save表的操作
+            Save save = new Save(sid, cid, Id.getRepositoryID(), ceid, map.get("suid"));
+            saveMapper.save(save);
+
+            // (5)对log表的操作
+            Log log = new Log(sid, cid, Id.getRepositoryID(), ceid, map.get("suid"), "input");
+            logMapper.addLog(log);
         }
 
     }

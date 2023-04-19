@@ -13,6 +13,11 @@ public interface CargoMapper {
     // 根据状态查找
 //    List<Cargo> findByState(String state);
 
+    // 获取最后一条记录的cid
+    int getNewCid();
+
+    Cargo findByCid(int cid);
+
     // 添加货物
     boolean addCargo(Cargo cargo);
 }

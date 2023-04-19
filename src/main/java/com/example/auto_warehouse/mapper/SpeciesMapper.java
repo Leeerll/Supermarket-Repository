@@ -28,4 +28,6 @@ public interface SpeciesMapper {
 
     // 添加货物品类
     boolean addSpecies(Species species);
+
+
 }
