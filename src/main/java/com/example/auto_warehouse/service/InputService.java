@@ -41,8 +41,9 @@ public class InputService {
         List<Map<String,String>> inputData = new ArrayList<>();
         // 遍历data
         for(Map map:data){
-            // 检查体积
-            if(Double.parseDouble((String) map.get("sh"))>1200 || Double.parseDouble((String) map.get("sw"))>800 || Double.parseDouble((String) map.get("sd"))>600){
+
+            // 检查体积,长宽高不能超过2m
+            if(Double.parseDouble((String) map.get("sh"))>200 || Double.parseDouble((String) map.get("sw"))>200 || Double.parseDouble((String) map.get("sd"))>200){
                 map.put("reason","体积过大");
                 notInputData.add(map);
             }
@@ -52,7 +53,7 @@ public class InputService {
                 notInputData.add(map);
             }
             // 检查超市是否存在
-            else if(supermarketMapper.findById("10")==null){
+            else if(supermarketMapper.findById((String) map.get("suid"))==null){
                 map.put("reason","超市不存在");
                 notInputData.add(map);
             }
@@ -118,7 +119,7 @@ public class InputService {
 
         for(int i=0; i<Double.parseDouble(map.get("num")); i++) {
             // 这箱货物存放的仓库柜id
-            String ceid;
+            String ceid = "";
 
             // (2)对Cargo表的操作
 
