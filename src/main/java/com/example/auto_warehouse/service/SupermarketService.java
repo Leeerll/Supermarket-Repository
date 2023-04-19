@@ -4,6 +4,7 @@ import com.example.auto_warehouse.bean.Supermarket;
 import com.example.auto_warehouse.bean.User;
 import com.example.auto_warehouse.mapper.SupermarketMapper;
 import com.example.auto_warehouse.mapper.UserMapper;
+import com.example.auto_warehouse.util.Id;
 import com.example.auto_warehouse.util.JsonResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -25,6 +26,7 @@ public class SupermarketService {
             //用户存在 匹配密码
             // 相等
             if(supermarket.getPassword().equals(password)){
+                Id.setShopID(userid);
                 return new JsonResult<>(supermarket,"登录成功!");
             }else {
                 //密码不相等

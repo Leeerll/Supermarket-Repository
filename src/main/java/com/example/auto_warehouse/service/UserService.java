@@ -2,6 +2,7 @@ package com.example.auto_warehouse.service;
 
 import com.example.auto_warehouse.bean.User;
 import com.example.auto_warehouse.mapper.UserMapper;
+import com.example.auto_warehouse.util.Id;
 import com.example.auto_warehouse.util.JsonResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -26,9 +27,10 @@ public class UserService {
         // 检查该用户是否存在
         User user = findById(userid);
         if(user != null){
-            //用户存在 匹配密码
+            // 用户存在 匹配密码
             // 相等
             if(user.getPassword().equals(password)){
+                Id.setRepositoryID(userid);
                 return new JsonResult<>(user,"登录成功!");
             }else {
                 //密码不相等
@@ -44,6 +46,7 @@ public class UserService {
     public JsonResult<User> modify(User user){
         int flag = 0;
         String userid = user.getUid();
+        String type = user.getType();
         //根据是否为空值判断 哪些数据需要修改
         if (user.getName() != null) {
             flag = userMapper.modifyName(userid,user.getName());
