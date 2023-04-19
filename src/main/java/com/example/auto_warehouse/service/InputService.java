@@ -115,7 +115,7 @@ public class InputService {
 
         // (2)对Cargo表的操作
 
-        Cargo cargo = new Cargo((String) map.get("sid"), (String) map.get("sname"), (String) map.get("productionDate"), (Integer) map.get("shelfLife"), (String) map.get("suid"));
+        Cargo cargo = new Cargo((String) map.get("sid"), (String) map.get("sname"), (String) map.get("productionDate"), Integer.parseInt(map.get("shelfLife")), (String) map.get("suid"));
         cargoMapper.addCargo(cargo);
         // (3)对Cell表的操作
         Cell cells = repositoryMapper.getCellAttr(Id.getRepositoryID(),"s");
