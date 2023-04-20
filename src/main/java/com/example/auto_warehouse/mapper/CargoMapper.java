@@ -15,6 +15,11 @@ public interface CargoMapper {
 //    @Select("select * from cargo where state = #{state}")
     List<Cargo> findByState(String state);
 
+    // 获取最后一条记录的cid
+    int getNewCid();
+
+    Cargo findByCid(int cid);
+
     // 添加货物
 //    @Insert(" insert into auto_warehouseDB.cargo (sid, sname, productionDate, shelfLife, inputTime, state, suid)\n" +
 //            "        values (#{cargo.sid}, #{cargo.sname}, #{cargo.productionDate}, #{cargo.shelfLife}, #{cargo.inputTime}, #{cargo.state}, #{cargo.suid})")

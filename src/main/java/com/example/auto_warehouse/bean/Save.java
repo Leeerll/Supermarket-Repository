@@ -2,9 +2,31 @@ package com.example.auto_warehouse.bean;
 
 import jakarta.persistence.Id;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class Save {
+
+
+    @Id
+    private String sid;            // 货物品类id
+    private int cid;               // 货物编号
+    private String rid;            // 仓库id
+    private String ceid;           // 仓库柜id
+    private String suid;           // 超市id
+    private Date inputTime;        // 入库时间
+    private Date outputTime;       // 出库时间
+
+    public Save(String sid, int cid, String rid, String ceid, String suid) throws ParseException {
+        this.sid = sid;
+        this.cid = cid;
+        this.rid = rid;
+        this.ceid = ceid;
+        this.suid = suid;
+        setInputTime();
+    }
+
     public String getSid() {
         return sid;
     }
@@ -49,8 +71,10 @@ public class Save {
         return inputTime;
     }
 
-    public void setInputTime(Date inputTime) {
-        this.inputTime = inputTime;
+    public void setInputTime() throws ParseException {
+        Date now = new Date();
+        SimpleDateFormat tFormat = new SimpleDateFormat("yyyy-MM-dd");
+        this.inputTime = tFormat.parse(tFormat.format(now));
     }
 
     public Date getOutputTime() {
@@ -61,22 +85,4 @@ public class Save {
         this.outputTime = outputTime;
     }
 
-    @Id
-    private String sid;            // 货物品类id
-    private int cid;               // 货物编号
-    private String rid;            // 仓库id
-    private String ceid;           // 仓库柜id
-    private String suid;           // 超市id
-    private Date inputTime;        // 入库时间
-    private Date outputTime;       // 出库时间
-
-    public Save(String sid, int cid, String rid, String ceid, String suid, Date inputTime, Date outputTime) {
-        this.sid = sid;
-        this.cid = cid;
-        this.rid = rid;
-        this.ceid = ceid;
-        this.suid = suid;
-        this.inputTime = inputTime;
-        this.outputTime = outputTime;
-    }
 }
