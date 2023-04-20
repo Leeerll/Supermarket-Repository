@@ -7,6 +7,7 @@ import com.example.auto_warehouse.bean.Repository;
 import com.example.auto_warehouse.mapper.*;
 import com.example.auto_warehouse.util.Id;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -15,6 +16,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+@Service
 public class OutputService {
     @Autowired
     private SpeciesMapper speciesMapper;  // 更改存量

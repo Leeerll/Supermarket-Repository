@@ -9,7 +9,7 @@
 
     <insert id="addSpecies" parameterType="com.example.auto_warehouse.bean.Species">
         insert into auto_warehouseDB.species
-        values(#{species.sid}, #{species.sname}, #{species.stype}, #{species.num}, #{species.weight}, #{species.sh}, #{species.sw}, #{species.sd}, #{species.size});
+        values(#{sid}, #{sname}, #{stype}, #{num}, #{weight}, #{sh}, #{sw}, #{sd}, #{size});
     </insert>
 
     <update id="addNum" parameterType="com.example.auto_warehouse.bean.Species">

@@ -14,18 +14,18 @@
 
     <select id="getNotExpireNum" parameterType="string" resultType="java.lang.Integer">
         select count(cid) from auto_warehouseDB.cargo
-        where sid=#{sid}, suid=#{suid}, state="not expire";
+        where sid=#{sid} and suid=#{suid} and state="not expire";
     </select>
 
     <select id="outputBatch" resultType="com.example.auto_warehouse.bean.Cargo">
         select * from auto_warehouseDB.cargo
-        where outputTime=null
-        order by productionDate acs limit 1;
+        where outputTime is null
+        order by productionDate LIMIT 1;
     </select>
 
     <insert id="addCargo" parameterType="com.example.auto_warehouse.bean.Cargo">
         insert into auto_warehouseDB.cargo (sid, sname, productionDate, shelfLife, inputTime, state, suid)
-        values (#{cargo.sid}, #{cargo.sname}, #{cargo.productionDate}, #{cargo.shelfLife}, #{cargo.inputTime}, #{cargo.state}, #{cargo.suid});
+        values (#{sid}, #{sname}, #{productionDate}, #{shelfLife}, #{inputTime}, #{state}, #{suid});
     </insert>
 
     <update id="updateOutputTime">

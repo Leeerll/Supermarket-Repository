@@ -119,20 +119,21 @@ public class InputService {
             cargoMapper.addCargo(cargo);
             int cid = cargoMapper.getNewCid();
             // (3)对Cell表的操作
-            if(cargoStatusMapper.getSameSpecies(map.get("sid"),map.get("suid"),Id.getRepositoryID()).equals("null")){
+            if(cargoStatusMapper.getSameSpecies(map.get("sid"),map.get("suid"),Id.getRepositoryID())==null){
                 // 该超市在仓库中无同类型产品
                 Cell empty_cell = repositoryMapper.getCellByType("null",Id.getRepositoryID());
                 ceid = empty_cell.getCeid();
-                empty_cell.setType(map.get("type"));
-                if(map.get("type").equals("s")){
+                empty_cell.setType(map.get("size"));
+                if(map.get("size").equals("s")){
                     empty_cell.setRestNum(16-1);
-                }else if(map.get("type").equals("m")){
+                }else if(map.get("size").equals("m")){
                     empty_cell.setRestNum(8-1);
-                }else if(map.get("type").equals("l")){
+                }else if(map.get("size").equals("l")){
                     empty_cell.setRestNum(4-1);
                 }else{
-                    logger.warn("excel表中的type属性不是s/m/l");
+                    logger.warn("excel表中的size属性不是s/m/l");
                 }
+                System.out.println(empty_cell);
                 int result = repositoryMapper.modifyCellTypeAndRestNumAndIsFull(empty_cell);
                 if(result==0){
                     logger.warn("修改空cell属性失败");
@@ -170,15 +171,15 @@ public class InputService {
                     // 同类产品的柜子都满了
                     Cell empty_cell = repositoryMapper.getCellByType("null",Id.getRepositoryID());
                     ceid = empty_cell.getCeid();
-                    empty_cell.setType(map.get("type"));
-                    if(map.get("type").equals("s")){
+                    empty_cell.setType(map.get("size"));
+                    if(map.get("size").equals("s")){
                         empty_cell.setRestNum(16-1);
-                    }else if(map.get("type").equals("m")){
+                    }else if(map.get("size").equals("m")){
                         empty_cell.setRestNum(8-1);
-                    }else if(map.get("type").equals("l")){
+                    }else if(map.get("size").equals("l")){
                         empty_cell.setRestNum(4-1);
                     }else{
-                        logger.warn("excel表中的type属性不是s/m/l");
+                        logger.warn("excel表中的size属性不是s/m/l");
                     }
                     int result = repositoryMapper.modifyCellTypeAndRestNumAndIsFull(empty_cell);
                     if(result==0){

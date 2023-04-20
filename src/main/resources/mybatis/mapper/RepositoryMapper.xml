@@ -14,8 +14,9 @@
     <select id = "getRestNum" resultType="java.lang.Integer">
         select restNum from auto_warehouseDB.repository where rid = #{rid}
     </select>
+
     <update id = "modifyCellTypeAndRestNumAndIsFull" parameterType="com.example.auto_warehouse.bean.Cell">
-        update auto_warehouseDB.cell set type = #{type} and restNum = #{restNum} and isFull = #{isFull} where crid = #{crid} and ceid = #{ceid}
+        update auto_warehouseDB.cell set type = #{type},restNum = #{restNum},isFull = #{isFull} where crid = #{crid} and ceid = #{ceid}
     </update>
 
 
