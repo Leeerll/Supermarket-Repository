@@ -110,12 +110,12 @@ public class InputService {
 
         // (1)对Species表的操作
         // 如果该种类的货物已存在，则只需更改num，否则需要插入操作
-        if(speciesMapper.findById((String)(map.get("sid")))!=null){
-            speciesMapper.updateNum((String) map.get("sid"), (Integer) map.get("num"));
-        }else{
-            Species species = new Species((String) map.get("sid"), (String) map.get("sname"), (String) map.get("stype"), (Integer) map.get("num"), (Double) map.get("weight"), (Double) map.get("sh"), (Double) map.get("sw"), (Double) map.get("sd"), (String) map.get("size"));
-            speciesMapper.addSpecies(species);
-        }
+//        if(speciesMapper.findById((String)(map.get("sid")))!=null){
+//            speciesMapper.updateNum((String) map.get("sid"), (Integer) map.get("num"));
+//        }else{
+//            Species species = new Species((String) map.get("sid"), (String) map.get("sname"), (String) map.get("stype"), (Integer) map.get("num"), (Double) map.get("weight"), (Double) map.get("sh"), (Double) map.get("sw"), (Double) map.get("sd"), (String) map.get("size"));
+//            speciesMapper.addSpecies(species);
+//        }
 
         for(int i=0; i<Double.parseDouble(map.get("num")); i++) {
             // 这箱货物存放的仓库柜id
@@ -123,8 +123,8 @@ public class InputService {
 
             // (2)对Cargo表的操作
 
-            Cargo cargo = new Cargo((String) map.get("sid"), (String) map.get("sname"), (String) map.get("productionDate"), (Integer) Double.parseDouble(map.get("shelfLife")), (String) map.get("suid"));
-            cargoMapper.addCargo(cargo);
+//            Cargo cargo = new Cargo((String) map.get("sid"), (String) map.get("sname"), (String) map.get("productionDate"), (Integer) Double.parseDouble(map.get("shelfLife")), (String) map.get("suid"));
+//            cargoMapper.addCargo(cargo);
 
             // (3)对Cell表的操作
             if(cargoStatusMapper.getSameSpecies(map.get("sid"),map.get("suid"),Id.getRepositoryID()).equals("null")){

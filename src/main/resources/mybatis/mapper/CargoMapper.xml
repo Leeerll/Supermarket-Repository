@@ -7,4 +7,24 @@
         insert into auto_warehouseDB.cargo (sid, sname, productionDate, shelfLife, inputTime, state, suid)
         values (#{cargo.sid}, #{cargo.sname}, #{cargo.productionDate}, #{cargo.shelfLife}, #{cargo.inputTime}, #{cargo.state}, #{cargo.suid});
     </insert>
+
+    <select id="findByState" parameterType="com.example.auto_warehouse.bean.Cargo">
+        select * from auto_warehouseDB.cargo where state = #{state};
+    </select>
+
+    <select id="findBySid" parameterType="com.example.auto_warehouse.bean.Cargo">
+        select * from auto_warehouseDB.cargo where sid = #{sid};
+    </select>
+
+    <select id="findByInputTime" parameterType="com.example.auto_warehouse.bean.Cargo">
+        select * from auto_warehouseDB.cargo where inputTime = #{inputTime};
+    </select>
+
+    <select id="findByOutputTime" parameterType="com.example.auto_warehouse.bean.Cargo">
+        select * from cargo where outputTime = #{outTime};
+    </select>
+
+    <select id="finfByCid" parameterType="com.example.auto_warehouse.bean.Cargo">
+        select * from cargo where cid = #{cid};
+    </select>
 </mapper>
