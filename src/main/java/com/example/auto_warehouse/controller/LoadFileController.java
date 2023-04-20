@@ -41,8 +41,8 @@ public class LoadFileController {
 
 
     @PostMapping("/importFileOutput")
-    public JsonResult<String> importData_output(HttpServletRequest request) throws IOException {
-        MultipartFile file = ((MultipartHttpServletRequest)request).getFile("file");
+    public JsonResult<String> importData_output(MultipartFile file) throws IOException {
+        //MultipartFile file = ((MultipartHttpServletRequest)request).getFile("file");
         if (file == null) {
             return new JsonResult<>("0","文件为空，上传失败");
         }
