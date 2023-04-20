@@ -37,8 +37,6 @@ public class InputService {
     public void check(List<Map<String,String>> data) throws ParseException {
         // 不能入库的数据
         List<Map<String,String>> notInputData = new ArrayList<>();
-        // 能入库的数据
-        List<Map<String,String>> inputData = new ArrayList<>();
         // 遍历data
         for(Map map:data){
 
@@ -63,7 +61,6 @@ public class InputService {
                 notInputData.add(map);
             }
             else {
-                inputData.add(map);
                 callInput(map);
             }
         }
@@ -71,10 +68,6 @@ public class InputService {
         if(notInputData.size()>0){
             notInput(notInputData);
         }
-//        // 针对能入库的货物
-//        if(inputData.size()>0){
-//            callInput(inputData);
-//        }
     }
     public List<NotInput> allNotInput(){
         return cargoStatusMapper.allNotInput();
@@ -111,7 +104,7 @@ public class InputService {
         // 如果该种类的货物已存在，则只需更改num，否则需要插入操作
         String sid = map.get("sid");
         if(speciesMapper.findById((String)(map.get("sid")))!=null){
-            speciesMapper.updateNum((String) map.get("sid"), Integer.parseInt(map.get("num")));
+            speciesMapper.addNum((String) map.get("sid"), Integer.parseInt(map.get("num")));
         }else{
             Species species = new Species((String) map.get("sid"), (String) map.get("sname"), (String) map.get("stype"), Integer.parseInt(map.get("num")), Double.parseDouble(map.get("weight")), Double.parseDouble(map.get("sh")), Double.parseDouble(map.get("sw")), Double.parseDouble(map.get("sd")), (String) map.get("size"));
             speciesMapper.addSpecies(species);

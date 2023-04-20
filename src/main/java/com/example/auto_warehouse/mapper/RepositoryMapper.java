@@ -12,5 +12,11 @@ public interface RepositoryMapper {
     Cell getCellByCeid(String ceid, String crid);
     int modifyCellTypeAndRestNumAndIsFull(Cell cell);
     int getRestNum(String rid);
+    // 在ceid仓库柜中出一个货物
+    void outCargo(String ceid);
+    // 清柜：对cell的更改
+    void clearCargo(String ceid);
+    // 清柜：对repository的更改
+    void updateRepositoryRestNum(String rid);
 
 }

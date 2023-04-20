@@ -4,6 +4,7 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <!--这边的包路径和sql语句需要根据自身的表的写-->
 <mapper namespace="com.example.auto_warehouse.mapper.RepositoryMapper">
+
     <select id = "getCellByType" resultType="com.example.auto_warehouse.bean.Cell">
         select * from auto_warehouseDB.cell where type = #{type} and crid = #{crid} order by ceid LIMIT 1
     </select>
@@ -15,6 +16,19 @@
     </select>
     <update id = "modifyCellTypeAndRestNumAndIsFull" parameterType="com.example.auto_warehouse.bean.Cell">
         update auto_warehouseDB.cell set type = #{type} and restNum = #{restNum} and isFull = #{isFull} where crid = #{crid} and ceid = #{ceid}
+    </update>
+
+
+    <update id="outCargo" parameterType="java.lang.String">
+        update auto_warehouseDB.cell set restNum = restNum+1 where ceid=#{ceid};
+    </update>
+
+    <update id="clearCargo" parameterType="java.lang.String">
+        update auto_warehouseDB.cell set isFull=0, type="", restNum = null where ceid=#{ceid};
+    </update>
+
+    <update id="updateRepositoryRestNum" parameterType="java.lang.String">
+        update auto_warehouseDB.repository set restNum=restNum+1 where rid=#{rid};
     </update>
 
 </mapper>
