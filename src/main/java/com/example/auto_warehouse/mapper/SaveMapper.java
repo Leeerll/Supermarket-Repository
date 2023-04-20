@@ -1,9 +1,11 @@
 package com.example.auto_warehouse.mapper;
 
 import com.example.auto_warehouse.bean.Save;
+import org.apache.ibatis.annotations.Mapper;
 
 import java.util.Date;
 
+@Mapper
 public interface SaveMapper {
     // 保存一条save记录
     void save(Save save);

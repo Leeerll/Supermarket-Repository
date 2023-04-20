@@ -39,7 +39,6 @@ public class InputService {
         List<Map<String,String>> notInputData = new ArrayList<>();
         // 遍历data
         for(Map map:data){
-
             // 检查体积,长宽高不能超过2m
             if(Double.parseDouble((String) map.get("sh"))>200 || Double.parseDouble((String) map.get("sw"))>200 || Double.parseDouble((String) map.get("sd"))>200){
                 map.put("reason","体积过大");
@@ -116,7 +115,7 @@ public class InputService {
 
             // (2)对Cargo表的操作
 
-            Cargo cargo = new Cargo((String) map.get("sid"), (String) map.get("sname"), (String) map.get("productionDate"), Integer.parseInt(map.get("shelfLife")), (String) map.get("suid"));
+            Cargo cargo = new Cargo((String) map.get("sid"), (String) map.get("sname"), (String) map.get("production_date"), Integer.parseInt(map.get("shelf_life")), (String) map.get("suid"));
             cargoMapper.addCargo(cargo);
             int cid = cargoMapper.getNewCid();
             // (3)对Cell表的操作
@@ -153,6 +152,10 @@ public class InputService {
                         if(cell.getRestNum()-1==0){
                             cell.setRestNum(0);
                             cell.setIsFull(1);
+                            int result = repositoryMapper.substractRepositoryRestNum(Id.getRepositoryID());
+                            if(result==0){
+                                logger.warn("修改repository's restNum失败");
+                            }
                         }else{
                             cell.setRestNum(cell.getRestNum()-1);
                         }

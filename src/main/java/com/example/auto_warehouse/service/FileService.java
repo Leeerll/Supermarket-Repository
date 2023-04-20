@@ -3,16 +3,17 @@ package com.example.auto_warehouse.service;
 import com.example.auto_warehouse.controller.LoadFileController;
 import com.example.auto_warehouse.util.ExcelMap;
 import jakarta.servlet.http.HttpServletRequest;
+import org.apache.poi.ss.usermodel.DateUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.*;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.text.DateFormat;
+import java.text.NumberFormat;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
@@ -59,9 +60,13 @@ public class FileService {
 
             // 声明变量，用于存储数据
             List<Map<String, String>> dataList = new ArrayList<>();
+            NumberFormat nf = NumberFormat.getInstance();
 
             // 遍历行
             for (Row row : sheet) {
+                if(row== sheet.getRow(0)){
+                    continue;
+                }
                 // 声明一行数据的 map
                 Map<String, String> rowData = new HashMap<>();
 
@@ -74,7 +79,14 @@ public class FileService {
                             value = cell.getStringCellValue();
                             break;
                         case NUMERIC:
-                            value = String.valueOf(cell.getNumericCellValue());
+                            if (DateUtil.isCellDateFormatted(cell)) {
+                                Date date = cell.getDateCellValue();
+                                DateFormat formater = new SimpleDateFormat("yyyy-MM-dd");
+                                value = formater.format(date);
+                            }else{
+                                value = nf.format(cell.getNumericCellValue());
+                                value = value.replace(",","");
+                            }
                             break;
                         case BOOLEAN:
                             value = String.valueOf(cell.getBooleanCellValue());

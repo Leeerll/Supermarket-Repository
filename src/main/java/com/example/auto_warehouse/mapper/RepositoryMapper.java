@@ -18,5 +18,6 @@ public interface RepositoryMapper {
     void clearCargo(String ceid);
     // 清柜：对repository的更改
     void updateRepositoryRestNum(String rid);
+    int substractRepositoryRestNum(String rid);
 
 }
