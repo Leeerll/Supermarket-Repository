@@ -14,8 +14,9 @@
     <select id = "getSameSpecies" resultType="java.lang.String">
         select sid from auto_warehouseDB.save where sid = #{sid} and suid = #{suid} and rid = #{rid} order by sid LIMIT 1
     </select>
+
     <select id = "getSameSpeciesAllCeid" resultType="com.example.auto_warehouse.bean.Save">
-        select ceid from auto_warehouseDB.save where sid = #{sid} and suid = #{suid} and rid = #{rid}
+        select * from auto_warehouseDB.save where sid = #{sid} and suid = #{suid} and rid = #{rid}
     </select>
 
 </mapper>

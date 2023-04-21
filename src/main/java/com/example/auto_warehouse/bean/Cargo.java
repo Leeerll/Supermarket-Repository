@@ -20,7 +20,7 @@ public class Cargo {
     private int shelfLife;           // 货物保质期
     private Date inputTime;        // 货物入库时间
     private Date outputTime;       // 货物出库时间
-    private String state;             // 状态
+    private String state;          // 定时更新状态（过期或未过期）
     private String suid;             // 关联超市
 
     public Cargo(String sid, String sname, String productionDate, int shelfLife, String suid) throws ParseException {

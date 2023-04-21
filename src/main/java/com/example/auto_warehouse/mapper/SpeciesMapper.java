@@ -23,9 +23,14 @@ public interface SpeciesMapper {
 
 
 
-    // 更改货物存货
-    boolean updateNum(String sid, int newNum);
+    // 入库：更改货物存货
+    boolean addNum(String sid, int newNum);
 
     // 添加货物品类
     boolean addSpecies(Species species);
+
+    // 出库：减少货物存货
+    boolean reduceNum(String sid, int newNum);
+
+
 }

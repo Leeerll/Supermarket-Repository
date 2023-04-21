@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.auto_warehouse.mapper.RuleMapper">
+    <select id="getRule" resultType="com.example.auto_warehouse.bean.Rule">
+        select * from auto_warehouseDB.rule;
+    </select>
+    <update id="setRuleExport" parameterType="com.example.auto_warehouse.bean.Rule">
+        update auto_warehouseDB.rule set export = #{export};
+    </update>
+    <update id="setRuleDispatch" parameterType="com.example.auto_warehouse.bean.Rule">
+        update auto_warehouseDB.rule set dispatch = #{dispatch};
+    </update>
+</mapper>
