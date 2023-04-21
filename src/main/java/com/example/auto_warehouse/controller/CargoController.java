@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Date;
 
 @RestController
 @RequestMapping("/cargo")
@@ -26,15 +27,23 @@ public class CargoController {
         String stype = map.get("stype");
         List<Cargo> result = cargoMapper.findByStype(stype);
         List<Map<String,String>> list = new ArrayList<>();
-        String pattern = "yyyy-MM-dd";
+        String pattern = "yyyy年MM月dd日";
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
         for(Cargo c:result){
             Map<String,String> stypemap = new HashMap<>();
             stypemap.put("stype",stype);
             stypemap.put("Sid",c.getSid());
             stypemap.put("cid",String.valueOf(c.getCid()));
-//            stypemap.put("input_time",simpleDateFormat.format(c.getInputTime()));
-//            stypemap.put("output_time",simpleDateFormat.format(c.getOutput_time()));
+            if(c.getInputTime()==null){
+                stypemap.put("input_time"," ");
+            }else{
+                stypemap.put("input_time",simpleDateFormat.format(c.getInputTime()));
+            }
+            if(c.getOutputTime()==null){
+                stypemap.put("output_time"," ");
+            }else{
+                stypemap.put("output_time",simpleDateFormat.format(c.getOutput_time()));
+            }
             stypemap.put("suid",c.getSuid());
             list.add(stypemap);
         }
