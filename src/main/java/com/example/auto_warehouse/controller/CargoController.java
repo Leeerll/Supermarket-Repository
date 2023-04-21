@@ -1,12 +1,11 @@
 package com.example.auto_warehouse.controller;
 
+import com.example.auto_warehouse.bean.Cargo;
 import com.example.auto_warehouse.bean.NotInput;
+import com.example.auto_warehouse.mapper.CargoMapper;
 import com.example.auto_warehouse.service.InputService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -19,8 +18,36 @@ import java.util.Map;
 public class CargoController {
     @Autowired
     private InputService inputService;
+    @Autowired
+    private CargoMapper cargoMapper;
 
+    @PostMapping("/findByStype")
+    public List<Map<String,String>> findByStype(@RequestBody Map<String,String> map){
+        String stype = map.get("stype");
+        List<Cargo> result = cargoMapper.findByStype(stype);
+        List<Map<String,String>> list = new ArrayList<>();
+        String pattern = "yyyy-MM-dd";
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
+        for(Cargo c:result){
+            Map<String,String> stypemap = new HashMap<>();
+            stypemap.put("stype",stype);
+            stypemap.put("Sid",c.getSid());
+            stypemap.put("cid",String.valueOf(c.getCid()));
+//            stypemap.put("input_time",simpleDateFormat.format(c.getInputTime()));
+//            stypemap.put("output_time",simpleDateFormat.format(c.getOutput_time()));
+            stypemap.put("suid",c.getSuid());
+            list.add(stypemap);
+        }
+        return list;
+    }
 
+    @PostMapping("/findByCid")
+    public List<Cargo> findByCid(@RequestBody Map<String,String> map){
+        String cid = map.get("cid");
+        int cid_int = Integer.parseInt(cid);
+        List<Cargo> result = cargoMapper.finfByCid(cid_int);
+        return result;
+    }
 
     @RequestMapping("/show_notInput")
     @ResponseBody
@@ -43,7 +70,4 @@ public class CargoController {
         }
         return list;
     }
-
-
-
 }
