@@ -5,6 +5,15 @@
 <mapper namespace="com.example.auto_warehouse.mapper.SaveMapper">
     <insert id="save">
         insert into auto_warehouseDB.save (sid, cid, rid, ceid, suid, inputTime)
-        values (#{save.sid}, #{save.cid}, #{save.rid}, #{save.ceid}, #{save.suid}, #{save.inputTime});
+        values (#{sid}, #{cid}, #{rid}, #{ceid}, #{suid}, #{inputTime});
     </insert>
+
+    <select id="getCellByCid" resultType="java.lang.String" parameterType="int">
+        select ceid from auto_warehouseDB.save where cid=#{cid};
+    </select>
+
+    <update id="updateOutputTime">
+        update auto_warehouseDB.save set outputTime=#{outputTime} where cid=#{cid};
+    </update>
+
 </mapper>

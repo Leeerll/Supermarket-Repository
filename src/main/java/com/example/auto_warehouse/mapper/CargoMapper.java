@@ -25,6 +25,16 @@ public interface CargoMapper {
 //            "        values (#{cargo.sid}, #{cargo.sname}, #{cargo.productionDate}, #{cargo.shelfLife}, #{cargo.inputTime}, #{cargo.state}, #{cargo.suid})")
     boolean addCargo(Cargo cargo);
 
+    // 未过期的货物存量
+    int getNotExpireNum(String sid, String suid);
+
+    // 未出库、现在还未过期、但最近要过期的
+    List<Cargo> outputBatch();
+
+    // 出库时更新出库时间
+    void updateOutputTime(int cid, Date outputTime);
+
+
     //根据货物品类查找
 //    @Select("select * from cargo where sid = #{sid}")
     List<Cargo> findBySid(String sid);

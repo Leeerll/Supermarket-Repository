@@ -37,11 +37,8 @@ public class InputService {
     public void check(List<Map<String,String>> data) throws ParseException {
         // 不能入库的数据
         List<Map<String,String>> notInputData = new ArrayList<>();
-        // 能入库的数据
-        List<Map<String,String>> inputData = new ArrayList<>();
         // 遍历data
         for(Map map:data){
-
             // 检查体积,长宽高不能超过2m
             if(Double.parseDouble((String) map.get("sh"))>200 || Double.parseDouble((String) map.get("sw"))>200 || Double.parseDouble((String) map.get("sd"))>200){
                 map.put("reason","体积过大");
@@ -63,7 +60,6 @@ public class InputService {
                 notInputData.add(map);
             }
             else {
-                inputData.add(map);
                 callInput(map);
             }
         }
@@ -71,10 +67,6 @@ public class InputService {
         if(notInputData.size()>0){
             notInput(notInputData);
         }
-//        // 针对能入库的货物
-//        if(inputData.size()>0){
-//            callInput(inputData);
-//        }
     }
     public List<NotInput> allNotInput(){
         return cargoStatusMapper.allNotInput();
@@ -111,7 +103,7 @@ public class InputService {
         // 如果该种类的货物已存在，则只需更改num，否则需要插入操作
         String sid = map.get("sid");
         if(speciesMapper.findById((String)(map.get("sid")))!=null){
-            speciesMapper.updateNum((String) map.get("sid"), Integer.parseInt(map.get("num")));
+            speciesMapper.addNum((String) map.get("sid"), Integer.parseInt(map.get("num")));
         }else{
             Species species = new Species((String) map.get("sid"), (String) map.get("sname"), (String) map.get("stype"), Integer.parseInt(map.get("num")), Double.parseDouble(map.get("weight")), Double.parseDouble(map.get("sh")), Double.parseDouble(map.get("sw")), Double.parseDouble(map.get("sd")), (String) map.get("size"));
             speciesMapper.addSpecies(species);
@@ -123,24 +115,25 @@ public class InputService {
 
             // (2)对Cargo表的操作
 
-            Cargo cargo = new Cargo((String) map.get("sid"), (String) map.get("sname"), (String) map.get("productionDate"), Integer.parseInt(map.get("shelfLife")), (String) map.get("suid"));
+            Cargo cargo = new Cargo((String) map.get("sid"), (String) map.get("sname"), (String) map.get("production_date"), Integer.parseInt(map.get("shelf_life")), (String) map.get("suid"));
             cargoMapper.addCargo(cargo);
             int cid = cargoMapper.getNewCid();
             // (3)对Cell表的操作
-            if(cargoStatusMapper.getSameSpecies(map.get("sid"),map.get("suid"),Id.getRepositoryID()).equals("null")){
+            if(cargoStatusMapper.getSameSpecies(map.get("sid"),map.get("suid"),Id.getRepositoryID())==null){
                 // 该超市在仓库中无同类型产品
                 Cell empty_cell = repositoryMapper.getCellByType("null",Id.getRepositoryID());
                 ceid = empty_cell.getCeid();
-                empty_cell.setType(map.get("type"));
-                if(map.get("type").equals("s")){
+                empty_cell.setType(map.get("size"));
+                if(map.get("size").equals("s")){
                     empty_cell.setRestNum(16-1);
-                }else if(map.get("type").equals("m")){
+                }else if(map.get("size").equals("m")){
                     empty_cell.setRestNum(8-1);
-                }else if(map.get("type").equals("l")){
+                }else if(map.get("size").equals("l")){
                     empty_cell.setRestNum(4-1);
                 }else{
-                    logger.warn("excel表中的type属性不是s/m/l");
+                    logger.warn("excel表中的size属性不是s/m/l");
                 }
+                System.out.println(empty_cell);
                 int result = repositoryMapper.modifyCellTypeAndRestNumAndIsFull(empty_cell);
                 if(result==0){
                     logger.warn("修改空cell属性失败");
@@ -160,6 +153,10 @@ public class InputService {
                         if(cell.getRestNum()-1==0){
                             cell.setRestNum(0);
                             cell.setIsFull(1);
+                            int result = repositoryMapper.substractRepositoryRestNum(Id.getRepositoryID());
+                            if(result==0){
+                                logger.warn("修改repository's restNum失败");
+                            }
                         }else{
                             cell.setRestNum(cell.getRestNum()-1);
                         }
@@ -174,15 +171,15 @@ public class InputService {
                     // 同类产品的柜子都满了
                     Cell empty_cell = repositoryMapper.getCellByType("null",Id.getRepositoryID());
                     ceid = empty_cell.getCeid();
-                    empty_cell.setType(map.get("type"));
-                    if(map.get("type").equals("s")){
+                    empty_cell.setType(map.get("size"));
+                    if(map.get("size").equals("s")){
                         empty_cell.setRestNum(16-1);
-                    }else if(map.get("type").equals("m")){
+                    }else if(map.get("size").equals("m")){
                         empty_cell.setRestNum(8-1);
-                    }else if(map.get("type").equals("l")){
+                    }else if(map.get("size").equals("l")){
                         empty_cell.setRestNum(4-1);
                     }else{
-                        logger.warn("excel表中的type属性不是s/m/l");
+                        logger.warn("excel表中的size属性不是s/m/l");
                     }
                     int result = repositoryMapper.modifyCellTypeAndRestNumAndIsFull(empty_cell);
                     if(result==0){
