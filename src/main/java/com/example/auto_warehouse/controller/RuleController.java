@@ -21,7 +21,7 @@ public class RuleController {
     }
 
     // 设置规则
-    @CrossOrigin(origins = "*")
+
     @PostMapping("/setRule")
     public JsonResult setRule(@RequestBody Map<String,ArrayList<String>>map){
 
@@ -37,7 +37,6 @@ public class RuleController {
         }
     }
 
-    @CrossOrigin(origins = "*")
     @GetMapping ("/sendRule")
     public JsonResult <Rule> getRule(){
         Rule rule = ruleService.getRule();
