@@ -2,8 +2,10 @@ package com.example.auto_warehouse.controller;
 
 import com.example.auto_warehouse.bean.Cargo;
 import com.example.auto_warehouse.bean.NotInput;
+import com.example.auto_warehouse.bean.NotOutput;
 import com.example.auto_warehouse.mapper.CargoMapper;
 import com.example.auto_warehouse.service.InputService;
+import com.example.auto_warehouse.service.OutputService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,6 +23,8 @@ public class CargoController {
     private InputService inputService;
     @Autowired
     private CargoMapper cargoMapper;
+    @Autowired
+    private OutputService outputService;
 
     @PostMapping("/findByStype")
     public List<Map<String,String>> findByStype(@RequestBody Map<String,String> map){
@@ -75,6 +79,21 @@ public class CargoController {
             map.put("shelf_life",String.valueOf(notInput.getShelf_life()));
             map.put("suid",notInput.getSuid());
             map.put("reason",notInput.getReason());
+            list.add(map);
+        }
+        return list;
+    }
+    @RequestMapping("/show_notOutput")
+    @ResponseBody
+    public List<Map<String,String>> show_notOutput(){
+        List<Map<String,String>> list = new ArrayList<>();
+        List<NotOutput> list_not = outputService.allNotOutput();
+        for(NotOutput notOutput:list_not){
+            Map<String,String> map = new HashMap<>();
+            map.put("sid",notOutput.getSid());
+            map.put("num",String.valueOf(notOutput.getNum()));
+            map.put("suid",notOutput.getSuid());
+            map.put("reason",notOutput.getReason());
             list.add(map);
         }
         return list;

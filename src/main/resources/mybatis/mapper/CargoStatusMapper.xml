@@ -11,6 +11,14 @@
         insert into auto_warehouseDB.notInput (id,name,type,num,productionDate,shelfLife,suid,reason)
         values(#{id},#{name},#{type},#{num},#{productionDate},#{shelfLife},#{suid},#{reason})
     </insert>
+    <select id = "allNotOutput" resultType="com.example.auto_warehouse.bean.NotOutput">
+        select * from auto_warehouseDB.notOutput
+    </select>
+    <insert id = "addNotOutput" parameterType="com.example.auto_warehouse.bean.NotOutput">
+        insert into auto_warehouseDB.notOutput (sid,num,suid,reason)
+        values(#{sid},#{num},#{suid},#{reason})
+    </insert>
+
     <select id = "getSameSpecies" resultType="java.lang.String">
         select sid from auto_warehouseDB.save where sid = #{sid} and suid = #{suid} and rid = #{rid} order by sid LIMIT 1
     </select>
