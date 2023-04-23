@@ -9,6 +9,7 @@ import com.example.auto_warehouse.service.OutputService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -83,6 +84,7 @@ public class CargoController {
         }
         return list;
     }
+
     @RequestMapping("/show_notOutput")
     @ResponseBody
     public List<Map<String,String>> show_notOutput(){
@@ -98,4 +100,33 @@ public class CargoController {
         }
         return list;
     }
+
+    // 获取还未出库但已过期的货物
+    @RequestMapping("/showExpire")
+    @ResponseBody
+    public List<Map<String,String>> showExpire(){
+        // 更新数据库
+        cargoMapper.updateExpire();
+        List<Map<String,String>> list = new ArrayList<>();
+        List<Cargo> expireCargo = cargoMapper.showExpire();
+        for(Cargo cargo:expireCargo){
+            Map<String,String> map = new HashMap<>();
+            map.put("sid", cargo.getSid());
+            map.put("sname", cargo.getSname());
+            map.put("cid", String.valueOf(cargo.getCid()));
+            DateFormat dateformat= new SimpleDateFormat("yyyy-MM-dd");
+            map.put("productionDate", dateformat.format(cargo.getProductionDate()));
+            map.put("shelfLife", String.valueOf((cargo.getShelfLife())));
+            map.put("inputTime", dateformat.format(cargo.getInputTime()));
+            map.put("outputTime", dateformat.format(cargo.getOutputTime()));
+            map.put("state", cargo.getState());
+            map.put("suid", cargo.getSuid());
+            // 将该cargo货物对应的map添加到list中
+            list.add(map);
+        }
+        return list;
+    }
+
+    // 计算消耗
+
 }

@@ -36,4 +36,13 @@
         update auto_warehouseDB.cargo set outputTime=#{outputTime} where cid=#{cid};
     </update>
 
+    <select id="showExpire" resultType="com.example.auto_warehouse.bean.Cargo">
+        select * from auto_warehouseDB.cargo where state="expire";
+    </select>
+
+    <update id="updateExpire">
+        update auto_warehouseDB.cargo set state="expire"
+        where outputTime is null and TIMESTAMPDIFF(DAY, productionDate, NOW())>=shelfLife;
+    </update>
+
 </mapper>

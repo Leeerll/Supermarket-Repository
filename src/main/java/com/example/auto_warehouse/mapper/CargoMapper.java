@@ -32,4 +32,10 @@ public interface CargoMapper {
     // 出库时更新出库时间
     void updateOutputTime(int cid, Date outputTime);
 
+    // 更新数据库中过期货物
+    void updateExpire();
+
+    // 获取还未出库但已过期的货物
+    List<Cargo> showExpire();
+
 }
