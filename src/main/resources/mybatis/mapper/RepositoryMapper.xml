@@ -35,7 +35,7 @@
         update auto_warehouseDB.repository set restNum=restNum-1 where rid=#{rid};
     </update>
 
-    <select id="rate" resultType="com.example.auto_warehouse.bean.Repository">
+    <select id="rate">
         select * from auto_warehouseDB.repository;
     </select>
 </mapper>

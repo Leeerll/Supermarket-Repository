@@ -22,5 +22,4 @@ public interface RepositoryMapper {
     int substractRepositoryRestNum(String rid);
 
     List<Repository> rate();
-
 }
