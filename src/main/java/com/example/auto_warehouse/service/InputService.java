@@ -59,6 +59,10 @@ public class InputService {
                 map.put("reason", "仓库已满");
                 notInputData.add(map);
             }
+            else if(map.get("stype").equals("易炸品")||map.get("stype").equals("腐蚀品")||map.get("stype").equals("危险品")){
+                map.put("reason", "货物类型无法进入仓库");
+                notInputData.add(map);
+            }
             else {
                 callInput(map);
             }
