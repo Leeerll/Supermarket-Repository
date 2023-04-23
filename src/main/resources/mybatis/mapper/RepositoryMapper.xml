@@ -38,4 +38,9 @@
     <select id="rate">
         select * from auto_warehouseDB.repository;
     </select>
+
+    <select id="selectRateByRid" resultType="com.example.auto_warehouse.bean.Repository">
+        select * from auto_warehouseDB.repository
+        where auto_warehouseDB.repository.rid = #{rid};
+    </select>
 </mapper>

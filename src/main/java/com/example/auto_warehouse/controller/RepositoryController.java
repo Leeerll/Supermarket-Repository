@@ -3,9 +3,7 @@ package com.example.auto_warehouse.controller;
 import com.example.auto_warehouse.bean.Repository;
 import com.example.auto_warehouse.mapper.RepositoryMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -35,6 +33,20 @@ public class RepositoryController {
             stypemap.put("rate",String.valueOf(temp));
             list.add(stypemap);
         }
+        return list;
+    }
+
+    @PostMapping("/selectRateByRid")
+    public List<Map<String,String>> selectRateByRid(@RequestBody Map<String,String> map){
+        String rid = map.get("rid");
+        List<Repository> result = repositoryMapper.selectRateByRid(rid);
+        double temp = 1-((double)result.get(0).getRestNum()/(double)result.get(0).getTotalNum());
+        temp = temp*100;
+        String rate = String.valueOf(temp);
+        List<Map<String,String>> list = new ArrayList<>();
+        Map<String,String> stypemap = new HashMap<>();
+        stypemap.put("takerate",rate);
+        list.add(stypemap);
         return list;
     }
 }

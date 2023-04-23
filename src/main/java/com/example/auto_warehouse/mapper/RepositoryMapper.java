@@ -22,4 +22,7 @@ public interface RepositoryMapper {
     int substractRepositoryRestNum(String rid);
 
     List<Repository> rate();
+
+    //通过rid查询占有率
+    List<Repository> selectRateByRid(String rid);
 }
