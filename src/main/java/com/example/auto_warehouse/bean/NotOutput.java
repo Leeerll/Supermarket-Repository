@@ -8,10 +8,26 @@ import lombok.Data;
 @Entity
 public class NotOutput {
     @Id
+    private int notOutputID;
     private String sid;
     private String suid;
     private int num;
     private String reason;
+    private int isRead;
+
+    public int getNotOutputID() {
+        return notOutputID;
+    }
+
+
+    public int getIsRead() {
+        return isRead;
+    }
+
+    public void setIsRead(int isRead) {
+        this.isRead = isRead;
+    }
+
 
     public NotOutput(String sid, String suid, int num, String reason) {
         this.sid = sid;

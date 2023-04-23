@@ -37,8 +37,8 @@ public class SupermarketController {
     @ResponseBody
     public List<Map<String,String>> get_storage(){
         List<Map<String,String>> list = new ArrayList<>();
-        //List<ShopStorage> list_shopStorage = supermarketMapper.getStorage(Id.getShopID());
-        List<ShopStorage> list_shopStorage = supermarketMapper.getStorage("101");
+        List<ShopStorage> list_shopStorage = supermarketMapper.getStorage(Id.getShopID());
+        //List<ShopStorage> list_shopStorage = supermarketMapper.getStorage("101");
         for(ShopStorage shopStorage:list_shopStorage){
             Map<String,String> map = new HashMap<>();
             map.put("sname",shopStorage.getSname());

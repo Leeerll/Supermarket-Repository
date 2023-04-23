@@ -77,12 +77,11 @@ public class CargoController {
             map.put("type",notInput.getType());
             map.put("num",String.valueOf(notInput.getNum()));
             map.put("production_date", sdf1.format(notInput.getProduction_date()));
-            System.out.println("shelf_life:"+notInput.getShelf_life());
             map.put("shelf_life",String.valueOf(notInput.getShelf_life()));
             map.put("suid",notInput.getSuid());
             map.put("reason",notInput.getReason());
             list.add(map);
-            cargoStatusMapper.modifyIsRead(notInput.getNotInputID());
+            cargoStatusMapper.modifyIsReadInput(notInput.getNotInputID());
         }
         return list;
     }
@@ -98,6 +97,7 @@ public class CargoController {
             map.put("suid",notOutput.getSuid());
             map.put("reason",notOutput.getReason());
             list.add(map);
+            cargoStatusMapper.modifyIsReadOutput(notOutput.getNotOutputID());
         }
         return list;
     }
