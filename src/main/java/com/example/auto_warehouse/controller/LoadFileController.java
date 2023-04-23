@@ -1,6 +1,7 @@
 package com.example.auto_warehouse.controller;
 
 import com.example.auto_warehouse.service.FileService;
+import com.example.auto_warehouse.service.FileService;
 import com.example.auto_warehouse.util.JsonResult;
 import jakarta.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
@@ -23,10 +24,10 @@ public class LoadFileController {
 
     @PostMapping("/importFileInput")
     public JsonResult<String> importData_input(MultipartFile file) throws IOException {
-        //MultipartFile file = ((MultipartHttpServletRequest)request).getFile("file");
-        if (file == null) {
-            return new JsonResult<>("0","文件为空，上传失败");
-        }
+//        MultipartFile file = ((MultipartHttpServletRequest)request).getFile("file");
+//        if (file == null) {
+//            return new JsonResult<>("0","文件为空，上传失败");
+//        }
 
         //读取excel，形成list<map>
         boolean result = fileService.excelToListMap(file,"input");
