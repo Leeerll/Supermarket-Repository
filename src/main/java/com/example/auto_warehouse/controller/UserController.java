@@ -5,6 +5,7 @@ import com.example.auto_warehouse.service.UserService;
 import com.example.auto_warehouse.util.JsonResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.CrossOrigin;
 
 import java.util.Map;
 
@@ -15,7 +16,6 @@ public class UserController {
     private UserService userService;
 
     //登录部分及相关函数，还需要根据用户type分别再写个函数/或者加个参数type判断（未完成）
-
 
     @PostMapping("/login")
     public JsonResult<User> login(@RequestBody Map<String,String> map){

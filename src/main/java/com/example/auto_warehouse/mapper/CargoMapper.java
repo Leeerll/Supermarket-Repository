@@ -18,7 +18,8 @@ public interface CargoMapper {
     // 获取最后一条记录的cid
     int getNewCid();
 
-    Cargo findByCid(int cid);
+    List<Cargo> findByStype(String stype);
+    List<Cargo> finfByCid(int cid);
 
     // 添加货物
 //    @Insert(" insert into auto_warehouseDB.cargo (sid, sname, productionDate, shelfLife, inputTime, state, suid)\n" +

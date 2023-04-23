@@ -16,7 +16,6 @@ public class SupermarketController {
     @Autowired
     private SupermarketService SupermarketService;
 
-    @CrossOrigin(origins = "*")
     @PostMapping("/login")
     public JsonResult<Supermarket> login(@RequestBody Map<String,String> map){
         String uid = map.get("uid");
