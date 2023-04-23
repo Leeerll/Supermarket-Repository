@@ -26,12 +26,38 @@ public class AutoWarehouseApplication {
 
         ApplicationContext applicationContext2 = SpringContextUtil.getApplicationContext();
         outputService = applicationContext2.getBean(OutputService.class);
+        inputService = applicationContext2.getBean(InputService.class);
+
 
         // 创建一个入库监听定时器
-        Timer timer1 = new Timer();
-
+        Timer timer = new Timer();
         // 定义一个计划任务，每秒钟检查一次队列是否为空，并输出结果
         TimerTask task = new TimerTask() {
+            @Override
+            public void run() {
+                if (ExcelMap.input_map_queue.isEmpty()) {
+                    //System.out.println("入库队列为空");
+                } else {
+                    System.out.println("入库队列不为空");
+                    Id.setRepositoryID("1");
+                    try {
+                        inputService.check(ExcelMap.input_map_queue.getFirst());
+                    } catch (ParseException e) {
+                        throw new RuntimeException(e);
+                    }
+                    ExcelMap.input_map_queue.removeFirst();
+                }
+            }
+        };
+        // 每秒钟执行一次计划任务，立即启动
+        timer.scheduleAtFixedRate(task, 0, 1000);
+
+
+
+        // 创建一个出库监听定时器
+        Timer timer1 = new Timer();
+        // 定义一个计划任务，每秒钟检查一次队列是否为空，并输出结果
+        TimerTask task1 = new TimerTask() {
             @Override
             public void run() {
                 if (ExcelMap.output_map_queue.isEmpty()) {
@@ -48,9 +74,8 @@ public class AutoWarehouseApplication {
                 }
             }
         };
-
         // 每秒钟执行一次计划任务，立即启动
-        timer1.scheduleAtFixedRate(task, 0, 1000);
+        timer1.scheduleAtFixedRate(task1, 0, 1000);
 
 
 

@@ -4,14 +4,19 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <!--这边的包路径和sql语句需要根据自身的表的写-->
 <mapper namespace="com.example.auto_warehouse.mapper.CargoStatusMapper">
-
     <select id = "allNotInput" resultType="com.example.auto_warehouse.bean.NotInput">
         select * from auto_warehouseDB.notInput
     </select>
-
     <insert id = "addNotInput" parameterType="com.example.auto_warehouse.bean.NotInput">
         insert into auto_warehouseDB.notInput (id,name,type,num,productionDate,shelfLife,suid,reason)
         values(#{id},#{name},#{type},#{num},#{productionDate},#{shelfLife},#{suid},#{reason})
+    </insert>
+    <select id = "allNotOutput" resultType="com.example.auto_warehouse.bean.NotOutput">
+        select * from auto_warehouseDB.notOutput
+    </select>
+    <insert id = "addNotOutput" parameterType="com.example.auto_warehouse.bean.NotOutput">
+        insert into auto_warehouseDB.notOutput (sid,num,suid,reason)
+        values(#{sid},#{num},#{suid},#{reason})
     </insert>
 
     <select id = "getSameSpecies" resultType="java.lang.String">

@@ -1,11 +1,11 @@
 package com.example.auto_warehouse.service;
 
-import com.example.auto_warehouse.bean.Cargo;
-import com.example.auto_warehouse.bean.Cell;
-import com.example.auto_warehouse.bean.Log;
-import com.example.auto_warehouse.bean.Repository;
+import com.example.auto_warehouse.bean.*;
+import com.example.auto_warehouse.controller.LoadFileController;
 import com.example.auto_warehouse.mapper.*;
 import com.example.auto_warehouse.util.Id;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -32,6 +32,10 @@ public class OutputService {
     private LogMapper logMapper;
     @Autowired
     private SupermarketMapper supermarketMapper;
+    @Autowired
+    private CargoStatusMapper cargoStatusMapper;
+
+    private static final Logger logger = LoggerFactory.getLogger(LoadFileController.class);
 
     // 出库data：sid、num、suid
     public void check(List<Map<String,String>> data) throws ParseException {
@@ -67,7 +71,26 @@ public class OutputService {
 
     }
 
-    private void notOutput(List<Map<String, String>> notOutputData) {
+    private void notOutput(List<Map<String, String>> list) {
+        int insert_num = 0;
+        try {
+            for(int i=0;i<list.size();i++){
+                String sid = list.get(i).get("sid");
+                int num = Integer.parseInt(list.get(i).get("num"));
+                String suid = list.get(i).get("suid");
+                String reason = list.get(i).get("reason");
+                NotOutput notOutput = new NotOutput(sid,suid,num,reason);
+                insert_num += cargoStatusMapper.addNotOutput(notOutput);
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        if(insert_num!=list.size()){
+            logger.warn("不能出库数据未完全写入");
+        }
+    }
+    public List<NotOutput> allNotOutput(){
+        return cargoStatusMapper.allNotOutput();
     }
 
     private void callOutput(Map<String,String> map) throws ParseException {
