@@ -46,10 +46,10 @@ public class CargoController {
             }else{
                 stypemap.put("input_time",simpleDateFormat.format(c.getInputTime()));
             }
-            if(c.getOutput_time()==null){
+            if(c.getOutputTime()==null){
                 stypemap.put("output_time"," ");
             }else{
-                stypemap.put("output_time",simpleDateFormat.format(c.getOutput_time()));
+                stypemap.put("output_time",simpleDateFormat.format(c.getOutputTime()));
             }
             stypemap.put("suid",c.getSuid());
             list.add(stypemap);

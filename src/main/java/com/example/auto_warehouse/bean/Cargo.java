@@ -20,6 +20,15 @@ public class Cargo {
     private Date productionDate;   // 货物生产日期
     private int shelfLife;           // 货物保质期
     private Date inputTime;        // 货物入库时间
+
+    public Date getOutputTime() {
+        return outputTime;
+    }
+
+    public void setOutputTime(Date outputTime) {
+        this.outputTime = outputTime;
+    }
+
     private Date outputTime;       // 货物出库时间
     private String state;          // 定时更新状态（过期或未过期）
     private String suid;             // 关联超市
@@ -59,7 +68,7 @@ public class Cargo {
     }
 
 
-    public Date getProduction_date() {
+    public Date getProductionDate() {
         return productionDate;
     }
 
@@ -86,13 +95,7 @@ public class Cargo {
         this.inputTime = tFormat.parse(tFormat.format(now));
     }
 
-    public Date getOutput_time() {
-        return outputTime;
-    }
 
-    public void setOutput_time(Date outputTime) {
-        this.outputTime = outputTime;
-    }
 
     public String getState() {
         return state;
