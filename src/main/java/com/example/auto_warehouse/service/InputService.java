@@ -64,6 +64,7 @@ public class InputService {
                 notInputData.add(map);
             }
             else {
+
                 callInput(map);
             }
         }

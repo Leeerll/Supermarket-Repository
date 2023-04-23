@@ -22,4 +22,7 @@ public interface RepositoryMapper {
     int substractRepositoryRestNum(String rid);
 
     List<Repository> rate();
+
+    // 更新income
+    void updateIncome(String rid, double money);
 }

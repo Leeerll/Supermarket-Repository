@@ -3,9 +3,7 @@ package com.example.auto_warehouse.controller;
 import com.example.auto_warehouse.bean.Repository;
 import com.example.auto_warehouse.mapper.RepositoryMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -37,4 +35,16 @@ public class RepositoryController {
         }
         return list;
     }
+
+    // 更新仓库计算消耗
+    @PostMapping("/checkIncome")
+    public void checkIncome(@RequestParam("rid") String rid, @RequestParam("money") double money){
+        repositoryMapper.updateIncome(rid, money);
+    }
+
+
+
+    //    public void checkIncome(@RequestBody Map<String,String> map){
+    //        repositoryMapper.updateIncome(map.get("rid"), Double.parseDouble(map.get("money")));
+
 }
