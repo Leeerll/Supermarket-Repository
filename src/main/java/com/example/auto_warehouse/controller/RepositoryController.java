@@ -30,8 +30,9 @@ public class RepositoryController {
         for(Repository r:repositories){
             Map<String, String> stypemap = new HashMap<>();
             stypemap.put("rid",r.getRid());
-            int temp=1-(r.getRestNum()/r.getTotalNum());
-            stypemap.put("rate",Integer.toString(temp));
+            double temp=1-((double)r.getRestNum()/(double)r.getTotalNum());
+            temp = temp*100;
+            stypemap.put("rate",String.valueOf(temp));
             list.add(stypemap);
         }
         return list;
