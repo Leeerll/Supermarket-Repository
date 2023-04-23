@@ -6,10 +6,11 @@ import lombok.Data;
 
 import java.util.Date;
 
-@Data
+
 @Entity
 public class NotInput {
     @Id
+    private int notInputID;
     private String id;
     private String name;
     private String type;
@@ -18,6 +19,29 @@ public class NotInput {
     private int shelfLife;
     private String suid;
     private String reason;
+    private int isRead;
+    public int getNotInputID() {
+        return notInputID;
+    }
+    public NotInput(String id, String name, String type, int num, Date productionDate, int shelfLife, String suid, String reason) {
+        this.id = id;
+        this.name = name;
+        this.type = type;
+        this.num = num;
+        this.productionDate = productionDate;
+        this.shelfLife = shelfLife;
+        this.suid = suid;
+        this.reason = reason;
+    }
+
+    public int getIsRead() {
+        return isRead;
+    }
+
+    public void setIsRead(int isRead) {
+        this.isRead = isRead;
+    }
+
 
     public String getReason() {
         return reason;
@@ -88,17 +112,6 @@ public class NotInput {
         this.suid = suid;
     }
 
-
-    public NotInput(String id, String name, String type, int num, Date productionDate, int shelfLife, String suid, String reason) {
-        this.id = id;
-        this.name = name;
-        this.type = type;
-        this.num = num;
-        this.productionDate = productionDate;
-        this.shelfLife = shelfLife;
-        this.suid = suid;
-        this.reason = reason;
-    }
 
 
 }

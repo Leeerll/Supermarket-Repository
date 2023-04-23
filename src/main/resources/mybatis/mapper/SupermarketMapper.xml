@@ -4,9 +4,16 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <!--这边的包路径和sql语句需要根据自身的表的写-->
 <mapper namespace="com.example.auto_warehouse.mapper.SupermarketMapper">
+    <resultMap type="com.example.auto_warehouse.bean.ShopStorage" id="ShopStorageResult">
+        <result property="sname" column="sname" />
+        <result property="storageNum" column="storageNum" />
+    </resultMap>
 
     <select id = "findById" resultType="com.example.auto_warehouse.bean.Supermarket">
         select * from auto_warehouseDB.supermarket where suid = #{suid}
+    </select>
+    <select id = "getStorage" parameterType="java.lang.String" resultMap="ShopStorageResult">
+        select sname,count(*) as storageNum from auto_warehouseDB.save,auto_warehouseDB.species where save.sid=species.sid and suid = #{suid} group by sname
     </select>
 
 </mapper>

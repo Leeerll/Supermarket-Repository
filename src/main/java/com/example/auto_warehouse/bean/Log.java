@@ -1,11 +1,14 @@
 package com.example.auto_warehouse.bean;
 
+import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import lombok.Data;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+@Entity
 public class Log {
     @Id
     private String sid;            // 货物品类id
@@ -24,6 +27,9 @@ public class Log {
         this.suid = suid;
         setRecordTime();
         this.logContent = logContent;
+    }
+    public Log(){
+
     }
     public void setRecordTime() throws ParseException {
         Date now = new Date();

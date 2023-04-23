@@ -4,6 +4,7 @@ import com.example.auto_warehouse.bean.Cargo;
 import com.example.auto_warehouse.bean.NotInput;
 import com.example.auto_warehouse.bean.NotOutput;
 import com.example.auto_warehouse.mapper.CargoMapper;
+import com.example.auto_warehouse.mapper.CargoStatusMapper;
 import com.example.auto_warehouse.service.InputService;
 import com.example.auto_warehouse.service.OutputService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +27,44 @@ public class CargoController {
     private CargoMapper cargoMapper;
     @Autowired
     private OutputService outputService;
+    @Autowired
+    private CargoStatusMapper cargoStatusMapper;
+
+    @PostMapping("/findByStype")
+    public List<Map<String,String>> findByStype(@RequestBody Map<String,String> map){
+        String stype = map.get("stype");
+        List<Cargo> result = cargoMapper.findByStype(stype);
+        List<Map<String,String>> list = new ArrayList<>();
+        String pattern = "yyyy年MM月dd日";
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
+        for(Cargo c:result){
+            Map<String,String> stypemap = new HashMap<>();
+            stypemap.put("stype",stype);
+            stypemap.put("Sid",c.getSid());
+            stypemap.put("cid",String.valueOf(c.getCid()));
+            if(c.getInputTime()==null){
+                stypemap.put("input_time"," ");
+            }else{
+                stypemap.put("input_time",simpleDateFormat.format(c.getInputTime()));
+            }
+            if(c.getOutputTime()==null){
+                stypemap.put("output_time"," ");
+            }else{
+                stypemap.put("output_time",simpleDateFormat.format(c.getOutput_time()));
+            }
+            stypemap.put("suid",c.getSuid());
+            list.add(stypemap);
+        }
+        return list;
+    }
+
+    @PostMapping("/findByCid")
+    public List<Cargo> findByCid(@RequestBody Map<String,String> map){
+        String cid = map.get("cid");
+        int cid_int = Integer.parseInt(cid);
+        List<Cargo> result = cargoMapper.finfByCid(cid_int);
+        return result;
+    }
 
     @RequestMapping("/show_notInput")
     @ResponseBody
@@ -40,11 +79,11 @@ public class CargoController {
             map.put("type",notInput.getType());
             map.put("num",String.valueOf(notInput.getNum()));
             map.put("production_date", sdf1.format(notInput.getProduction_date()));
-            System.out.println("shelf_life:"+notInput.getShelf_life());
             map.put("shelf_life",String.valueOf(notInput.getShelf_life()));
             map.put("suid",notInput.getSuid());
             map.put("reason",notInput.getReason());
             list.add(map);
+            cargoStatusMapper.modifyIsReadInput(notInput.getNotInputID());
         }
         return list;
     }
@@ -61,6 +100,7 @@ public class CargoController {
             map.put("suid",notOutput.getSuid());
             map.put("reason",notOutput.getReason());
             list.add(map);
+            cargoStatusMapper.modifyIsReadOutput(notOutput.getNotOutputID());
         }
         return list;
     }
