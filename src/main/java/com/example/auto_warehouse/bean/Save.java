@@ -17,6 +17,9 @@ public class Save {
     private String suid;           // 超市id
     private Date inputTime;        // 入库时间
     private Date outputTime;       // 出库时间
+    private String stype;           //货物类型
+
+    private String sname;          //货物名称
 
     public Save(String sid, int cid, String rid, String ceid, String suid) throws ParseException {
         this.sid = sid;
@@ -25,6 +28,14 @@ public class Save {
         this.ceid = ceid;
         this.suid = suid;
         setInputTime();
+    }
+
+    public String getStype() {
+        return stype;
+    }
+
+    public String getSname() {
+        return sname;
     }
 
     public String getSid() {
