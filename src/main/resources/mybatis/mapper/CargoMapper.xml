@@ -4,16 +4,8 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.example.auto_warehouse.mapper.CargoMapper">
 
-    <select id="findByStype" parameterType="string" resultType="com.example.auto_warehouse.bean.Cargo">
-        select * from auto_warehouseDB.species left join auto_warehouseDB.cargo on auto_warehouseDB.species.sid = auto_warehouseDB.cargo.sid where stype = #{stype};
-    </select>
-
     <select id="getNewCid" resultType="int">
         select max(cid) from auto_warehouseDB.cargo;
-    </select>
-
-    <select id="finfByCid" parameterType="int" resultType="com.example.auto_warehouse.bean.Cargo">
-        select * from auto_warehouseDB.cargo where cid=#{cid};
     </select>
 
     <select id="getNotExpireNum" parameterType="string" resultType="java.lang.Integer">
