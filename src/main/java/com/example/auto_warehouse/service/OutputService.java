@@ -62,11 +62,11 @@ public class OutputService {
             else{
                 callOutput(map);
             }
-            // 针对不能出库的货物
-            if(notOutputData.size()>0){
-                notOutput(notOutputData);
-            }
 
+        }
+        // 针对不能出库的货物
+        if(notOutputData.size()>0){
+            notOutput(notOutputData);
         }
 
     }

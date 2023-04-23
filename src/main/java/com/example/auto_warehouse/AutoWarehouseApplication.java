@@ -51,7 +51,6 @@ public class AutoWarehouseApplication {
         timer.scheduleAtFixedRate(task, 0, 1000);
 
 
-
         // 创建一个出库监听定时器
         Timer timer1 = new Timer();
         // 定义一个计划任务，每秒钟检查一次队列是否为空，并输出结果
@@ -74,7 +73,6 @@ public class AutoWarehouseApplication {
         };
         // 每秒钟执行一次计划任务，立即启动
         timer1.scheduleAtFixedRate(task1, 0, 1000);
-
 
 
 

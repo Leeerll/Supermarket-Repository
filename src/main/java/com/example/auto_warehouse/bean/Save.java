@@ -1,11 +1,12 @@
 package com.example.auto_warehouse.bean;
 
+import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-
+@Entity
 public class Save {
 
 
@@ -83,6 +84,9 @@ public class Save {
 
     public void setOutputTime(Date outputTime) {
         this.outputTime = outputTime;
+    }
+    public Save(){
+
     }
 
 }

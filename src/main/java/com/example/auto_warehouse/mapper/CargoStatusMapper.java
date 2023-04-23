@@ -12,6 +12,7 @@ import java.util.List;
 public interface CargoStatusMapper {
     int addNotInput(NotInput notInput);
     List<NotInput> allNotInput();
+    int modifyIsRead(int notInputID);
     int addNotOutput(NotOutput notOutput);
     List<NotOutput> allNotOutput();
     // 判断进货超市在仓库中是否存有同类产品

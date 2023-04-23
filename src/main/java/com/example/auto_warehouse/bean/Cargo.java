@@ -8,13 +8,14 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-@Data
+
 @Entity
 public class Cargo {
 
-    @Id
+
     private String sid;               // 货物品类id
     private String sname;             // 货物品名
+    @Id
     private int cid;               // 货物编号
     private Date productionDate;   // 货物生产日期
     private int shelfLife;           // 货物保质期

@@ -5,8 +5,11 @@
 <!--这边的包路径和sql语句需要根据自身的表的写-->
 <mapper namespace="com.example.auto_warehouse.mapper.CargoStatusMapper">
     <select id = "allNotInput" resultType="com.example.auto_warehouse.bean.NotInput">
-        select * from auto_warehouseDB.notInput
+        select * from auto_warehouseDB.notInput where isRead = 0
     </select>
+    <update id="modifyIsRead" parameterType="java.lang.Integer">
+        update auto_warehouseDB.notInput set isRead=1 where notInputID=#{notInputID};
+    </update>
     <insert id = "addNotInput" parameterType="com.example.auto_warehouse.bean.NotInput">
         insert into auto_warehouseDB.notInput (id,name,type,num,productionDate,shelfLife,suid,reason)
         values(#{id},#{name},#{type},#{num},#{productionDate},#{shelfLife},#{suid},#{reason})

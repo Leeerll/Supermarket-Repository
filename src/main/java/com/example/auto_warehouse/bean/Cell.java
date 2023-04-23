@@ -4,7 +4,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import lombok.Data;
 
-@Data
+
 @Entity
 public class Cell {
 
@@ -18,8 +18,8 @@ public class Cell {
         this.restNum = restNum;
     }
 
-    @Id
     private String crid;
+    @Id
     private String ceid;
     private double costT;
     private double maxWeight;

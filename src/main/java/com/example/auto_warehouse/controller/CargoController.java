@@ -4,6 +4,7 @@ import com.example.auto_warehouse.bean.Cargo;
 import com.example.auto_warehouse.bean.NotInput;
 import com.example.auto_warehouse.bean.NotOutput;
 import com.example.auto_warehouse.mapper.CargoMapper;
+import com.example.auto_warehouse.mapper.CargoStatusMapper;
 import com.example.auto_warehouse.service.InputService;
 import com.example.auto_warehouse.service.OutputService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,14 +26,15 @@ public class CargoController {
     private CargoMapper cargoMapper;
     @Autowired
     private OutputService outputService;
+    @Autowired
+    private CargoStatusMapper cargoStatusMapper;
 
     @PostMapping("/findByStype")
     public List<Map<String,String>> findByStype(@RequestBody Map<String,String> map){
         String stype = map.get("stype");
         List<Cargo> result = cargoMapper.findByStype(stype);
         List<Map<String,String>> list = new ArrayList<>();
-        String pattern = "yyyy年MM月dd日";
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
         for(Cargo c:result){
             Map<String,String> stypemap = new HashMap<>();
             stypemap.put("stype",stype);
@@ -43,7 +45,7 @@ public class CargoController {
             }else{
                 stypemap.put("input_time",simpleDateFormat.format(c.getInputTime()));
             }
-            if(c.getOutputTime()==null){
+            if(c.getOutput_time()==null){
                 stypemap.put("output_time"," ");
             }else{
                 stypemap.put("output_time",simpleDateFormat.format(c.getOutput_time()));
@@ -80,6 +82,7 @@ public class CargoController {
             map.put("suid",notInput.getSuid());
             map.put("reason",notInput.getReason());
             list.add(map);
+            cargoStatusMapper.modifyIsRead(notInput.getNotInputID());
         }
         return list;
     }

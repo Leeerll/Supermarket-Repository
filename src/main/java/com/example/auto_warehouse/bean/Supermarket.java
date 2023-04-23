@@ -4,15 +4,24 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import lombok.Data;
 
-@Data
+
 @Entity
 public class Supermarket {
     @Id
     private String suid;
     private String suregion;
-
     private String password;
     private String rid;
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+
     public Supermarket(){
 
     }
