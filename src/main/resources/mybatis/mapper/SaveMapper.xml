@@ -16,4 +16,78 @@
         update auto_warehouseDB.save set outputTime=#{outputTime} where cid=#{cid};
     </update>
 
+    <select id="findByState" parameterType="date" resultType="com.example.auto_warehouse.bean.Cargo">
+        select * from auto_warehouseDB.cargo where state = #{state};
+    </select>
+
+    <select id="findByCid" parameterType="int" resultType="com.example.auto_warehouse.bean.Save">
+        select * from auto_warehouseDB.save left join auto_warehouseDB.species
+                                                      on auto_warehouseDB.species.sid = auto_warehouseDB.save.sid
+        where auto_warehouseDB.save.cid=#{cid};
+    </select>
+
+    <select id="findBySid" parameterType="string" resultType="com.example.auto_warehouse.bean.Save">
+        select * from auto_warehouseDB.save left join auto_warehouseDB.species
+                                                      on auto_warehouseDB.species.sid = auto_warehouseDB.save.sid
+        where auto_warehouseDB.species.sid = #{sid};
+    </select>
+
+    <select id="findByInputTime" parameterType="date" resultType="com.example.auto_warehouse.bean.Save">
+        select * from auto_warehouseDB.save left join auto_warehouseDB.species
+                                                      on auto_warehouseDB.species.sid = auto_warehouseDB.save.sid
+        where inputTime = #{inputTime};
+    </select>
+
+    <select id="findByStype" parameterType="string" resultType="com.example.auto_warehouse.bean.Save">
+        select * from auto_warehouseDB.save left join auto_warehouseDB.species
+                                                      on auto_warehouseDB.species.sid = auto_warehouseDB.save.sid
+        where stype = #{stype};
+    </select>
+
+    <select id="findSupByCid" parameterType="int">
+        select suid from auto_warehouseDB.cargo where cid = #{cid};
+    </select>
+
+    <select id="findByCeid" parameterType="string" resultType="com.example.auto_warehouse.bean.Save">
+        select * from auto_warehouseDB.save left join auto_warehouseDB.species
+                                                      on auto_warehouseDB.save.sid = auto_warehouseDB.species.sid
+        where auto_warehouseDB.save.ceid = #{ceid};
+    </select>
+
+    <!--待检验-->
+    <select id="findByStypeAndInputTime" resultType="com.example.auto_warehouse.bean.Save">
+        select * from auto_warehouseDB.save left join auto_warehouseDB.species
+                                                      on auto_warehouseDB.save.sid = auto_warehouseDB.species.sid
+        where auto_warehouseDB.species.stype = #{stype} and auto_warehouseDB.save.inputTime = #{inputTime};
+    </select>
+
+    <select id="findByStypeAndOutputTime" resultType="com.example.auto_warehouse.bean.Save">
+        select * from auto_warehouseDB.save left join auto_warehouseDB.species
+                                                      on auto_warehouseDB.save.sid = auto_warehouseDB.species.sid
+        where auto_warehouseDB.species.stype = #{stype} and auto_warehouseDB.save.outputTime = #{outputTime};
+    </select>
+
+    <select id="findByStypeAndSuid" resultType="com.example.auto_warehouse.bean.Save">
+        select * from auto_warehouseDB.save left join auto_warehouseDB.species
+                                                      on auto_warehouseDB.save.sid = auto_warehouseDB.species.sid
+        where auto_warehouseDB.species.stype = #{stype} and auto_warehouseDB.save.suid = #{suid};
+    </select>
+
+    <select id="findBySidAndInputTime" resultType="com.example.auto_warehouse.bean.Save">
+        select * from auto_warehouseDB.save left join auto_warehouseDB.species
+                                                      on auto_warehouseDB.save.sid = auto_warehouseDB.species.sid
+        where auto_warehouseDB.save.sid = #{sid} and auto_warehouseDB.save.inputTime = #{inputTime};
+    </select>
+
+    <select id="findBySidAndOutputTime" resultType="com.example.auto_warehouse.bean.Save">
+        select * from auto_warehouseDB.save left join auto_warehouseDB.species
+                                                      on auto_warehouseDB.save.sid = auto_warehouseDB.species.sid
+        where auto_warehouseDB.save.sid = #{sid} and auto_warehouseDB.save.outputTime = #{outputTime};
+    </select>
+
+    <select id="findBySidAndSuid" resultType="com.example.auto_warehouse.bean.Save">
+        select * from auto_warehouseDB.save left join auto_warehouseDB.species
+                                                      on auto_warehouseDB.save.sid = auto_warehouseDB.species.sid
+        where auto_warehouseDB.save.sid = #{sid} and auto_warehouseDB.save.suid = #{suid};
+    </select>
 </mapper>

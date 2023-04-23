@@ -1,6 +1,7 @@
 package com.example.auto_warehouse.mapper;
 
 import com.example.auto_warehouse.bean.Cell;
+import com.example.auto_warehouse.bean.Repository;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
@@ -20,4 +21,5 @@ public interface RepositoryMapper {
     void updateRepositoryRestNum(String rid);
     int substractRepositoryRestNum(String rid);
 
+    List<Repository> rate();
 }
