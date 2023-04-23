@@ -1,5 +1,6 @@
 package com.example.auto_warehouse;
 
+import org.mybatis.spring.annotation.MapperScan;
 import com.example.auto_warehouse.service.InputService;
 import com.example.auto_warehouse.service.OutputService;
 import com.example.auto_warehouse.util.ExcelMap;
@@ -14,6 +15,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 @SpringBootApplication
+@MapperScan("com.example.auto_warehouse.mapper")
 public class AutoWarehouseApplication {
     private static InputService inputService;
     private static OutputService outputService;

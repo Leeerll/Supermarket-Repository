@@ -24,7 +24,7 @@ public class InputService {
     private CargoMapper cargoMapper;
     @Autowired
     private CargoStatusMapper cargoStatusMapper;
-//    @Autowired
+    //    @Autowired
 //    private CellMapper cellMapper;
     @Autowired
     private RepositoryMapper repositoryMapper;
