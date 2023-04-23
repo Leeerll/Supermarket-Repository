@@ -16,9 +16,6 @@
         update auto_warehouseDB.save set outputTime=#{outputTime} where cid=#{cid};
     </update>
 
-    <select id="findByState" parameterType="date" resultType="com.example.auto_warehouse.bean.Cargo">
-        select * from auto_warehouseDB.cargo where state = #{state};
-    </select>
 
     <select id="findByCid" parameterType="int" resultType="com.example.auto_warehouse.bean.Save">
         select * from auto_warehouseDB.save left join auto_warehouseDB.species
@@ -44,9 +41,6 @@
         where stype = #{stype};
     </select>
 
-    <select id="findSupByCid" parameterType="int">
-        select suid from auto_warehouseDB.cargo where cid = #{cid};
-    </select>
 
     <select id="findByCeid" parameterType="string" resultType="com.example.auto_warehouse.bean.Save">
         select * from auto_warehouseDB.save left join auto_warehouseDB.species

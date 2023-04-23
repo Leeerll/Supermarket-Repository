@@ -38,4 +38,10 @@ public interface CargoMapper {
     // 获取还未出库但已过期的货物
     List<Cargo> showExpire();
 
+    // 通过（是否过期）状态查找货物
+    List<Cargo> findByState(String state);
+
+    // 根据货物品类id查找超市id
+    String findSupByCid(int cid);
+
 }

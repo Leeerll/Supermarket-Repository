@@ -18,7 +18,7 @@ public interface SaveMapper {
     String getCellByCid(int cid);
 
     // 根据状态查找
-    //List<Cargo> findByState(String state);
+//    List<Cargo> findByState(String state);
 
     List<Save> findByStype(String stype);
     List<Save> findByCid(int cid);
@@ -30,10 +30,8 @@ public interface SaveMapper {
     List<Save> findByInputTime(Date inputTime);
 
     //根据出库时间查找货物
-    List<Save> findByOutputTime(Date outputTime);
+//    List<Save> findByOutputTime(Date outputTime);
 
-//    //根据货物品类id查找超市id
-//    List<Cargo> findSupByCid(int cid);
 
     //根据ceid查找货物
     List<Save> findByCeid(String ceid);

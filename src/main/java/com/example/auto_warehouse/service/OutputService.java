@@ -34,6 +34,8 @@ public class OutputService {
     private SupermarketMapper supermarketMapper;
     @Autowired
     private CargoStatusMapper cargoStatusMapper;
+    @Autowired
+    private OrderMapper orderMapper;
 
     private static final Logger logger = LoggerFactory.getLogger(LoadFileController.class);
 
@@ -136,13 +138,18 @@ public class OutputService {
                 // (6) 对log表的操作
                 Log log = new Log(sid, cid, Id.getRepositoryID(), ceid, map.get("suid"), "output");
                 logMapper.addLog(log);
+
             }
 
             needNum -= thisNum;
         }
-
+        // (7) 生成订单
+        double cost = needNum * 1;
+        Order order = new Order((String)map.get("suid"), (String)map.get("rid"), cost);
+        orderMapper.insertOrder(order);
     }
 
+    // 清空仓库柜
     boolean clearCell(Cell cell){
         if(cell.getType()=="s" && cell.getRestNum()==3){
             return true;

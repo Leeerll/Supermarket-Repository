@@ -45,4 +45,12 @@
         where outputTime is null and TIMESTAMPDIFF(DAY, productionDate, NOW())>=shelfLife;
     </update>
 
+    <select id="findByState" parameterType="java.lang.String" resultType="com.example.auto_warehouse.bean.Cargo">
+        select * from auto_warehouseDB.cargo where state = #{state};
+    </select>
+
+    <select id="findSupByCid" parameterType="int" resultType="java.lang.String">
+        select suid from auto_warehouseDB.cargo where cid = #{cid};
+    </select>
+
 </mapper>
