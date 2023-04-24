@@ -35,14 +35,19 @@
         update auto_warehouseDB.repository set restNum=restNum-1 where rid=#{rid};
     </update>
 
-    <update id="updateIncome">
-        update auto_warehouseDB.repository set income=income+#{money}
-        where rid=#{rid};
-    </update>
-
-    <select id="rate" resultType="com.example.auto_warehouse.bean.Repository">
+    <select id="rate">
         select * from auto_warehouseDB.repository;
     </select>
 
+    <update id="modifyMachineHealth" parameterType="java.lang.String">
+        update auto_warehouseDB.repository set machineHealth = machineHealth-0.1 where rid=#{rid}
+    </update>
 
+    <select id="selectRateByRid" resultType="com.example.auto_warehouse.bean.Repository">
+        select * from auto_warehouseDB.repository
+        where auto_warehouseDB.repository.rid = #{rid};
+    </select>
+    <select id="selectMonthIncome" resultType="com.example.auto_warehouse.bean.Income">
+        select * from auto_warehouseDB.income where repositoryId = #{repositoryId} and yearMonth between #{year} and #{year}+100
+    </select>
 </mapper>

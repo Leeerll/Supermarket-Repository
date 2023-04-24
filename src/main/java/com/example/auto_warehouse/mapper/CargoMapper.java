@@ -17,9 +17,6 @@ public interface CargoMapper {
     // 获取最后一条记录的cid
     int getNewCid();
 
-    List<Cargo> findByStype(String stype);
-    List<Cargo> finfByCid(int cid);
-
     // 添加货物
     boolean addCargo(Cargo cargo);
 

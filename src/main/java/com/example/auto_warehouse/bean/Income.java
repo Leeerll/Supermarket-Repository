@@ -6,19 +6,11 @@ import lombok.Data;
 
 @Data
 @Entity
-public class Repository {
-
+public class Income {
     @Id
-    private String rid;
-    private int totalNum;
-    private int restNum;
-    private double machineHealth;
+    private String repositoryId;
+    private int yearMonth;
     private double income;
-
-
-    public Repository(){
-
-    }
-
-
+    // 这个year用来传递当前年份
+    private int year;
 }

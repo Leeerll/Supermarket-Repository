@@ -1,6 +1,7 @@
 package com.example.auto_warehouse.mapper;
 
 import com.example.auto_warehouse.bean.Cell;
+import com.example.auto_warehouse.bean.Income;
 import com.example.auto_warehouse.bean.Repository;
 import org.apache.ibatis.annotations.Mapper;
 
@@ -22,7 +23,9 @@ public interface RepositoryMapper {
     int substractRepositoryRestNum(String rid);
 
     List<Repository> rate();
+    int modifyMachineHealth(String rid);
 
-    // 更新income
-    void updateIncome(String rid, double money);
+    //通过rid查询占有率
+    List<Repository> selectRateByRid(String rid);
+    List<Income> selectMonthIncome(String repositoryId, int year);
 }

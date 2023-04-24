@@ -139,10 +139,12 @@ public class InputService {
                     logger.warn("excel表中的size属性不是s/m/l");
                 }
                 System.out.println(empty_cell);
+                //-------------------------------------------------
                 int result = repositoryMapper.modifyCellTypeAndRestNumAndIsFull(empty_cell);
                 if(result==0){
                     logger.warn("修改空cell属性失败");
                 }
+                repositoryMapper.modifyMachineHealth(Id.getRepositoryID());
             }else{
                 // 该超市在仓库中有同类型产品
                 List<Save> list = cargoStatusMapper.getSameSpeciesAllCeid(map.get("sid"),map.get("suid"),Id.getRepositoryID());
@@ -165,10 +167,12 @@ public class InputService {
                         }else{
                             cell.setRestNum(cell.getRestNum()-1);
                         }
+                        //--------------------------------------------------------------
                         int result = repositoryMapper.modifyCellTypeAndRestNumAndIsFull(cell);
                         if(result==0){
                             logger.warn("修改未填满同类cell属性失败");
                         }
+                        repositoryMapper.modifyMachineHealth(Id.getRepositoryID());
                         break;
                     }
                 }
@@ -186,10 +190,12 @@ public class InputService {
                     }else{
                         logger.warn("excel表中的size属性不是s/m/l");
                     }
+                    //--------------------------------------------------------------------------------------
                     int result = repositoryMapper.modifyCellTypeAndRestNumAndIsFull(empty_cell);
                     if(result==0){
                         logger.warn("修改空cell属性失败");
                     }
+                    repositoryMapper.modifyMachineHealth(Id.getRepositoryID());
                 }
             }
 
