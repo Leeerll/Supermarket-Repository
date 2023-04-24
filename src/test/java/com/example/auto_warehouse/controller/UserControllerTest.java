@@ -19,17 +19,6 @@ class UserControllerTest {
     @Autowired
     private UserController userController;
 
-    @Test
-    void addUser() {
-        Map<String,String> map = new HashMap<>();
-        map.put("uid","123456");
-        map.put("name","abc");
-        map.put("password","123");
-        map.put("type","admin");
-
-        int num = Integer.parseInt(userController.addUser(map).getCode());
-        assertEquals(1,num);
-    }
 
     @Test
     void login() {

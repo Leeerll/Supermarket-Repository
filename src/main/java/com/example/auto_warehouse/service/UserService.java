@@ -1,5 +1,6 @@
 package com.example.auto_warehouse.service;
 
+import com.example.auto_warehouse.bean.Supermarket;
 import com.example.auto_warehouse.bean.User;
 import com.example.auto_warehouse.mapper.UserMapper;
 import com.example.auto_warehouse.util.Id;
@@ -66,10 +67,10 @@ public class UserService {
     }
 
     //添加用户
-    public JsonResult<User> addUser(User user){
+    public JsonResult<User> addSupermarket(Supermarket supermarket){
         int num = 0;
-        if(user.getUid()!=null && user.getPassword()!=null && user.getType()!=null){
-            num = userMapper.addUser(user);
+        if(supermarket.getSuid()!=null && supermarket.getPassword()!=null){
+            num = userMapper.addSupermarket(supermarket);
         }
         if(num==0){
             return new JsonResult<>("0","添加失败！");

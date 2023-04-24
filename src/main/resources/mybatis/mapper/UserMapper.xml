@@ -13,9 +13,9 @@
         select * from auto_warehouseDB.user
     </select>
 
-    <insert id = "addUser" parameterType="com.example.auto_warehouse.bean.User">
-        insert into auto_warehouseDB.user (uid,name,password,type)
-        values(#{uid},#{name},#{password},#{type})
+    <insert id = "addSupermarket" parameterType="com.example.auto_warehouse.bean.Supermarket">
+        insert into auto_warehouseDB.supermarket (suid,suregion,rid,password)
+        values(#{suid},#{suregion},#{rid},#{password})
     </insert>
 
     <update id = "modifyName" parameterType="com.example.auto_warehouse.bean.User">
