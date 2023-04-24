@@ -75,4 +75,21 @@ public class UserService {
             return new JsonResult<>(String.valueOf(num),"添加成功！");
         }
     }
+    public boolean checkPassword(String userid, String password){
+        // 检查该用户是否存在
+        User user = findById(userid);
+        if(user != null){
+            // 用户存在 匹配密码
+            // 相等
+            if(user.getPassword().equals(password)){
+                return true;
+            }else {
+                //密码不相等
+                return false;
+            }
+        }else{
+            // 用户不存在
+            return false;
+        }
+    }
 }
