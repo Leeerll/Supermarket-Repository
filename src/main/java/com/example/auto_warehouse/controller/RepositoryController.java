@@ -32,9 +32,12 @@ public class RepositoryController {
             stypemap.put("rid",r.getRid());
             double temp=1-((double)r.getRestNum()/(double)r.getTotalNum());
             temp = temp*100;
-            stypemap.put("rate",String.valueOf(temp));
+            stypemap.put("rate", temp +"%");
+            double mh_rate = (r.getMachineHealth()/100.0)*100;
+            stypemap.put("machine_health_rate", mh_rate +"%");
             list.add(stypemap);
         }
         return list;
     }
+
 }

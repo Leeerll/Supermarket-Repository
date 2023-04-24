@@ -22,4 +22,6 @@ public interface RepositoryMapper {
     int substractRepositoryRestNum(String rid);
 
     List<Repository> rate();
+    int modifyMachineHealth(String rid);
+    double getOneRMachineHealth(String rid);
 }

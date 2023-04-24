@@ -38,4 +38,15 @@
     <select id="rate">
         select * from auto_warehouseDB.repository;
     </select>
+
+    <update id="modifyMachineHealth" parameterType="java.lang.String">
+        update auto_warehouseDB.repository set machineHealth = machineHealth-0.1 where rid=#{rid}
+    </update>
+    <select id = "getOneRMachineHealth" parameterType="java.lang.String" resultType="java.lang.Double">
+        select machineHealth from auto_warehouseDB.repository where rid=#{rid}
+    </select>
+    <select id = "getOneRIncome" parameterType="java.lang.String" resultType="java.lang.Double">
+        select income from auto_warehouseDB.repository where rid=#{rid}
+    </select>
+
 </mapper>
