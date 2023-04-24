@@ -47,11 +47,7 @@ public class UserService {
     public JsonResult<User> modify(User user){
         int flag = 0;
         String userid = user.getUid();
-        String type = user.getType();
         //根据是否为空值判断 哪些数据需要修改
-        if (user.getName() != null) {
-            flag = userMapper.modifyName(userid,user.getName());
-        }
         if(user.getPassword() != null){
             flag = userMapper.modifyPassword(userid,user.getPassword());
         }

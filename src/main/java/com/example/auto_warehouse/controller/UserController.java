@@ -39,4 +39,13 @@ public class UserController {
         supermarket.setRid("1");
         return userService.addSupermarket(supermarket);
     }
+    @PostMapping("/modifyPassword")
+    public JsonResult<User>modifyPassword(@RequestBody Map<String,String>map){
+        String uid = map.get("uid");
+        String password = map.get("password");
+        User user = new User();
+        user.setUid(uid);
+        user.setPassword(password);
+        return userService.modify(user);
+    }
 }
