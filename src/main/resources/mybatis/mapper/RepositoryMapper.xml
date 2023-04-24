@@ -35,7 +35,12 @@
         update auto_warehouseDB.repository set restNum=restNum-1 where rid=#{rid};
     </update>
 
-    <select id="rate">
+    <update id="updateIncome">
+        update auto_warehouseDB.repository set income=income+#{money}
+        where rid=#{rid};
+    </update>
+
+    <select id="rate" resultType="com.example.auto_warehouse.bean.Repository">
         select * from auto_warehouseDB.repository;
     </select>
 

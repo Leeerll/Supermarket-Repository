@@ -143,6 +143,7 @@ public class OutputService {
 
             needNum -= thisNum;
         }
+
         // (7) 生成订单
         double cost = needNum * 1;
         Order order = new Order((String)map.get("suid"), (String)map.get("rid"), cost);
