@@ -24,4 +24,7 @@ public interface RepositoryMapper {
     List<Repository> rate();
     int modifyMachineHealth(String rid);
     double getOneRMachineHealth(String rid);
+
+    //通过rid查询占有率
+    List<Repository> selectRateByRid(String rid);
 }

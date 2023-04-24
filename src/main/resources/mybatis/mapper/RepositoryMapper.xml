@@ -49,4 +49,9 @@
         select income from auto_warehouseDB.repository where rid=#{rid}
     </select>
 
+
+    <select id="selectRateByRid" resultType="com.example.auto_warehouse.bean.Repository">
+        select * from auto_warehouseDB.repository
+        where auto_warehouseDB.repository.rid = #{rid};
+    </select>
 </mapper>
