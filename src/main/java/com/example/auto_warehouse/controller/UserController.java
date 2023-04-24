@@ -43,9 +43,14 @@ public class UserController {
     public JsonResult<User>modifyPassword(@RequestBody Map<String,String>map){
         String uid = map.get("uid");
         String password = map.get("password");
-        User user = new User();
-        user.setUid(uid);
-        user.setPassword(password);
-        return userService.modify(user);
+        String old_password = map.get("old_password");
+        if(userService.checkPassword(uid,old_password)){
+            User user = new User();
+            user.setUid(uid);
+            user.setPassword(password);
+            return userService.modify(user);
+        }else{
+            return new JsonResult<>("0","原始密码错误!");
+        }
     }
 }
