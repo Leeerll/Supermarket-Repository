@@ -1,14 +1,40 @@
 package com.example.auto_warehouse.bean;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-
+@Entity
 public class Order {
-    String suid;
-    String rid;
-    Date time;
-    double cost;
+    private String suid;
+    private String rid;
+    private Date time;
+    private double cost;
+    private int isRead;
+    @Id
+    private int orderID;
+
+    public int getIsRead() {
+        return isRead;
+    }
+
+    public void setIsRead(int isRead) {
+        this.isRead = isRead;
+    }
+
+    public int getOrderID() {
+        return orderID;
+    }
+
+    public void setOrderID(int orderID) {
+        this.orderID = orderID;
+    }
+
+
+    public Order() {
+    }
 
     public Order(String suid, String rid, double cost) throws ParseException {
         this.suid = suid;

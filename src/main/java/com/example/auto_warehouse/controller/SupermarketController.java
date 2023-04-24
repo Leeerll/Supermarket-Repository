@@ -1,9 +1,6 @@
 package com.example.auto_warehouse.controller;
 
-import com.example.auto_warehouse.bean.NotInput;
-import com.example.auto_warehouse.bean.ShopStorage;
-import com.example.auto_warehouse.bean.Supermarket;
-import com.example.auto_warehouse.bean.User;
+import com.example.auto_warehouse.bean.*;
 import com.example.auto_warehouse.mapper.SupermarketMapper;
 import com.example.auto_warehouse.service.SupermarketService;
 import com.example.auto_warehouse.service.UserService;
@@ -12,6 +9,7 @@ import com.example.auto_warehouse.util.JsonResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -44,6 +42,23 @@ public class SupermarketController {
             map.put("sname",shopStorage.getSname());
             map.put("storageNum",String.valueOf(shopStorage.getStorageNum()));
             list.add(map);
+        }
+        return list;
+    }
+
+    @RequestMapping("/get_order")
+    @ResponseBody
+    public List<Map<String,String>> get_order(@RequestBody Map<String,String> map){
+        String suid = map.get("suid");
+        List<Map<String,String>> list = new ArrayList<>();
+        List<Order> list_order = supermarketMapper.allOrder(suid,"1");
+        DateFormat dateformat= new SimpleDateFormat("yyyy-MM-dd");
+        for(Order order:list_order){
+            Map<String,String> map1 = new HashMap<>();
+            map1.put("time",dateformat.format(order.getTime()));
+            map1.put("cost",String.valueOf(order.getCost()));
+            list.add(map1);
+            supermarketMapper.modifyIsReadOrder(order.getOrderID());
         }
         return list;
     }

@@ -16,4 +16,11 @@
         select sname,count(*) as storageNum from auto_warehouseDB.save,auto_warehouseDB.species where save.sid=species.sid and suid = #{suid} group by sname
     </select>
 
+    <select id = "allOrder" resultType="com.example.auto_warehouse.bean.Order">
+        select * from auto_warehouseDB.order where isRead = 0 and suid = #{suid} and rid = #{rid}
+    </select>
+    <update id="modifyIsReadOrder" parameterType="java.lang.Integer">
+        update auto_warehouseDB.order set isRead=1 where orderID=#{orderID}
+    </update>
+
 </mapper>
