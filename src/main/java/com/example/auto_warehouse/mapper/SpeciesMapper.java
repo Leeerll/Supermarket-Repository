@@ -37,5 +37,6 @@ public interface SpeciesMapper {
     // 出库：减少货物存货
     boolean reduceNum(String sid, int newNum);
 
-
+    // 通过sid返回stype
+    String findStypeBySid(String sid);
 }

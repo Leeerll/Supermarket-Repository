@@ -14,6 +14,9 @@ public interface CargoMapper {
     // 根据状态查找
 //    List<Cargo> findByState(String state);
 
+    // 显示所有货物
+    List<Cargo> showAll();
+
     // 获取最后一条记录的cid
     int getNewCid();
 
@@ -40,5 +43,7 @@ public interface CargoMapper {
 
     // 根据货物品类id查找超市id
     String findSupByCid(int cid);
+
+
 
 }

@@ -84,4 +84,10 @@
                                                       on auto_warehouseDB.save.sid = auto_warehouseDB.species.sid
         where auto_warehouseDB.save.sid = #{sid} and auto_warehouseDB.save.suid = #{suid};
     </select>
+
+    <select id="findBySuid" resultType="com.example.auto_warehouse.bean.Save" parameterType="java.lang.String">
+        select * from auto_warehouseDB.save left join auto_warehouseDB.species
+                                                      on auto_warehouseDB.save.sid = auto_warehouseDB.species.sid
+        where auto_warehouseDB.save.suid = #{suid};
+    </select>
 </mapper>
