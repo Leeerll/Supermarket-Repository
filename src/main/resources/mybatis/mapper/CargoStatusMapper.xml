@@ -24,8 +24,8 @@
         update auto_warehouseDB.notOutput set isRead=isRead-1 where notOutputID=#{notOutputID};
     </update>
     <insert id = "addNotOutput" parameterType="com.example.auto_warehouse.bean.NotOutput">
-        insert into auto_warehouseDB.notOutput (sid,num,suid,reason)
-        values(#{sid},#{num},#{suid},#{reason})
+        insert into auto_warehouseDB.notOutput (sid,num,suid,reason,name)
+        values(#{sid},#{num},#{suid},#{reason},#{name})
     </insert>
 
     <select id = "getSameSpecies" resultType="java.lang.String">
