@@ -75,6 +75,7 @@ public class SupermarketController {
         for(NotOutput notOutput:list_not){
             Map<String,String> map1 = new HashMap<>();
             map1.put("sid",notOutput.getSid());
+            map1.put("name",notOutput.getName());
             map1.put("num",String.valueOf(notOutput.getNum()));
             map1.put("reason",notOutput.getReason());
             list.add(map1);

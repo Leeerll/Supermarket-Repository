@@ -81,7 +81,8 @@ public class OutputService {
                 int num = Integer.parseInt(list.get(i).get("num"));
                 String suid = list.get(i).get("suid");
                 String reason = list.get(i).get("reason");
-                NotOutput notOutput = new NotOutput(sid,suid,num,reason);
+                String name = list.get(i).get("name");
+                NotOutput notOutput = new NotOutput(sid,suid,num,reason,name);
                 insert_num += cargoStatusMapper.addNotOutput(notOutput);
             }
         }catch (Exception e){

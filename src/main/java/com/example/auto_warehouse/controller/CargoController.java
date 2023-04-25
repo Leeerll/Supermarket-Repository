@@ -63,6 +63,7 @@ public class CargoController {
             map.put("num",String.valueOf(notOutput.getNum()));
             map.put("suid",notOutput.getSuid());
             map.put("reason",notOutput.getReason());
+            map.put("name", notOutput.getName());
             list.add(map);
             cargoStatusMapper.modifyIsReadOutput(notOutput.getNotOutputID());
         }
