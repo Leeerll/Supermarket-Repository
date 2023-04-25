@@ -19,7 +19,7 @@ public interface SaveMapper {
 
     // 根据状态查找
 //    List<Cargo> findByState(String state);
-
+    List<Save> findAll();
     List<Save> findByStype(String stype);
     List<Save> findByCid(int cid);
 

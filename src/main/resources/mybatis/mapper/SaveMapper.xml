@@ -8,6 +8,11 @@
         values (#{sid}, #{cid}, #{rid}, #{ceid}, #{suid}, #{inputTime});
     </insert>
 
+    <select id="findAll" resultType="com.example.auto_warehouse.bean.Save">
+        select * from auto_warehouseDB.save left join auto_warehouseDB.species
+        on auto_warehouseDB.species.sid = auto_warehouseDB.save.sid;
+    </select>
+
     <select id="getCellByCid" resultType="java.lang.String" parameterType="int">
         select ceid from auto_warehouseDB.save where cid=#{cid};
     </select>
