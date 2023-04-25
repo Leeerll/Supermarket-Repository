@@ -2,6 +2,7 @@ package com.example.auto_warehouse.controller;
 
 import com.example.auto_warehouse.bean.Income;
 import com.example.auto_warehouse.bean.Repository;
+import com.example.auto_warehouse.mapper.IncomeMapper;
 import com.example.auto_warehouse.mapper.RepositoryMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -15,6 +16,8 @@ public class RepositoryController {
 
     @Autowired
     private RepositoryMapper repositoryMapper;
+    @Autowired
+    private IncomeMapper incomeMapper;
 
     @RequestMapping("/rate")
     @ResponseBody
@@ -71,6 +74,9 @@ public class RepositoryController {
     @PostMapping("/checkIncome")
     public void checkIncome(@RequestParam("rid") String rid, @RequestParam("money") double money){
         repositoryMapper.updateIncome(rid, money);
+        int year = Calendar.getInstance().get(Calendar.YEAR);
+        int month = Calendar.getInstance().get(Calendar.MONTH);
+        incomeMapper.updateIncome(year,month,money);
     }
 
 
