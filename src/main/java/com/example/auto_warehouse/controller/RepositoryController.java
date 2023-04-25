@@ -76,7 +76,14 @@ public class RepositoryController {
         repositoryMapper.updateIncome(rid, money);
         int year = Calendar.getInstance().get(Calendar.YEAR);
         int month = Calendar.getInstance().get(Calendar.MONTH);
-        incomeMapper.updateIncome(year,month,money);
+        int yearMonth = year*100+month+1;
+        List<Income> list = incomeMapper.findByYearMonth(rid,yearMonth);
+        if(list.size()==0){
+            Income income = new Income(rid,yearMonth,money);
+            incomeMapper.insertIncome(income);
+        }else{
+            incomeMapper.updateIncome(yearMonth,money,rid);
+        }
     }
 
 

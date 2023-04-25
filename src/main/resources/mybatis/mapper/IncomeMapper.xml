@@ -4,8 +4,14 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper  namespace="com.example.auto_warehouse.mapper.IncomeMapper">
 
-    <update id="updateIncome">
+    <update id="updateIncome" parameterType="com.example.auto_warehouse.bean.Income">
         update auto_warehouseDB.income set income = income+#{money}
-        where round(yearMonth/100, 0)=#{year} and yearMonth-round(yearMonth/100, 0)*100=#{month};
+        where repositoryId = #{repositoryId} and yearMonth = #{yearMonth}
     </update>
+    <update id="insertIncome" parameterType="com.example.auto_warehouse.bean.Income">
+        insert auto_warehouseDB.income(repositoryId,yearMonth,income) values(#{repositoryId},#{yearMonth},#{income})
+    </update>
+    <select id = "findByYearMonth" resultType="com.example.auto_warehouse.bean.Income">
+        select * from auto_warehouseDB.income where repositoryId = #{repositoryId} and yearMonth = #{yearMonth}
+    </select>
 </mapper>
