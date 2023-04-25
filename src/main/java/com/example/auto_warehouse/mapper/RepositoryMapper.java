@@ -31,4 +31,6 @@ public interface RepositoryMapper {
     //通过rid查询占有率
     List<Repository> selectRateByRid(String rid);
     List<Income> selectMonthIncome(String repositoryId, int year);
+
+
 }

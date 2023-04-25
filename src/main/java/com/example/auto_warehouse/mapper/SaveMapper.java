@@ -54,4 +54,7 @@ public interface SaveMapper {
     //根据货物种类和超市id查询
     List<Save> findByStypeAndSuid(String stype, String suid);
 
+    //根据和超市id查询
+    List<Save> findBySuid(String suid);
+
 }

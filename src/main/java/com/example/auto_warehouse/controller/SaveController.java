@@ -1,7 +1,9 @@
 package com.example.auto_warehouse.controller;
 
 import com.example.auto_warehouse.bean.Save;
+import com.example.auto_warehouse.mapper.RepositoryMapper;
 import com.example.auto_warehouse.mapper.SaveMapper;
+import com.example.auto_warehouse.mapper.SpeciesMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -18,6 +20,8 @@ public class SaveController {
 
     @Autowired
     private SaveMapper saveMapper;
+    @Autowired
+    private SpeciesMapper speciesMapper;
 
     @PostMapping("/findByStype")
     public List<Map<String,String>> findByStype(@RequestBody Map<String,String> map){
@@ -335,6 +339,38 @@ public class SaveController {
             Map<String,String> stypemap = new HashMap<>();
             stypemap.put("sname",c.getSname());
             stypemap.put("sid",c.getSid());
+            stypemap.put("stype",stype);
+            stypemap.put("ceid",c.getCeid());
+            stypemap.put("cid",String.valueOf(c.getCid()));
+            if(c.getInputTime()==null){
+                stypemap.put("input_time"," ");
+            }else{
+                stypemap.put("input_time",simpleDateFormat.format(c.getInputTime()));
+            }
+            if(c.getOutputTime()==null){
+                stypemap.put("output_time"," ");
+            }else{
+                stypemap.put("output_time",simpleDateFormat.format(c.getOutputTime()));
+            }
+            stypemap.put("suid",c.getSuid());
+            list.add(stypemap);
+        }
+        return list;
+    }
+
+    @PostMapping("/findBySuid")
+    public List<Map<String,String>> findBySuid(@RequestBody Map<String,String> map){
+        String suid = map.get("suid");
+        List<Save> result = saveMapper.findBySuid(suid);
+        List<Map<String,String>> list = new ArrayList<>();
+        String pattern = "yyyy-MM-dd";
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
+
+        for(Save c:result){
+            Map<String,String> stypemap = new HashMap<>();
+            stypemap.put("sname",c.getSname());
+            stypemap.put("sid",c.getSid());
+            String stype = speciesMapper.findStypeBySid(c.getSid());
             stypemap.put("stype",stype);
             stypemap.put("ceid",c.getCeid());
             stypemap.put("cid",String.valueOf(c.getCid()));

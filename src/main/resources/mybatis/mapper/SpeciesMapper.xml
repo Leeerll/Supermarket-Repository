@@ -33,4 +33,8 @@
         update auto_warehouseDB.species set num = num - #{newNum} where sid=#{sid};
     </update>
 
+    <select id="findStypeBySid" resultType="java.lang.String" parameterType="java.lang.String">
+        select stype from auto_warehouseDB.species where sid=#{sid};
+    </select>
+
 </mapper>
