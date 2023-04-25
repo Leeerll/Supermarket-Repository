@@ -17,6 +17,9 @@
     <select id = "allNotOutput" resultType="com.example.auto_warehouse.bean.NotOutput">
         select * from auto_warehouseDB.notOutput where isRead > 0
     </select>
+    <select id = "supermarketNotOutput" parameterType="java.lang.String" resultType="com.example.auto_warehouse.bean.NotOutput">
+        select * from auto_warehouseDB.notOutput where isRead > 0 and suid = #{suid}
+    </select>
     <update id="modifyIsReadOutput" parameterType="java.lang.Integer">
         update auto_warehouseDB.notOutput set isRead=isRead-1 where notOutputID=#{notOutputID};
     </update>

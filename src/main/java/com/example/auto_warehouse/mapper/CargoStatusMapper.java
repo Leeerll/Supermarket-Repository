@@ -17,6 +17,7 @@ public interface CargoStatusMapper {
     int modifyIsReadInput(int notInputID);
     int addNotOutput(NotOutput notOutput);
     List<NotOutput> allNotOutput();
+    List<NotOutput> supermarketNotOutput(String suid);
     int modifyIsReadOutput(int notOutputID);
     // 判断进货超市在仓库中是否存有同类产品
     String getSameSpecies(String sid, String suid, String rid);

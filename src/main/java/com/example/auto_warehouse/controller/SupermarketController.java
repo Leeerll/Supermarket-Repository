@@ -1,7 +1,9 @@
 package com.example.auto_warehouse.controller;
 
 import com.example.auto_warehouse.bean.*;
+import com.example.auto_warehouse.mapper.CargoStatusMapper;
 import com.example.auto_warehouse.mapper.SupermarketMapper;
+import com.example.auto_warehouse.service.OutputService;
 import com.example.auto_warehouse.service.SupermarketService;
 import com.example.auto_warehouse.service.UserService;
 import com.example.auto_warehouse.util.Id;
@@ -23,6 +25,8 @@ public class SupermarketController {
     private SupermarketService SupermarketService;
     @Autowired
     private SupermarketMapper supermarketMapper;
+    @Autowired
+    private CargoStatusMapper cargoStatusMapper;
 
     @PostMapping("/login")
     public JsonResult<Supermarket> login(@RequestBody Map<String,String> map){
@@ -59,6 +63,22 @@ public class SupermarketController {
             map1.put("cost",String.valueOf(order.getCost()));
             list.add(map1);
             supermarketMapper.modifyIsReadOrder(order.getOrderID());
+        }
+        return list;
+    }
+
+    @RequestMapping("/show_notOutput")
+    @ResponseBody
+    public List<Map<String,String>> show_notOutput(@RequestBody Map<String,String> map){
+        List<Map<String,String>> list = new ArrayList<>();
+        List<NotOutput> list_not = cargoStatusMapper.supermarketNotOutput(map.get("suid"));
+        for(NotOutput notOutput:list_not){
+            Map<String,String> map1 = new HashMap<>();
+            map1.put("sid",notOutput.getSid());
+            map1.put("num",String.valueOf(notOutput.getNum()));
+            map1.put("reason",notOutput.getReason());
+            list.add(map1);
+            cargoStatusMapper.modifyIsReadOutput(notOutput.getNotOutputID());
         }
         return list;
     }
