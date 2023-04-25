@@ -108,12 +108,12 @@ public class FileService {
             workbook.close();
 
             // 操作完上的文件 需要删除在根目录下生成的文件
-            File f = new File(file.toURI());
-            if (f.delete()){
-                System.out.println("删除成功");
-            }else {
-                System.out.println("删除失败");
-            }
+//            File f = new File(file.toURI());
+//            if (f.delete()){
+//                System.out.println("删除成功");
+//            }else {
+//                System.out.println("删除失败");
+//            }
 
             // 输出结果
             System.out.println(dataList);

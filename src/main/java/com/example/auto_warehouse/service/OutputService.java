@@ -81,7 +81,8 @@ public class OutputService {
                 int num = Integer.parseInt(list.get(i).get("num"));
                 String suid = list.get(i).get("suid");
                 String reason = list.get(i).get("reason");
-                NotOutput notOutput = new NotOutput(sid,suid,num,reason);
+                String name = list.get(i).get("name");
+                NotOutput notOutput = new NotOutput(sid,suid,num,reason,name);
                 insert_num += cargoStatusMapper.addNotOutput(notOutput);
             }
         }catch (Exception e){
@@ -146,7 +147,7 @@ public class OutputService {
 
         // (7) 生成订单
         double cost = needNum * 1;
-        Order order = new Order((String)map.get("suid"), (String)map.get("rid"), cost);
+        Order order = new Order((String)map.get("suid"), Id.getRepositoryID(), cost);
         orderMapper.insertOrder(order);
     }
 

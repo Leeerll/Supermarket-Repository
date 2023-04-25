@@ -1,5 +1,6 @@
 package com.example.auto_warehouse.controller;
 
+import com.example.auto_warehouse.bean.Supermarket;
 import com.example.auto_warehouse.bean.User;
 import com.example.auto_warehouse.service.UserService;
 import com.example.auto_warehouse.util.JsonResult;
@@ -27,17 +28,29 @@ public class UserController {
         return userService.login(uid,password);
     }
 
-    @PostMapping("/addUser")
-    public JsonResult<User>addUser(@RequestBody Map<String,String>map){
-        String userid = map.get("uid");
-        String name = map.get("name");
+    @PostMapping("/addSupermarket")
+    public JsonResult<User>addSupermarket(@RequestBody Map<String,String>map){
+        String suid = map.get("suid");
         String password = map.get("password");
-        String type = map.get("type");
-        User user = new User();
-        user.setUid(userid);
-        user.setName(name);
-        user.setPassword(password);
-        user.setType(type);
-        return userService.addUser(user);
+        Supermarket supermarket = new Supermarket();
+        supermarket.setSuid(suid);
+        supermarket.setPassword(password);
+        supermarket.setSuregion("A");
+        supermarket.setRid("1");
+        return userService.addSupermarket(supermarket);
+    }
+    @PostMapping("/modifyPassword")
+    public JsonResult<User>modifyPassword(@RequestBody Map<String,String>map){
+        String uid = map.get("uid");
+        String password = map.get("password");
+        String old_password = map.get("old_password");
+        if(userService.checkPassword(uid,old_password)){
+            User user = new User();
+            user.setUid(uid);
+            user.setPassword(password);
+            return userService.modify(user);
+        }else{
+            return new JsonResult<>("0","原始密码错误!");
+        }
     }
 }

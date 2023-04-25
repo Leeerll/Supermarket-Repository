@@ -5,20 +5,23 @@
 <!--这边的包路径和sql语句需要根据自身的表的写-->
 <mapper namespace="com.example.auto_warehouse.mapper.CargoStatusMapper">
     <select id = "allNotInput" resultType="com.example.auto_warehouse.bean.NotInput">
-        select * from auto_warehouseDB.notInput where isRead = 0
+        select * from auto_warehouseDB.notInput where isRead > 0
     </select>
     <update id="modifyIsReadInput" parameterType="java.lang.Integer">
-        update auto_warehouseDB.notInput set isRead=1 where notInputID=#{notInputID};
+        update auto_warehouseDB.notInput set isRead=isRead-1 where notInputID=#{notInputID};
     </update>
     <insert id = "addNotInput" parameterType="com.example.auto_warehouse.bean.NotInput">
         insert into auto_warehouseDB.notInput (id,name,type,num,productionDate,shelfLife,suid,reason)
         values(#{id},#{name},#{type},#{num},#{productionDate},#{shelfLife},#{suid},#{reason})
     </insert>
     <select id = "allNotOutput" resultType="com.example.auto_warehouse.bean.NotOutput">
-        select * from auto_warehouseDB.notOutput where isRead = 0
+        select * from auto_warehouseDB.notOutput where isRead > 0
+    </select>
+    <select id = "supermarketNotOutput" parameterType="java.lang.String" resultType="com.example.auto_warehouse.bean.NotOutput">
+        select * from auto_warehouseDB.notOutput where isRead > 0 and suid = #{suid}
     </select>
     <update id="modifyIsReadOutput" parameterType="java.lang.Integer">
-        update auto_warehouseDB.notOutput set isRead=1 where notOutputID=#{notOutputID};
+        update auto_warehouseDB.notOutput set isRead=isRead-1 where notOutputID=#{notOutputID};
     </update>
     <insert id = "addNotOutput" parameterType="com.example.auto_warehouse.bean.NotOutput">
         insert into auto_warehouseDB.notOutput (sid,num,suid,reason)

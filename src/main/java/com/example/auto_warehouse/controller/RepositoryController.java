@@ -28,26 +28,26 @@ public class RepositoryController {
             stypemap.put("rid",r.getRid());
             double temp=1-((double)r.getRestNum()/(double)r.getTotalNum());
             temp = temp*100;
-            stypemap.put("rate", temp +"%");
+            stypemap.put("rate", String.valueOf(temp));
             double mh_rate = (r.getMachineHealth()/100.0)*100;
-            stypemap.put("machine_health_rate", mh_rate +"%");
+            stypemap.put("machine_health_rate", String.valueOf(mh_rate));
             list.add(stypemap);
         }
         return list;
     }
 
     @PostMapping("/selectRateByRid")
-    public List<Map<String,String>> selectRateByRid(@RequestBody Map<String,String> map){
+    public Map<String,String> selectRateByRid(@RequestBody Map<String,String> map){
         String rid = map.get("rid");
         List<Repository> result = repositoryMapper.selectRateByRid(rid);
         double temp = 1-((double)result.get(0).getRestNum()/(double)result.get(0).getTotalNum());
         temp = temp*100;
         String rate = String.valueOf(temp);
-        List<Map<String,String>> list = new ArrayList<>();
         Map<String,String> stypemap = new HashMap<>();
+        double mh_rate = (result.get(0).getMachineHealth()/100.0)*100;
+        stypemap.put("machine_health_rate", String.valueOf(mh_rate));
         stypemap.put("takerate",rate);
-        list.add(stypemap);
-        return list;
+        return stypemap;
     }
 
     @RequestMapping("/getMonthIncome")

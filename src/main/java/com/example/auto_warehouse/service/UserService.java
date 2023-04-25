@@ -1,5 +1,6 @@
 package com.example.auto_warehouse.service;
 
+import com.example.auto_warehouse.bean.Supermarket;
 import com.example.auto_warehouse.bean.User;
 import com.example.auto_warehouse.mapper.UserMapper;
 import com.example.auto_warehouse.util.Id;
@@ -46,11 +47,7 @@ public class UserService {
     public JsonResult<User> modify(User user){
         int flag = 0;
         String userid = user.getUid();
-        String type = user.getType();
         //根据是否为空值判断 哪些数据需要修改
-        if (user.getName() != null) {
-            flag = userMapper.modifyName(userid,user.getName());
-        }
         if(user.getPassword() != null){
             flag = userMapper.modifyPassword(userid,user.getPassword());
         }
@@ -66,16 +63,33 @@ public class UserService {
     }
 
     //添加用户
-    public JsonResult<User> addUser(User user){
+    public JsonResult<User> addSupermarket(Supermarket supermarket){
         int num = 0;
-        if(user.getUid()!=null && user.getPassword()!=null && user.getType()!=null){
-            num = userMapper.addUser(user);
+        if(supermarket.getSuid()!=null && supermarket.getPassword()!=null){
+            num = userMapper.addSupermarket(supermarket);
         }
         if(num==0){
             return new JsonResult<>("0","添加失败！");
         }else{
             //此处前端连接需判断num是否为传过来的添加用户数
             return new JsonResult<>(String.valueOf(num),"添加成功！");
+        }
+    }
+    public boolean checkPassword(String userid, String password){
+        // 检查该用户是否存在
+        User user = findById(userid);
+        if(user != null){
+            // 用户存在 匹配密码
+            // 相等
+            if(user.getPassword().equals(password)){
+                return true;
+            }else {
+                //密码不相等
+                return false;
+            }
+        }else{
+            // 用户不存在
+            return false;
         }
     }
 }
