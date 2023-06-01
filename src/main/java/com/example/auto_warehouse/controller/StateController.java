@@ -39,7 +39,7 @@ public class StateController {
         return list;
     }
 
-    // 管理员查看需要人工审核的全部订单
+    // 管理员查看需要人工审核的全部订单的入库申请单详情
     @RequestMapping("/manual_review_detail")
     @ResponseBody
     public List<Map<String,String>> manual_review_detail(@RequestBody Map<String,String> map1){
@@ -105,5 +105,9 @@ public class StateController {
         return list;
     }
 
-    // 超市查看未通过系统审核的申请单原因，其实就是inputThings的信息
+    // 超市查看未通过系统审核的申请单原因，其实就是notInput的信息
+
+
+    // 人工审核通过
+
 }
