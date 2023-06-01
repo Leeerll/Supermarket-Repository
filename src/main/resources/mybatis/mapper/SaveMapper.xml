@@ -4,8 +4,8 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.example.auto_warehouse.mapper.SaveMapper">
     <insert id="save">
-        insert into auto_warehouseDB.save (sid, cid, rid, ceid, suid, inputTime)
-        values (#{sid}, #{cid}, #{rid}, #{ceid}, #{suid}, #{inputTime});
+        insert into auto_warehouseDB.save (sid, cid, rid, ceid, suid, state)
+        values (#{sid}, #{cid}, #{rid}, #{ceid}, #{suid}, #{state});
     </insert>
 
     <select id="getCellByCid" resultType="java.lang.String" parameterType="int">

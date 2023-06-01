@@ -166,6 +166,7 @@ public class InputService {
         }
     }
 
+    // 预留库位
     public void callInput(Map<String,String> map) throws ParseException {
 
         // (1)对Species表的操作
@@ -184,7 +185,6 @@ public class InputService {
             String ceid = "";
 
             // (2)对Cargo表的操作
-
             Cargo cargo = new Cargo((String) map.get("sid"), (String) map.get("sname"), (String) map.get("production_date"), Integer.parseInt(map.get("shelf_life")), (String) map.get("suid"));
             cargoMapper.addCargo(cargo);
             int cid = cargoMapper.getNewCid();
@@ -265,7 +265,7 @@ public class InputService {
             }
 
             // (4)对save表的操作
-            Save save = new Save(sid, cid, Id.getRepositoryID(), ceid, map.get("suid"));
+            Save save = new Save(sid, cid, Id.getRepositoryID(), ceid, map.get("suid"),"待入库");
             saveMapper.save(save);
 
             // (5)对log表的操作
