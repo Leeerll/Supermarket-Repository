@@ -3,6 +3,7 @@ package com.example.auto_warehouse.mapper;
 import com.example.auto_warehouse.bean.InputThings;
 import com.example.auto_warehouse.bean.Message;
 import com.example.auto_warehouse.bean.Order;
+import com.example.auto_warehouse.bean.NotInput;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.Date;
@@ -24,4 +25,6 @@ public interface OrderMapper {
     List<InputThings> getInputThingsByOrderID(int orderID);
     List<Order> getOrderBySuid(String suid);
     List<Message> getMessageByOrderID(int orderID);
+
+    List<NotInput> getNotinputByOrderID(int orderID);
 }

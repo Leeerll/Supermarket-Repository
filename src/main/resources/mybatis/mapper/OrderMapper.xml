@@ -40,6 +40,8 @@
     <select id="getMessageByOrderID" resultType="com.example.auto_warehouse.bean.Message">
         select * from auto_warehouseDB.message where orderID=#{orderID};
     </select>
-
+    <select id="getNotinputByOrderID" resultType="com.example.auto_warehouse.bean.NotInput">
+        select * from auto_warehouseDB.notInput where orderID=#{orderID};
+    </select>
 
 </mapper>
