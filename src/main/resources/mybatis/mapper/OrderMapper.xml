@@ -7,6 +7,39 @@
         insert into auto_warehouseDB.order(suid,rid,time,cost)
         values (#{suid}, #{rid}, #{time}, #{cost});
     </insert>
+    <insert id="insertOrder2" parameterType="com.example.auto_warehouse.bean.Order">
+        insert into auto_warehouseDB.order(suid,rid,time,state)
+        values (#{suid}, #{rid}, #{time}, #{state});
+    </insert>
+    <select id="getOrderID" resultType="java.lang.Integer">
+        select Max(orderID) from auto_warehouseDB.order;
+    </select>
+    <select id="getOrderByStatePeople" resultType="com.example.auto_warehouse.bean.Order">
+        select * from auto_warehouseDB.order where state="人工审核状态";
+    </select>
+    <select id="getSuid" parameterType="com.example.auto_warehouse.bean.Order">
+        select suid from auto_warehouseDB.order where orderID=#{orderID};
+    </select>
+    <insert id="insertInputThings" parameterType="com.example.auto_warehouse.bean.InputThings">
+        insert into auto_warehouseDB.inputThings(sid,sname,stype,num,weight,sh,sw,sd,productionDate,shelfLife,suid,size,inputTime,outputTime,orderID)
+        values (#{sid}, #{sname}, #{stype},#{num}, #{weight},#{sh}, #{sw}, #{sd}, #{productionDate},#{shelfLife}, #{suid}, #{size}, #{inputTime},#{outputTime}, #{orderID});
+    </insert>
+    <update id="modifyOrderState" parameterType="com.example.auto_warehouse.bean.Order">
+        update auto_warehouseDB.order set state=#{state},time=#{time} where orderID=#{orderID};
+    </update>
+    <insert id="insertMessage" parameterType="com.example.auto_warehouse.bean.Message">
+        insert into auto_warehouseDB.message(orderID,action,suid,time)
+        values (#{orderID}, #{action}, #{suid}, #{time});
+    </insert>
+    <select id="getInputThingsByOrderID" resultType="com.example.auto_warehouse.bean.InputThings">
+        select * from auto_warehouseDB.inputThings where orderID=#{orderID};
+    </select>
+    <select id="getOrderBySuid" resultType="com.example.auto_warehouse.bean.Order">
+        select * from auto_warehouseDB.order where suid=#{suid};
+    </select>
+    <select id="getMessageByOrderID" resultType="com.example.auto_warehouse.bean.Message">
+        select * from auto_warehouseDB.message where orderID=#{orderID};
+    </select>
 
 
 </mapper>

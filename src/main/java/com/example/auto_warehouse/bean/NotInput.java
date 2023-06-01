@@ -20,10 +20,11 @@ public class NotInput {
     private String suid;
     private String reason;
     private int isRead;
+    private int orderID;
     public int getNotInputID() {
         return notInputID;
     }
-    public NotInput(String id, String name, String type, int num, Date productionDate, int shelfLife, String suid, String reason) {
+    public NotInput(String id, String name, String type, int num, Date productionDate, int shelfLife, String suid, String reason, int orderID) {
         this.id = id;
         this.name = name;
         this.type = type;
@@ -32,6 +33,7 @@ public class NotInput {
         this.shelfLife = shelfLife;
         this.suid = suid;
         this.reason = reason;
+        this.orderID = orderID;
     }
 
     public int getIsRead() {

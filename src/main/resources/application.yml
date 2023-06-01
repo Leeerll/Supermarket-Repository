@@ -1,6 +1,6 @@
 spring:
   datasource:
-    url: jdbc:mysql://bj-cynosdbmysql-grp-qzs817me.sql.tencentcdb.com:27204
+    url: jdbc:mysql://bj-cynosdbmysql-grp-qzs817me.sql.tencentcdb.com:27204?useUnicode=true&characterEncoding=UTF-8
     username: root
     password: Zjq123789
 server:

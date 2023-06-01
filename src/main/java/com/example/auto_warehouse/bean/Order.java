@@ -1,5 +1,6 @@
 package com.example.auto_warehouse.bean;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 
@@ -10,11 +11,32 @@ import java.util.Date;
 public class Order {
     private String suid;
     private String rid;
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date time;
     private double cost;
     private int isRead;
     @Id
     private int orderID;
+    private String state;
+    private String others;
+
+    public String getState() {
+        return state;
+    }
+
+    public void setState(String state) {
+        this.state = state;
+    }
+
+    public String getOthers() {
+        return others;
+    }
+
+    public void setOthers(String others) {
+        this.others = others;
+    }
+
+
 
     public int getIsRead() {
         return isRead;
@@ -42,6 +64,12 @@ public class Order {
         setTime();
         this.cost = cost;
     }
+    public Order(String suid, String rid, String state) throws ParseException {
+        this.suid = suid;
+        this.rid = rid;
+        setTime();
+        this.state = state;
+    }
 
     public String getSuid() {
         return suid;
@@ -65,7 +93,7 @@ public class Order {
 
     public void setTime() throws ParseException {
         Date now = new Date();
-        SimpleDateFormat tFormat = new SimpleDateFormat("yyyy-MM-dd");
+        SimpleDateFormat tFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         this.time = tFormat.parse(tFormat.format(now));
     }
 
