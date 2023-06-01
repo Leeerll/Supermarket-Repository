@@ -11,8 +11,8 @@
         update auto_warehouseDB.notInput set isRead=isRead-1 where notInputID=#{notInputID};
     </update>
     <insert id = "addNotInput" parameterType="com.example.auto_warehouse.bean.NotInput">
-        insert into auto_warehouseDB.notInput (id,name,type,num,productionDate,shelfLife,suid,reason)
-        values(#{id},#{name},#{type},#{num},#{productionDate},#{shelfLife},#{suid},#{reason})
+        insert into auto_warehouseDB.notInput (id,name,type,num,productionDate,shelfLife,suid,reason,orderID)
+        values(#{id},#{name},#{type},#{num},#{productionDate},#{shelfLife},#{suid},#{reason},#{orderID})
     </insert>
     <select id = "allNotOutput" resultType="com.example.auto_warehouse.bean.NotOutput">
         select * from auto_warehouseDB.notOutput where isRead > 0

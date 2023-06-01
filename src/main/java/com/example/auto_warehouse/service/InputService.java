@@ -32,15 +32,37 @@ public class InputService {
     private SaveMapper saveMapper;
     @Autowired
     private LogMapper logMapper;
+    @Autowired
+    private OrderMapper orderMapper;
     private static final Logger logger = LoggerFactory.getLogger(LoadFileController.class);
+    private Date now_time;
+
+    private Date getNowTime() throws ParseException {
+        Date now = new Date();
+        SimpleDateFormat tFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        now_time = tFormat.parse(tFormat.format(now));
+        return now_time;
+    }
 
     public void check(List<Map<String,String>> data) throws ParseException {
+        // 写入order表，状态设为“系统审核状态”
+        String suid = data.get(0).get("suid");
+        Order order = new Order(suid,Id.getRepositoryID(),"系统审核状态");
+        orderMapper.insertOrder2(order);
+        Message message = new Message(orderMapper.getOrderID(), "系统审核状态",suid);
+        orderMapper.insertMessage(message);
+
         // 不能入库的数据
         List<Map<String,String>> notInputData = new ArrayList<>();
         // 遍历data
         for(Map map:data){
+            // 内容完整核实
+            if(!(map.containsKey("sid")&&map.containsKey("sname")&&map.containsKey("stype")&&map.containsKey("num")&&map.containsKey("weight")&&map.containsKey("sh")&&map.containsKey("sw")&&map.containsKey("sd")&&map.containsKey("production_date")&&map.containsKey("shelf_life")&&map.containsKey("suid")&&map.containsKey("size")&&map.containsKey("input_time")&&map.containsKey("output_time"))){
+                map.put("reason","货品内容不完整");
+                notInputData.add(map);
+            }
             // 检查体积,长宽高不能超过2m
-            if(Double.parseDouble((String) map.get("sh"))>200 || Double.parseDouble((String) map.get("sw"))>200 || Double.parseDouble((String) map.get("sd"))>200){
+            else if(Double.parseDouble((String) map.get("sh"))>200 || Double.parseDouble((String) map.get("sw"))>200 || Double.parseDouble((String) map.get("sd"))>200){
                 map.put("reason","体积过大");
                 notInputData.add(map);
             }
@@ -49,7 +71,7 @@ public class InputService {
                 map.put("reason","超重");
                 notInputData.add(map);
             }
-            // 检查超市是否存在
+            // 检查超市是否存在（身份核实）
             else if(supermarketMapper.findById((String) map.get("suid"))==null){
                 map.put("reason","超市不存在");
                 notInputData.add(map);
@@ -65,12 +87,25 @@ public class InputService {
             }
             else {
 
-                callInput(map);
+
             }
         }
         // 针对不能入库的货物
         if(notInputData.size()>0){
+            orderMapper.modifyOrderState(orderMapper.getOrderID(),"未通过系统审核状态",getNowTime());
+            Message message2 = new Message(orderMapper.getOrderID(), "未通过系统审核状态",suid);
+            orderMapper.insertMessage(message2);
             notInput(notInputData);
+        }else{
+            orderMapper.modifyOrderState(orderMapper.getOrderID(),"通过系统审核状态",getNowTime());
+            Message message1 = new Message(orderMapper.getOrderID(), "通过系统审核状态",suid);
+            orderMapper.insertMessage(message1);
+            // 进入人工审核状态
+            orderMapper.modifyOrderState(orderMapper.getOrderID(),"人工审核状态",getNowTime());
+            Message message3 = new Message(orderMapper.getOrderID(), "人工审核状态",suid);
+            orderMapper.insertMessage(message3);
+            // 写入入库单表
+            writeInputThings(data);
         }
     }
     public List<NotInput> allNotInput(){
@@ -80,6 +115,7 @@ public class InputService {
 
     // 不能入库，写入停滞区
     public boolean notInput(List<Map<String,String>> list) {
+        int orderID = orderMapper.getOrderID();
         SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy-MM-dd");
         int insert_num = 0;
         try {
@@ -92,7 +128,7 @@ public class InputService {
                 int shelf_life = Integer.parseInt(list.get(i).get("shelf_life"));
                 String suid = list.get(i).get("suid");
                 String reason = list.get(i).get("reason");
-                NotInput notInput = new NotInput(id,name,type,num,production_date,shelf_life,suid,reason);
+                NotInput notInput = new NotInput(id,name,type,num,production_date,shelf_life,suid,reason,orderID);
                 insert_num += cargoStatusMapper.addNotInput(notInput);
             }
         }catch (Exception e){
@@ -100,6 +136,34 @@ public class InputService {
         }
 
         return insert_num == list.size();
+    }
+
+    // 写入inputThings表
+    public void writeInputThings(List<Map<String,String>> list) {
+        int orderID = orderMapper.getOrderID();
+        SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy-MM-dd");
+        try {
+            for(int i=0;i<list.size();i++){
+                String sid = list.get(i).get("sid");
+                String sname = list.get(i).get("sname");
+                String stype = list.get(i).get("stype");
+                int num = Integer.parseInt(list.get(i).get("num"));
+                double weight = Double.parseDouble(list.get(i).get("weight"));
+                double sh = Double.parseDouble(list.get(i).get("sh"));
+                double sw = Double.parseDouble(list.get(i).get("sw"));
+                double sd = Double.parseDouble(list.get(i).get("sd"));
+                Date production_date = sdf1.parse(list.get(i).get("production_date"));
+                int shelf_life = Integer.parseInt(list.get(i).get("shelf_life"));
+                String suid = list.get(i).get("suid");
+                String size = list.get(i).get("size");
+                Date inputTime = sdf1.parse(list.get(i).get("input_time"));
+                Date outputTime = sdf1.parse(list.get(i).get("output_time"));
+                InputThings inputThings = new InputThings(sid,sname,stype,num,weight,sh,sw,sd,production_date,shelf_life,suid,size,inputTime,outputTime,orderID);
+                orderMapper.insertInputThings(inputThings);
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
     }
 
     public void callInput(Map<String,String> map) throws ParseException {
