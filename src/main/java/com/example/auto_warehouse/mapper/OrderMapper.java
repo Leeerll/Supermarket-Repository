@@ -24,9 +24,11 @@ public interface OrderMapper {
     void insertMessage(Message message);
     String getSuid(int orderID);
     List<Order> getOrderByStatePeople();
+    List<Order> getOrderByStatePay(String suid);
     List<InputThings> getInputThingsByOrderID(int orderID);
     List<Order> getOrderBySuid(String suid);
     List<Message> getMessageByOrderID(int orderID);
 
     List<NotInput> getNotinputByOrderID(int orderID);
+    Order getOrderByOrderID(int orderID);
 }

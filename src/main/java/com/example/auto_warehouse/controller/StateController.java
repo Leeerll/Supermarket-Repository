@@ -1,11 +1,11 @@
 package com.example.auto_warehouse.controller;
 
-import com.example.auto_warehouse.bean.InputThings;
-import com.example.auto_warehouse.bean.Message;
-import com.example.auto_warehouse.bean.NotInput;
-import com.example.auto_warehouse.bean.Order;
+import com.example.auto_warehouse.bean.*;
+import com.example.auto_warehouse.mapper.IncomeMapper;
 import com.example.auto_warehouse.mapper.OrderMapper;
+import com.example.auto_warehouse.mapper.RepositoryMapper;
 import com.example.auto_warehouse.service.InputService;
+import com.example.auto_warehouse.util.Id;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -14,16 +14,17 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @RestController
 @RequestMapping("/state")
 public class StateController {
     @Autowired
     private OrderMapper orderMapper;
+    @Autowired
+    private RepositoryMapper repositoryMapper;
+    @Autowired
+    private IncomeMapper incomeMapper;
     @Autowired
     private InputService inputService;
 
@@ -138,6 +139,7 @@ public class StateController {
         System.out.println(list);
         return list;
     }
+
     // 人工审核通过
     @RequestMapping("/manual_review_passed")
     @ResponseBody
@@ -194,5 +196,69 @@ public class StateController {
         orderMapper.insertMessage(message1);
         return "true";
     }
+
+    // 超市查看需要缴费的订单
+    @RequestMapping("/show_payment")
+    @ResponseBody
+    public List<Map<String,String>> show_payment(@RequestBody Map<String,String> map1){
+        String suid = map1.get("suid");
+        List<Order> list_order = orderMapper.getOrderByStatePay(suid);
+        List<Map<String,String>> list = new ArrayList<>();
+        SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        for(Order order:list_order){
+            Map<String,String> map = new HashMap<>();
+            map.put("orderID",String.valueOf(order.getOrderID()));
+            map.put("cost",String.valueOf(order.getCost()));
+            map.put("time", sdf1.format(order.getTime()));
+            list.add(map);
+        }
+        return list;
+    }
+
+    // 超市缴费成功
+    @RequestMapping("/finish_payment")
+    @ResponseBody
+    public String finish_payment(@RequestBody Map<String,String> map1) throws ParseException {
+        int orderID = Integer.parseInt(map1.get("orderID"));
+        // 改成“已缴费状态”
+        orderMapper.modifyOrderState(orderID,"已缴费状态",inputService.getNowTime());
+        Message message1 = new Message(orderID, "已缴费状态", orderMapper.getSuid(orderID));
+        orderMapper.insertMessage(message1);
+        // 仓库收入income表增加，repository收入增加
+        double money=orderMapper.getOrderByOrderID(orderID).getCost();
+        repositoryMapper.updateIncome(Id.getRepositoryID(), money);
+        int year = Calendar.getInstance().get(Calendar.YEAR);
+        int month = Calendar.getInstance().get(Calendar.MONTH);
+        int yearMonth = year*100+month+1;
+        List<Income> list = incomeMapper.findByYearMonth(Id.getRepositoryID(),yearMonth);
+        if(list.size()==0){
+            Income income = new Income(Id.getRepositoryID(),yearMonth,money);
+            incomeMapper.insertIncome(income);
+        }else{
+            incomeMapper.updateIncome(yearMonth,money,Id.getRepositoryID());
+        }
+        return "true";
+    }
+
+    // 到货接口(python程序调用)，传到货清单excel
+    @RequestMapping("/arrival")
+    @ResponseBody
+    public String arrival(@RequestBody Map<String,String> map1) throws ParseException {
+        // 处理excel
+
+        // 改成“到货检查状态”
+
+        // 调用核验函数
+
+        return "true";
+    }
+
+    // 返回给超市核验单表，进行确认
+
+
+    // 超市确认核验单
+
+
+
 
 }

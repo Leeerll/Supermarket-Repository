@@ -17,9 +17,13 @@
     <select id="getOrderByStatePeople" resultType="com.example.auto_warehouse.bean.Order">
         select * from auto_warehouseDB.order where state="人工审核状态";
     </select>
+    <select id="getOrderByStatePay" resultType="com.example.auto_warehouse.bean.Order">
+        select * from auto_warehouseDB.order where state="待缴费状态" and suid=#{suid};
+    </select>
     <select id="getSuid" parameterType="com.example.auto_warehouse.bean.Order" resultType="java.lang.String">
         select suid from auto_warehouseDB.order where orderID=#{orderID};
     </select>
+
     <insert id="insertInputThings" parameterType="com.example.auto_warehouse.bean.InputThings">
         insert into auto_warehouseDB.inputThings(sid,sname,stype,num,weight,sh,sw,sd,productionDate,shelfLife,suid,size,inputTime,outputTime,orderID)
         values (#{sid}, #{sname}, #{stype},#{num}, #{weight},#{sh}, #{sw}, #{sd}, #{productionDate},#{shelfLife}, #{suid}, #{size}, #{inputTime},#{outputTime}, #{orderID});
@@ -48,6 +52,9 @@
     </select>
     <select id="getNotinputByOrderID" resultType="com.example.auto_warehouse.bean.NotInput">
         select * from auto_warehouseDB.notInput where orderID=#{orderID};
+    </select>
+    <select id="getOrderByOrderID" resultType="com.example.auto_warehouse.bean.Order">
+        select * from auto_warehouseDB.order where orderID=#{orderID};
     </select>
 
 </mapper>
