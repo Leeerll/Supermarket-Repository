@@ -22,14 +22,16 @@ public class Save {
 
     private String sname;          //货物名称
     private String state;          //入库状态信息
+    private int orderID;
 
-    public Save(String sid, int cid, String rid, String ceid, String suid, String state) throws ParseException {
+    public Save(String sid, int cid, String rid, String ceid, String suid, String state, int orderID) throws ParseException {
         this.sid = sid;
         this.cid = cid;
         this.rid = rid;
         this.ceid = ceid;
         this.suid = suid;
         this.state = state;
+        this.orderID = orderID;
         //setInputTime();
     }
 

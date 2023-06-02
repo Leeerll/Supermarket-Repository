@@ -136,9 +136,9 @@ public class OutputService {
 
                 // (5) 对save表的操作：outputTime
                 saveMapper.updateOutputTime(cargoList.get(i).getCid(), outputTime);
-                // (6) 对log表的操作
-                Log log = new Log(sid, cid, Id.getRepositoryID(), ceid, map.get("suid"), "output");
-                logMapper.addLog(log);
+                // (6) 对log表的操作------------------------------------------------------------------------------------------修改
+                //Log log = new Log(sid, cid, Id.getRepositoryID(), ceid, map.get("suid"), "output");
+                //logMapper.addLog(log);
 
             }
 

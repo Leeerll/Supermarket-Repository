@@ -35,9 +35,9 @@ public class InputService {
     @Autowired
     private OrderMapper orderMapper;
     private static final Logger logger = LoggerFactory.getLogger(LoadFileController.class);
-    private Date now_time;
+    public Date now_time;
 
-    private Date getNowTime() throws ParseException {
+    public Date getNowTime() throws ParseException {
         Date now = new Date();
         SimpleDateFormat tFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         now_time = tFormat.parse(tFormat.format(now));
@@ -167,7 +167,7 @@ public class InputService {
     }
 
     // 预留库位
-    public void callInput(Map<String,String> map) throws ParseException {
+    public void callInput(Map<String,String> map,int orderID) throws ParseException {
 
         // (1)对Species表的操作
         // 如果该种类的货物已存在，则只需更改num，否则需要插入操作
@@ -265,11 +265,11 @@ public class InputService {
             }
 
             // (4)对save表的操作
-            Save save = new Save(sid, cid, Id.getRepositoryID(), ceid, map.get("suid"),"待入库");
+            Save save = new Save(sid, cid, Id.getRepositoryID(), ceid, map.get("suid"),"待入库",orderID);
             saveMapper.save(save);
 
             // (5)对log表的操作
-            Log log = new Log(sid, cid, Id.getRepositoryID(), ceid, map.get("suid"), "input");
+            Log log = new Log(sid, cid, Id.getRepositoryID(), ceid, map.get("suid"), "待入库",orderID);
             logMapper.addLog(log);
         }
 

@@ -5,7 +5,7 @@ import org.slf4j.LoggerFactory;
 
 // 此类用于登录时设置全局用ID，供后端调用，查询数据库
 public class Id {
-    static String repositoryID;
+    static String repositoryID="1";
     static String shopID;
 
     public static String getShopID() {

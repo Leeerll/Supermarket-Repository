@@ -17,7 +17,7 @@
     <select id="getOrderByStatePeople" resultType="com.example.auto_warehouse.bean.Order">
         select * from auto_warehouseDB.order where state="人工审核状态";
     </select>
-    <select id="getSuid" parameterType="com.example.auto_warehouse.bean.Order">
+    <select id="getSuid" parameterType="com.example.auto_warehouse.bean.Order" resultType="java.lang.String">
         select suid from auto_warehouseDB.order where orderID=#{orderID};
     </select>
     <insert id="insertInputThings" parameterType="com.example.auto_warehouse.bean.InputThings">
@@ -26,6 +26,12 @@
     </insert>
     <update id="modifyOrderState" parameterType="com.example.auto_warehouse.bean.Order">
         update auto_warehouseDB.order set state=#{state},time=#{time} where orderID=#{orderID};
+    </update>
+    <update id="modifyOrderCost" parameterType="com.example.auto_warehouse.bean.Order">
+        update auto_warehouseDB.order set cost=#{cost} where orderID=#{orderID};
+    </update>
+    <update id="modifyOrderOthers" parameterType="com.example.auto_warehouse.bean.Order">
+        update auto_warehouseDB.order set others=#{others} where orderID=#{orderID};
     </update>
     <insert id="insertMessage" parameterType="com.example.auto_warehouse.bean.Message">
         insert into auto_warehouseDB.message(orderID,action,suid,time)

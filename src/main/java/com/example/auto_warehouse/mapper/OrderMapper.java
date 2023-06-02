@@ -18,6 +18,8 @@ public interface OrderMapper {
     int getOrderID();
     void insertInputThings(InputThings inputThings);
     void modifyOrderState(int orderID, String state, Date time);
+    void modifyOrderCost(int orderID,double cost);
+    void modifyOrderOthers(int orderID,String others);
     void insertMessage(Message message);
     String getSuid(int orderID);
     List<Order> getOrderByStatePeople();

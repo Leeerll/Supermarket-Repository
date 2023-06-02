@@ -24,8 +24,8 @@
     </select>
 
     <insert id="addCargo" parameterType="com.example.auto_warehouse.bean.Cargo">
-        insert into auto_warehouseDB.cargo (sid, sname, productionDate, shelfLife, inputTime, state, suid)
-        values (#{sid}, #{sname}, #{productionDate}, #{shelfLife}, #{inputTime}, #{state}, #{suid});
+        insert into auto_warehouseDB.cargo (sid, sname, productionDate, shelfLife, state, suid)
+        values (#{sid}, #{sname}, #{productionDate}, #{shelfLife}, #{state}, #{suid});
     </insert>
 
     <update id="updateOutputTime">

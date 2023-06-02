@@ -38,7 +38,7 @@ public class Cargo {
         this.sname = sname;
         setProductionDate(productionDate);
         this.shelfLife = shelfLife;
-        setInputTime();
+        //setInputTime();
         this.state = "not expire";
         this.suid = suid;
     }
