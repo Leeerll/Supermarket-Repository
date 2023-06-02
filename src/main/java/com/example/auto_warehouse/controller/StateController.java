@@ -88,7 +88,7 @@ public class StateController {
             map.put("orderID",String.valueOf(order.getOrderID()));
             map.put("state",order.getState());
             map.put("time", sdf1.format(order.getTime()));
-            map.put("others", sdf1.format(order.getOthers())); // 如果未通过人工审核，原因会显示在这里
+            map.put("others", order.getOthers()); // 如果未通过人工审核，原因会显示在这里
             list.add(map);
         }
         return list;
