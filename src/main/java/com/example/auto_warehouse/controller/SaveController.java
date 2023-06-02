@@ -23,6 +23,36 @@ public class SaveController {
     @Autowired
     private SpeciesMapper speciesMapper;
 
+    @RequestMapping("/findAll")
+    public List<Map<String,String>> findAll(){
+        List<Save> result = saveMapper.findAll();
+        List<Map<String,String>> list = new ArrayList<>();
+        String pattern = "yyyy-MM-dd";
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
+        for(Save c:result){
+            Map<String,String> stypemap = new HashMap<>();
+            stypemap.put("stype",c.getStype());
+            stypemap.put("sname",c.getSname());
+            stypemap.put("ceid",c.getCeid());
+            stypemap.put("sid",c.getSid());
+            stypemap.put("cid",String.valueOf(c.getCid()));
+            if(c.getInputTime()==null){
+                stypemap.put("input_time"," ");
+            }else{
+                stypemap.put("input_time",simpleDateFormat.format(c.getInputTime()));
+            }
+            if(c.getOutputTime()==null){
+                stypemap.put("output_time"," ");
+            }else{
+                stypemap.put("output_time",simpleDateFormat.format(c.getOutputTime()));
+            }
+            stypemap.put("suid",c.getSuid());
+
+            list.add(stypemap);
+        }
+        return list;
+    }
+
     @PostMapping("/findByStype")
     public List<Map<String,String>> findByStype(@RequestBody Map<String,String> map){
         String stype = map.get("stype");

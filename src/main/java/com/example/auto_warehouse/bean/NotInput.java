@@ -114,6 +114,7 @@ public class NotInput {
         this.suid = suid;
     }
 
+    public int getOrderID (){ return orderID; }
 
 
 }

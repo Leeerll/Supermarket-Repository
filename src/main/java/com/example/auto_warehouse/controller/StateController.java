@@ -2,6 +2,7 @@ package com.example.auto_warehouse.controller;
 
 import com.example.auto_warehouse.bean.InputThings;
 import com.example.auto_warehouse.bean.Message;
+import com.example.auto_warehouse.bean.NotInput;
 import com.example.auto_warehouse.bean.Order;
 import com.example.auto_warehouse.mapper.OrderMapper;
 import com.example.auto_warehouse.service.InputService;
@@ -111,8 +112,32 @@ public class StateController {
     }
 
     // 超市查看未通过系统审核的申请单原因，其实就是notInput的信息
+    @RequestMapping("/show_supermarket_order_notInput")
+    @ResponseBody
+    public List<Map<String,String>> show_supermarket_order_notInput(@RequestBody Map<String,String> map){
+        int orderID = Integer.parseInt(map.get("orderID"));
 
+        List<Map<String,String>> list = new ArrayList<>();
+        List<NotInput> list_notInput = orderMapper.getNotinputByOrderID(orderID);
+        SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        for(NotInput not_Input:list_notInput){
+            Map<String,String> map2 = new HashMap<>();
+            map2.put("id",not_Input.getId());
+            map2.put("name",not_Input.getName());
+            map2.put("type",not_Input.getType());
+            map2.put("reason",not_Input.getReason());
+            map2.put("orderID",String.valueOf( not_Input.getOrderID()));
+            map2.put("suid",String.valueOf( not_Input.getSuid()));
+            map2.put("productionDate", sdf1.format(not_Input.getProduction_date()));
+            map2.put("num", String.valueOf(not_Input.getNum()));
+            map2.put("shelfLife", String.valueOf(not_Input.getShelf_life()));
 
+            list.add(map2);
+        }
+        System.out.println("1234567889");
+        System.out.println(list);
+        return list;
+    }
     // 人工审核通过
     @RequestMapping("/manual_review_passed")
     @ResponseBody
