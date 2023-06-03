@@ -56,7 +56,7 @@ public class InputService {
         List<Map<String,String>> notInputData = new ArrayList<>();
         // 遍历data
         for(Map map:data){
-            // 内容完整核实
+            // 内容完整核实-----------------------------------------------------------------
             if(!(map.containsKey("sid")&&map.containsKey("sname")&&map.containsKey("stype")&&map.containsKey("num")&&map.containsKey("weight")&&map.containsKey("sh")&&map.containsKey("sw")&&map.containsKey("sd")&&map.containsKey("production_date")&&map.containsKey("shelf_life")&&map.containsKey("suid")&&map.containsKey("size")&&map.containsKey("input_time")&&map.containsKey("output_time"))){
                 map.put("reason","货品内容不完整");
                 notInputData.add(map);
