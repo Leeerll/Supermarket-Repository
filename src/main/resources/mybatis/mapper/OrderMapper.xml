@@ -59,6 +59,9 @@
     <select id="getOrderByOrderID" resultType="com.example.auto_warehouse.bean.Order">
         select * from auto_warehouseDB.order where orderID=#{orderID};
     </select>
+    <select id="getOrderBySuidAndstate" resultType="com.example.auto_warehouse.bean.Order">
+        select * from auto_warehouseDB.order where suid=#{suid} and state=#{state};
+    </select>
 
     <insert id="insertOrderCostLog" parameterType="com.example.auto_warehouse.bean.OrderCostLog">
         insert into auto_warehouseDB.orderCostLog(suid,orderID,money,statement,time)

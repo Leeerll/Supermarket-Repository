@@ -135,13 +135,13 @@ public class InputService {
                     find = 1;
                     checkThing[index] = 1;
                     if(inputThings.getNum()==Integer.parseInt((String) map.get("num"))){
-                        CheckInput checkInput  = new CheckInput(orderId, inputThings.getSid(), 0, "正常");
+                        CheckInput checkInput  = new CheckInput(orderId, inputThings.getSid(), 0, "正常", "待确认入库");
                         checkInputMapper.insertCheckInput(checkInput);
                     }else if(inputThings.getNum()<Integer.parseInt((String) map.get("num"))){
-                        CheckInput checkInput  = new CheckInput(orderId, inputThings.getSid(), inputThings.getNum() - Integer.parseInt((String) map.get("num")), "实际到货数量少于入库申请数量");
+                        CheckInput checkInput  = new CheckInput(orderId, inputThings.getSid(), inputThings.getNum() - Integer.parseInt((String) map.get("num")), "实际到货数量少于入库申请数量", "待确认入库");
                         checkInputMapper.insertCheckInput(checkInput);
                     }else{
-                        CheckInput checkInput  = new CheckInput(orderId, inputThings.getSid(), inputThings.getNum() - Integer.parseInt((String) map.get("num")), "实际到货数量多于入库申请数量");
+                        CheckInput checkInput  = new CheckInput(orderId, inputThings.getSid(), inputThings.getNum() - Integer.parseInt((String) map.get("num")), "实际到货数量多于入库申请数量", "待确认入库");
                         checkInputMapper.insertCheckInput(checkInput);
                     }
                     break;
@@ -150,14 +150,14 @@ public class InputService {
             }
             // 种类检查
             if(find==0){
-                CheckInput checkInput  = new CheckInput(orderId, (String) map.get("sid"), 0, "入库申请中无该物品");
+                CheckInput checkInput  = new CheckInput(orderId, (String) map.get("sid"), 0, "入库申请中无该物品", "待确认入库");
                 checkInputMapper.insertCheckInput(checkInput);
             }
         }
         // 种类检查
         for(int i=0; i<inputThingsList.size(); i++) {
             if (checkThing[i] == 0) {
-                CheckInput checkInput = new CheckInput(orderId, inputThingsList.get(i).getSid(), 0, "实际到货缺少该物品");
+                CheckInput checkInput = new CheckInput(orderId, inputThingsList.get(i).getSid(), 0, "实际到货缺少该物品", "待确认入库");
                 checkInputMapper.insertCheckInput(checkInput);
             }
         }

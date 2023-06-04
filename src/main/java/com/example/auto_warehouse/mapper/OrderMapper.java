@@ -30,4 +30,5 @@ public interface OrderMapper {
     List<NotInput> getNotinputByOrderID(int orderID);
     Order getOrderByOrderID(int orderID);
     void insertOrderCostLog(OrderCostLog orderCostLog);
+    List<Order> getOrderBySuidAndstate(String suid, String state);
 }
