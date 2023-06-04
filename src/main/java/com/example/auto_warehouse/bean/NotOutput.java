@@ -15,6 +15,7 @@ public class NotOutput {
     private String reason;
     private int isRead;
     private String name;
+    private int orderID;
 
     public String getName() {
         return name;
@@ -38,12 +39,13 @@ public class NotOutput {
     }
 
 
-    public NotOutput(String sid, String suid, int num, String reason, String name) {
+    public NotOutput(String sid, String suid, int num, String reason, String name,int orderID) {
         this.sid = sid;
         this.suid = suid;
         this.num = num;
         this.reason = reason;
         this.name = name;
+        this.orderID = orderID;
     }
     public NotOutput(){
 
