@@ -117,6 +117,7 @@ public class InputService {
 
     // 正式到货申请
     public void checkIn(List<Map<String,String>> data) throws ParseException {
+
         // (1) 检查费用是否已缴
 
         // (2) 检查货物信息和之前的入库申请单是否相同

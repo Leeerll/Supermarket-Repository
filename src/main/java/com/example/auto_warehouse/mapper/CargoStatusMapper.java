@@ -21,6 +21,7 @@ public interface CargoStatusMapper {
     int modifyIsReadOutput(int notOutputID);
     // 判断进货超市在仓库中是否存有同类产品
     List<String> getSameSpecies(String sid, String suid, String rid);
+    List<String> getSameSpeciesByOrderID(String sid, int orderID);
 
     List<String> getSameSpeciesAllCeid(String sid, String suid, String rid);
 }

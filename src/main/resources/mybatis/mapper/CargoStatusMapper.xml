@@ -24,12 +24,16 @@
         update auto_warehouseDB.notOutput set isRead=isRead-1 where notOutputID=#{notOutputID};
     </update>
     <insert id = "addNotOutput" parameterType="com.example.auto_warehouse.bean.NotOutput">
-        insert into auto_warehouseDB.notOutput (sid,num,suid,reason,name)
-        values(#{sid},#{num},#{suid},#{reason},#{name})
+        insert into auto_warehouseDB.notOutput (sid,num,suid,reason,name,orderID)
+        values(#{sid},#{num},#{suid},#{reason},#{name},#{orderID})
     </insert>
 
     <select id = "getSameSpecies" resultType="java.lang.String">
         select sid from auto_warehouseDB.save where sid = #{sid} and suid = #{suid} and rid = #{rid} and state!="变更未送达"
+    </select>
+
+    <select id = "getSameSpeciesByOrderID" resultType="java.lang.String">
+        select sid from auto_warehouseDB.save where sid = #{sid} and orderID = #{orderID} and state!="变更未送达"
     </select>
 
     <select id = "getSameSpeciesAllCeid" resultType="java.lang.String">

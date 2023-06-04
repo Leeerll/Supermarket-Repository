@@ -12,14 +12,14 @@
         select max(cid) from auto_warehouseDB.cargo;
     </select>
 
-    <select id="getNotExpireNum" parameterType="string" resultType="java.lang.Integer">
+    <select id="getNotExpireNum" resultType="java.lang.Integer">
         select count(cid) from auto_warehouseDB.cargo
-        where sid=#{sid} and suid=#{suid} and state="not expire";
+        where sid=#{sid} and orderID=#{orderID} and state="not expire";
     </select>
 
     <select id="outputBatch" resultType="com.example.auto_warehouse.bean.Cargo">
         select * from auto_warehouseDB.cargo
-        where outputTime is null
+        where outputTime is null and sid=#{sid} and orderID=#{orderID}
         order by productionDate LIMIT 1;
     </select>
 
@@ -54,6 +54,9 @@
     </update>
     <update id="updateInputTime">
         update auto_warehouseDB.cargo set inputTime=#{inputTime} where orderID=#{orderID} and state!="变更未送达";
+    </update>
+    <update id="modifyCargoStateCommon" parameterType="com.example.auto_warehouse.bean.Cargo">
+        update auto_warehouseDB.cargo set state=#{state} where cid=#{cid};
     </update>
 
 </mapper>

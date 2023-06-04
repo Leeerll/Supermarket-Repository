@@ -86,10 +86,10 @@ public class AutoWarehouseApplication {
                 if (ExcelMap.actual_input_map_queue.isEmpty()) {
                     //System.out.println("入库队列为空");
                 } else {
-                    System.out.println("出库队列不为空");
+                    System.out.println("实际入库队列不为空");
                     Id.setRepositoryID("1");
                     try {
-                        outputService.check(ExcelMap.actual_input_map_queue.getFirst());
+                        inputService.checkIn(ExcelMap.actual_input_map_queue.getFirst());
                     } catch (ParseException e) {
                         throw new RuntimeException(e);
                     }

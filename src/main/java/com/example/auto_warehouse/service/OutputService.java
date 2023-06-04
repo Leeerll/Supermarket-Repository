@@ -41,12 +41,13 @@ public class OutputService {
 
     // 出库data：sid、num、suid
     public void check(List<Map<String,String>> data) throws ParseException {
+        int orderID = Integer.parseInt(data.get(0).get("orderID"));
         // 不能出库的数据
         List<Map<String,String>> notOutputData = new ArrayList<>();
         // 遍历data
         for(Map map:data){
             // 检查sid是否存在
-            if(speciesMapper.findById((String) map.get("sid"))==null){
+            if(speciesMapper.findById((String) map.get("sid"))==null || cargoStatusMapper.getSameSpeciesByOrderID((String) map.get("sid"), orderID).size()==0){
                 map.put("reason","商品不存在");
                 notOutputData.add(map);
             }
@@ -56,13 +57,14 @@ public class OutputService {
                 notOutputData.add(map);
             }
             // 检查num是否够
-            else if(Integer.parseInt((String) map.get("num"))<= cargoMapper.getNotExpireNum((String) map.get("sid"), (String) map.get("suid"))){
+            else if(Integer.parseInt((String) map.get("num"))<= cargoMapper.getNotExpireNum((String) map.get("sid"), orderID)){
                 map.put("reason","余量不足");
                 notOutputData.add(map);
             }
             // 更改表
             else{
-                callOutput(map);
+
+                //callOutput(map);---------------------------------------------------------------------------需要修改
             }
 
         }
@@ -74,6 +76,7 @@ public class OutputService {
     }
 
     private void notOutput(List<Map<String, String>> list) {
+        int orderID = Integer.parseInt(list.get(0).get("orderID"));
         int insert_num = 0;
         try {
             for(int i=0;i<list.size();i++){
@@ -82,7 +85,7 @@ public class OutputService {
                 String suid = list.get(i).get("suid");
                 String reason = list.get(i).get("reason");
                 String name = list.get(i).get("name");
-                NotOutput notOutput = new NotOutput(sid,suid,num,reason,name);
+                NotOutput notOutput = new NotOutput(sid,suid,num,reason,name,orderID);
                 insert_num += cargoStatusMapper.addNotOutput(notOutput);
             }
         }catch (Exception e){
@@ -97,6 +100,7 @@ public class OutputService {
     }
 
     private void callOutput(Map<String,String> map) throws ParseException {
+        int orderID = Integer.parseInt(map.get("orderID"));
         // 超市端需要的量
         int needNum = Integer.parseInt((String)map.get("num"));
         // 当前货物的sid
@@ -111,7 +115,7 @@ public class OutputService {
         // 设计这个while循环的目的：从不同批次的货物中分批出货
         while(needNum>0){
             // 获取：未出库、现在还未过期、但最近要过期的一批货物
-            List<Cargo> cargoList = cargoMapper.outputBatch();
+            List<Cargo> cargoList = cargoMapper.outputBatch(sid,orderID);
             int thisNum = cargoList.size();
 
             // 遍历每一个cargo
@@ -124,6 +128,7 @@ public class OutputService {
                 Cell cell = repositoryMapper.getCellByCeid(ceid, Id.getRepositoryID());
                 // (2) 对cargo表的操作: outputTime
                 cargoMapper.updateOutputTime(cid, outputTime);
+                cargoMapper.modifyCargoStateCommon(cid,"已出库");
                 // 先判断是否清柜
                 // (3) 对cell表的操作: 按需更改restNum、isFull、type
                 // (4) 对repository表的操作: restNum（彻底空出一个cell才改）
@@ -135,20 +140,22 @@ public class OutputService {
                 }
 
                 // (5) 对save表的操作：outputTime
-                saveMapper.updateOutputTime(cargoList.get(i).getCid(), outputTime);
-                // (6) 对log表的操作------------------------------------------------------------------------------------------修改
-                //Log log = new Log(sid, cid, Id.getRepositoryID(), ceid, map.get("suid"), "output");
-                //logMapper.addLog(log);
+                saveMapper.updateOutputTime(cid, outputTime);
+                saveMapper.modifySaveStateCommon(cid,"已出库");
+                // (6) 对log表的操作
+                Log old_log = logMapper.getLogByCid(cid);
+                Log log = new Log(old_log.getSid(), cid, Id.getRepositoryID(), ceid, old_log.getSuid(), "已出库",orderID);
+                logMapper.addLog(log);
 
             }
 
             needNum -= thisNum;
         }
 
-        // (7) 生成订单
-        double cost = needNum * 1;
-        Order order = new Order((String)map.get("suid"), Id.getRepositoryID(), cost);
-        orderMapper.insertOrder(order);
+        // (7) 生成订单------------------------------------------------------------------------------------------------待修改
+//        double cost = needNum * 1;
+//        Order order = new Order((String)map.get("suid"), Id.getRepositoryID(), cost);
+//        orderMapper.insertOrder(order);
     }
 
     // 清空仓库柜

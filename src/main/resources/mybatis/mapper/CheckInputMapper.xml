@@ -12,7 +12,7 @@
         select * from auto_warehouseDB.checkInput where orderID=#{orderID} and 0>num;
     </select>
     <select id="getByOrderIDAndSpecies" resultType="com.example.auto_warehouse.bean.CheckInput">
-        select * from auto_warehouseDB.checkInput where orderID=#{orderID} and statement="品类少";
+        select * from auto_warehouseDB.checkInput where orderID=#{orderID} and statement="实际到货缺少该物品";
     </select>
     <select id="getByOrderID" resultType="com.example.auto_warehouse.bean.CheckInput" parameterType="int">
         select * from auto_warehouseDB.checkInput where orderID=#{orderID};
