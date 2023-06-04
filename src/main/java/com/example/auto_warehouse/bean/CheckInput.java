@@ -9,11 +9,12 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 public class CheckInput {
-    public CheckInput(int orderID, String sid, int num, String statement) {
+    public CheckInput(int orderID, String sid, int num, String statement, String state) {
         this.orderID = orderID;
         this.sid = sid;
         this.num = num;
         this.statement = statement;
+        this.state = state;
     }
 
     @Id
@@ -21,4 +22,5 @@ public class CheckInput {
     private String sid;
     private int num;
     private String statement;
+    private String state;
 }
