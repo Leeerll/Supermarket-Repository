@@ -10,6 +10,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 @Entity
+@Data
 public class Log {
     @Id
     private String sid;            // 货物品类id

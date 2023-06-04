@@ -57,4 +57,11 @@ public interface SaveMapper {
     //根据和超市id查询
     List<Save> findBySuid(String suid);
 
+    List<String> findAllCeidByOrderIDAndSid(String sid,int orderID);
+    int findCountByOrderIDAndSidAndCeid(String sid,int orderID,String ceid);
+    List<Integer> getNumCid(String sid,int orderID,String ceid,int num);
+    void modifySaveState(int cid);
+    void updateInputTimeAndState(int orderID,Date inputTime);
+    void updateConfirmState(int orderID);
+
 }

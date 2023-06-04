@@ -44,6 +44,7 @@ public interface CargoMapper {
     // 根据货物品类id查找超市id
     String findSupByCid(int cid);
 
-
+    void modifyCargoState(int cid);
+    void updateInputTime(int orderID,Date inputTime);
 
 }

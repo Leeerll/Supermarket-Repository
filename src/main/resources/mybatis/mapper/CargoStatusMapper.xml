@@ -29,11 +29,11 @@
     </insert>
 
     <select id = "getSameSpecies" resultType="java.lang.String">
-        select sid from auto_warehouseDB.save where sid = #{sid} and suid = #{suid} and rid = #{rid} order by sid LIMIT 1
+        select sid from auto_warehouseDB.save where sid = #{sid} and suid = #{suid} and rid = #{rid} and state!="变更未送达"
     </select>
 
-    <select id = "getSameSpeciesAllCeid" resultType="com.example.auto_warehouse.bean.Save">
-        select * from auto_warehouseDB.save where sid = #{sid} and suid = #{suid} and rid = #{rid}
+    <select id = "getSameSpeciesAllCeid" resultType="java.lang.String">
+        select distinct ceid from auto_warehouseDB.save where sid = #{sid} and suid = #{suid} and rid = #{rid} and state!="变更未送达"
     </select>
 
 </mapper>
