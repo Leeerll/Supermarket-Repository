@@ -8,4 +8,6 @@ public class ExcelMap {
     public static final LinkedList<List<Map<String,String>>> input_map_queue = new LinkedList<>();
     public static final LinkedList<List<Map<String,String>>> output_map_queue = new LinkedList<>();
 
+    public static final LinkedList<List<Map<String,String>>> actual_input_map_queue = new LinkedList<>();
+
 }

@@ -77,6 +77,28 @@ public class AutoWarehouseApplication {
         timer1.scheduleAtFixedRate(task1, 0, 1000);
 
 
+        // 创建一个实际入库监听定时器
+        Timer timer2 = new Timer();
+        // 定义一个计划任务，每秒钟检查一次队列是否为空，并输出结果
+        TimerTask task2 = new TimerTask() {
+            @Override
+            public void run() {
+                if (ExcelMap.actual_input_map_queue.isEmpty()) {
+                    //System.out.println("入库队列为空");
+                } else {
+                    System.out.println("出库队列不为空");
+                    Id.setRepositoryID("1");
+                    try {
+                        outputService.check(ExcelMap.actual_input_map_queue.getFirst());
+                    } catch (ParseException e) {
+                        throw new RuntimeException(e);
+                    }
+                    ExcelMap.actual_input_map_queue.removeFirst();
+                }
+            }
+        };
+        // 每秒钟执行一次计划任务，立即启动
+        timer2.scheduleAtFixedRate(task2, 0, 1000);
 
     }
 

@@ -60,4 +60,9 @@
         select * from auto_warehouseDB.order where orderID=#{orderID};
     </select>
 
+    <insert id="insertOrderCostLog" parameterType="com.example.auto_warehouse.bean.OrderCostLog">
+        insert into auto_warehouseDB.orderCostLog(suid,orderID,money,statement,time)
+        values (#{suid}, #{orderID}, #{money}, #{statement}, #{time});
+    </insert>
+
 </mapper>
