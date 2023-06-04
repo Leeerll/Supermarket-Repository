@@ -4,6 +4,7 @@ import com.example.auto_warehouse.bean.*;
 import com.example.auto_warehouse.controller.LoadFileController;
 import com.example.auto_warehouse.mapper.*;
 import com.example.auto_warehouse.util.Id;
+import com.example.auto_warehouse.util.JsonResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,10 +12,7 @@ import org.springframework.stereotype.Service;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 public class OutputService {
@@ -96,6 +94,7 @@ public class OutputService {
         return cargoStatusMapper.allNotOutput();
     }
 
+    // 清理货柜 写入出库时间
     private void callOutput(Map<String,String> map) throws ParseException {
         // 超市端需要的量
         int needNum = Integer.parseInt((String)map.get("num"));
@@ -150,7 +149,6 @@ public class OutputService {
         Order order = new Order((String)map.get("suid"), Id.getRepositoryID(), cost);
         orderMapper.insertOrder(order);
     }
-
     // 清空仓库柜
     boolean clearCell(Cell cell){
         if(cell.getType()=="s" && cell.getRestNum()==3){
@@ -163,6 +161,66 @@ public class OutputService {
             return true;
         }
         return false;
+    }
+
+    // 出库时计算费用
+    public void getOrderPayment(List<Map<String, Object>> data) {
+        // 当前出库订单编号
+        int orderID = (int) data.get(0).get("orderID");
+        int suid = (int) data.get(0).get("suid");
+        // 根据待缴费状态状态获取实际费用
+        List<Save>list= orderMapper.getOrderPayment(suid,orderID,"待缴费状态");
+        // 计算每笔费用的价钱
+        int amount=0;
+        for(Save save : list){
+            int day = (int) ((save.getOutputTime().getTime() - save.getInputTime().getTime())
+                    / (24 * 60 * 60 * 1000));
+            amount = 2*day;
+        }
+        // 更新出库费用
+        orderMapper.updatePayment(orderID,amount);
+    }
+    // 出库补交费用
+    public JsonResult<List<Map<String,String>>>getActualOrderPayment(int suid){
+        // 根据超市传来的suid补交费用
+        List<Order>list=orderMapper.getActualOrderPayment(suid,"待出库状态");
+        List<Map<String,String>>resultList=new ArrayList<>();
+        SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        for (Order order : list) {
+            Map<String,String>map=new HashMap<>();
+            String orderID = String.valueOf(order.getOrderID());
+            String time = String.valueOf(sdf1.format(order.getTime()));
+            int actualCost = order.getActualCost();
+            double cost = order.getCost();
+            double diff = cost-actualCost;
+            if(diff>0){
+                // actual > 0 需要补偿差价
+                map.put("orderID",orderID);
+                map.put("time",time);
+                map.put("diff",String.valueOf(diff));
+                resultList.add(map);
+                // 更新orderCostLog表
+//                OrderCostLog orderCostLog = new OrderCostLog(suid,orderID,diff, "补交差价");
+//                orderMapper.insertOrderCostLog(orderCostLog);
+            }else if(diff<0){
+                // 需要退款
+                map.put("orderID",orderID);
+                map.put("time",time);
+                map.put("diff",String.valueOf(diff));
+                resultList.add(map);
+                // 更新orderCostLog表
+//                OrderCostLog orderCostLog = new OrderCostLog(suid,orderID,diff, "补交差价");
+//                orderMapper.insertOrderCostLog(orderCostLog);
+            }else {
+                return new JsonResult<>("1","正常缴费");
+            }
+        }
+        return new JsonResult<>(resultList);
+    }
+    // 获取超市缴费记录
+    public List<OrderCostLog>getPaymentOrderLog(int suid){
+        List<OrderCostLog>list = orderMapper.getOrderPaymentLog(suid);
+        return list;
     }
 
 }

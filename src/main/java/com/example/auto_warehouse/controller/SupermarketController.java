@@ -56,6 +56,8 @@ public class SupermarketController {
         String suid = map.get("suid");
         List<Map<String,String>> list = new ArrayList<>();
         List<Order> list_order = supermarketMapper.allOrder(suid,"1");
+//        return list_order;
+        System.out.println(list_order);
         DateFormat dateformat= new SimpleDateFormat("yyyy-MM-dd");
         for(Order order:list_order){
             Map<String,String> map1 = new HashMap<>();
@@ -64,8 +66,10 @@ public class SupermarketController {
             list.add(map1);
             supermarketMapper.modifyIsReadOrder(order.getOrderID());
         }
+//        System.out.println(list.toString());
         return list;
     }
+
 
     @RequestMapping("/show_notOutput")
     @ResponseBody
