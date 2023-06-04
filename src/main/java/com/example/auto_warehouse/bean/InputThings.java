@@ -12,7 +12,7 @@ import java.util.Date;
 @NoArgsConstructor
 public class InputThings {
 
-    public InputThings(String sid, String sname, String stype, int num, double weight, double sh, double sw, double sd, Date productionDate, int shelfLife, String suid, String size, Date inputTime, Date outputTime, int orderID) {
+    public InputThings(String sid, String sname, String stype, int num, double weight, double sh, double sw, double sd, Date productionDate, int shelfLife, String suid, String size, Date inputTime, Date outputTime, int orderID, double price, String phone, String manufacturer) {
         this.sid = sid;
         this.sname = sname;
         this.stype = stype;
@@ -28,6 +28,9 @@ public class InputThings {
         this.inputTime = inputTime;
         this.outputTime = outputTime;
         this.orderID = orderID;
+        this.price = price;
+        this.phone = phone;
+        this.manufacturer = manufacturer;
     }
 
     @Id
@@ -46,5 +49,8 @@ public class InputThings {
     private Date inputTime;
     private Date outputTime;
     private int orderID;
+    private double price;
+    private String phone;
+    private String manufacturer;
 
 }

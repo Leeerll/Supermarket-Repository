@@ -32,8 +32,9 @@ public class Cargo {
     private Date outputTime;       // 货物出库时间
     private String state;          // 定时更新状态（过期或未过期）
     private String suid;             // 关联超市
+    private int orderID;
 
-    public Cargo(String sid, String sname, String productionDate, int shelfLife, String suid) throws ParseException {
+    public Cargo(String sid, String sname, String productionDate, int shelfLife, String suid,int orderID) throws ParseException {
         this.sid = sid;
         this.sname = sname;
         setProductionDate(productionDate);
@@ -41,6 +42,7 @@ public class Cargo {
         //setInputTime();
         this.state = "not expire";
         this.suid = suid;
+        this.orderID = orderID;
     }
 
     public Cargo() {

@@ -20,7 +20,7 @@ public interface CargoStatusMapper {
     List<NotOutput> supermarketNotOutput(String suid);
     int modifyIsReadOutput(int notOutputID);
     // 判断进货超市在仓库中是否存有同类产品
-    String getSameSpecies(String sid, String suid, String rid);
+    List<String> getSameSpecies(String sid, String suid, String rid);
 
-    List<Save> getSameSpeciesAllCeid(String sid, String suid, String rid);
+    List<String> getSameSpeciesAllCeid(String sid, String suid, String rid);
 }

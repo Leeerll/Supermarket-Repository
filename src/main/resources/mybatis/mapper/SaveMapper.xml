@@ -95,4 +95,23 @@
                                                       on auto_warehouseDB.save.sid = auto_warehouseDB.species.sid
         where auto_warehouseDB.save.suid = #{suid};
     </select>
+
+    <select id="findAllCeidByOrderIDAndSid" resultType="java.lang.String">
+        select distinct ceid from auto_warehouseDB.save where sid=#{sid} and orderID=#{orderID};
+    </select>
+    <select id="findCountByOrderIDAndSidAndCeid" resultType="java.lang.Integer">
+        select count(*) from auto_warehouseDB.save where sid=#{sid} and orderID=#{orderID} and ceid=#{ceid};
+    </select>
+    <select id="getNumCid" resultType="java.lang.Integer">
+        select cid from auto_warehouseDB.save where sid=#{sid} and orderID=#{orderID} and ceid=#{ceid} LIMIT #{num};
+    </select>
+    <update id="modifySaveState" parameterType="com.example.auto_warehouse.bean.Save">
+        update auto_warehouseDB.save set state="变更未送达" where cid=#{cid};
+    </update>
+    <update id="updateInputTimeAndState">
+        update auto_warehouseDB.save set inputTime=#{inputTime},state="入库待确认状态" where orderID=#{orderID} and state!="变更未送达";
+    </update>
+    <update id="updateConfirmState">
+        update auto_warehouseDB.save set state="⼊库已确认状态" where orderID=#{orderID} and state="入库待确认状态";
+    </update>
 </mapper>

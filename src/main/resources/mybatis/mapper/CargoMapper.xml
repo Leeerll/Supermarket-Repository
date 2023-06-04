@@ -24,8 +24,8 @@
     </select>
 
     <insert id="addCargo" parameterType="com.example.auto_warehouse.bean.Cargo">
-        insert into auto_warehouseDB.cargo (sid, sname, productionDate, shelfLife, state, suid)
-        values (#{sid}, #{sname}, #{productionDate}, #{shelfLife}, #{state}, #{suid});
+        insert into auto_warehouseDB.cargo (sid, sname, productionDate, shelfLife, state, suid,orderID)
+        values (#{sid}, #{sname}, #{productionDate}, #{shelfLife}, #{state}, #{suid}, #{orderID});
     </insert>
 
     <update id="updateOutputTime">
@@ -48,5 +48,12 @@
     <select id="findSupByCid" parameterType="int" resultType="java.lang.String">
         select suid from auto_warehouseDB.cargo where cid = #{cid};
     </select>
+
+    <update id="modifyCargoState" parameterType="com.example.auto_warehouse.bean.Cargo">
+        update auto_warehouseDB.cargo set state="变更未送达" where cid=#{cid};
+    </update>
+    <update id="updateInputTime">
+        update auto_warehouseDB.cargo set inputTime=#{inputTime} where orderID=#{orderID} and state!="变更未送达";
+    </update>
 
 </mapper>

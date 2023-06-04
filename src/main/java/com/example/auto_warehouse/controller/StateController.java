@@ -1,9 +1,7 @@
 package com.example.auto_warehouse.controller;
 
 import com.example.auto_warehouse.bean.*;
-import com.example.auto_warehouse.mapper.IncomeMapper;
-import com.example.auto_warehouse.mapper.OrderMapper;
-import com.example.auto_warehouse.mapper.RepositoryMapper;
+import com.example.auto_warehouse.mapper.*;
 import com.example.auto_warehouse.service.InputService;
 import com.example.auto_warehouse.util.Id;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,10 +19,6 @@ import java.util.*;
 public class StateController {
     @Autowired
     private OrderMapper orderMapper;
-    @Autowired
-    private RepositoryMapper repositoryMapper;
-    @Autowired
-    private IncomeMapper incomeMapper;
     @Autowired
     private InputService inputService;
 
@@ -220,24 +214,7 @@ public class StateController {
     @ResponseBody
     public String finish_payment(@RequestBody Map<String,String> map1) throws ParseException {
         int orderID = Integer.parseInt(map1.get("orderID"));
-        // 改成“已缴费状态”
-        orderMapper.modifyOrderState(orderID,"已缴费状态",inputService.getNowTime());
-        Message message1 = new Message(orderID, "已缴费状态", orderMapper.getSuid(orderID));
-        orderMapper.insertMessage(message1);
-        // 仓库收入income表增加，repository收入增加
-        double money=orderMapper.getOrderByOrderID(orderID).getCost();
-        repositoryMapper.updateIncome(Id.getRepositoryID(), money);
-        int year = Calendar.getInstance().get(Calendar.YEAR);
-        int month = Calendar.getInstance().get(Calendar.MONTH);
-        int yearMonth = year*100+month+1;
-        List<Income> list = incomeMapper.findByYearMonth(Id.getRepositoryID(),yearMonth);
-        if(list.size()==0){
-            Income income = new Income(Id.getRepositoryID(),yearMonth,money);
-            incomeMapper.insertIncome(income);
-        }else{
-            incomeMapper.updateIncome(yearMonth,money,Id.getRepositoryID());
-        }
-        return "true";
+        return inputService.finish_payment(orderID);
     }
 
     // 到货接口(python程序调用)，传到货清单excel
@@ -257,8 +234,29 @@ public class StateController {
 
 
     // 超市确认核验单
+    @RequestMapping("/confirm_checkInput")
+    @ResponseBody
+    public String confirm_checkInput(@RequestBody Map<String,String> map1) throws ParseException {
+        int orderID = Integer.parseInt(map1.get("orderID"));
+        return inputService.confirm_checkInput(orderID);
+    }
+
+    // 实际入库（python发送，orderID需要去数据库中看）
+    @RequestMapping("/actual_input")
+    @ResponseBody
+    public String actual_input(@RequestBody Map<String,String> map1) throws ParseException {
+        int orderID = Integer.parseInt(map1.get("orderID"));
+        return inputService.actual_input(orderID);
+    }
 
 
+    // 入库确认（python发送，orderID需要去数据库中看）
+    @RequestMapping("/actual_input_confirm")
+    @ResponseBody
+    public String actual_input_confirm(@RequestBody Map<String,String> map1) throws ParseException {
+        int orderID = Integer.parseInt(map1.get("orderID"));
+        return inputService.actual_input_confirm(orderID);
+    }
 
 
 }

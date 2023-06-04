@@ -29,9 +29,13 @@ public class InputService {
     @Autowired
     private RepositoryMapper repositoryMapper;
     @Autowired
-    private SaveMapper saveMapper;
+    private CheckInputMapper checkInputMapper;
     @Autowired
     private LogMapper logMapper;
+    @Autowired
+    private IncomeMapper incomeMapper;
+    @Autowired
+    private SaveMapper saveMapper;
     @Autowired
     private OrderMapper orderMapper;
     private static final Logger logger = LoggerFactory.getLogger(LoadFileController.class);
@@ -56,8 +60,8 @@ public class InputService {
         List<Map<String,String>> notInputData = new ArrayList<>();
         // 遍历data
         for(Map map:data){
-            // 内容完整核实-----------------------------------------------------------------
-            if(!(map.containsKey("sid")&&map.containsKey("sname")&&map.containsKey("stype")&&map.containsKey("num")&&map.containsKey("weight")&&map.containsKey("sh")&&map.containsKey("sw")&&map.containsKey("sd")&&map.containsKey("production_date")&&map.containsKey("shelf_life")&&map.containsKey("suid")&&map.containsKey("size")&&map.containsKey("input_time")&&map.containsKey("output_time"))){
+            // 内容完整核实
+            if(!(map.containsKey("sid")&&map.containsKey("sname")&&map.containsKey("stype")&&map.containsKey("num")&&map.containsKey("weight")&&map.containsKey("sh")&&map.containsKey("sw")&&map.containsKey("sd")&&map.containsKey("production_date")&&map.containsKey("shelf_life")&&map.containsKey("suid")&&map.containsKey("size")&&map.containsKey("input_time")&&map.containsKey("output_time")&&map.containsKey("price")&&map.containsKey("phone")&&map.containsKey("manufacturer"))){
                 map.put("reason","货品内容不完整");
                 notInputData.add(map);
             }
@@ -158,7 +162,10 @@ public class InputService {
                 String size = list.get(i).get("size");
                 Date inputTime = sdf1.parse(list.get(i).get("input_time"));
                 Date outputTime = sdf1.parse(list.get(i).get("output_time"));
-                InputThings inputThings = new InputThings(sid,sname,stype,num,weight,sh,sw,sd,production_date,shelf_life,suid,size,inputTime,outputTime,orderID);
+                double price = Double.parseDouble(list.get(i).get("price"));
+                String phone = list.get(i).get("phone");
+                String manufacturer = list.get(i).get("manufacturer");
+                InputThings inputThings = new InputThings(sid,sname,stype,num,weight,sh,sw,sd,production_date,shelf_life,suid,size,inputTime,outputTime,orderID,price,phone,manufacturer);
                 orderMapper.insertInputThings(inputThings);
             }
         }catch (Exception e){
@@ -185,11 +192,11 @@ public class InputService {
             String ceid = "";
 
             // (2)对Cargo表的操作
-            Cargo cargo = new Cargo((String) map.get("sid"), (String) map.get("sname"), (String) map.get("production_date"), Integer.parseInt(map.get("shelf_life")), (String) map.get("suid"));
+            Cargo cargo = new Cargo((String) map.get("sid"), (String) map.get("sname"), (String) map.get("production_date"), Integer.parseInt(map.get("shelf_life")), (String) map.get("suid"),orderID);
             cargoMapper.addCargo(cargo);
             int cid = cargoMapper.getNewCid();
             // (3)对Cell表的操作
-            if(cargoStatusMapper.getSameSpecies(map.get("sid"),map.get("suid"),Id.getRepositoryID())==null){
+            if(cargoStatusMapper.getSameSpecies(map.get("sid"),map.get("suid"),Id.getRepositoryID()).size()==0){
                 // 该超市在仓库中无同类型产品
                 Cell empty_cell = repositoryMapper.getCellByType("null",Id.getRepositoryID());
                 ceid = empty_cell.getCeid();
@@ -212,10 +219,10 @@ public class InputService {
                 repositoryMapper.modifyMachineHealth(Id.getRepositoryID());
             }else{
                 // 该超市在仓库中有同类型产品
-                List<Save> list = cargoStatusMapper.getSameSpeciesAllCeid(map.get("sid"),map.get("suid"),Id.getRepositoryID());
+                List<String> list = cargoStatusMapper.getSameSpeciesAllCeid(map.get("sid"),map.get("suid"),Id.getRepositoryID());
                 Boolean have = false;
-                for(Save save:list){
-                    Cell cell = repositoryMapper.getCellByCeid(save.getCeid(), Id.getRepositoryID());
+                for(String ceid1:list){
+                    Cell cell = repositoryMapper.getCellByCeid(ceid1, Id.getRepositoryID());
                     if(cell.getIsFull()==1){
                         continue;
                     }else{
@@ -273,6 +280,152 @@ public class InputService {
             logMapper.addLog(log);
         }
 
+    }
+
+    // 超市缴费成功
+    public String finish_payment(int orderID) throws ParseException {
+        // 改成“已缴费状态”
+        orderMapper.modifyOrderState(orderID,"已缴费状态",getNowTime());
+        Message message1 = new Message(orderID, "已缴费状态", orderMapper.getSuid(orderID));
+        orderMapper.insertMessage(message1);
+        // 仓库收入income表增加，repository收入增加
+        double money=orderMapper.getOrderByOrderID(orderID).getCost();
+        repositoryMapper.updateIncome(Id.getRepositoryID(), money);
+        int year = Calendar.getInstance().get(Calendar.YEAR);
+        int month = Calendar.getInstance().get(Calendar.MONTH);
+        int yearMonth = year*100+month+1;
+        List<Income> list = incomeMapper.findByYearMonth(Id.getRepositoryID(),yearMonth);
+        if(list.size()==0){
+            Income income = new Income(Id.getRepositoryID(),yearMonth,money);
+            incomeMapper.insertIncome(income);
+        }else{
+            incomeMapper.updateIncome(yearMonth,money,Id.getRepositoryID());
+        }
+        return "true";
+    }
+
+    public String confirm_checkInput(int orderID) throws ParseException {
+        // 根据核验单checkInput对货位进行释放（针对入库货物数量少了的情况，多了的情况需要重新提交申请走流程）
+
+        // 1.针对入库货物数量少了的情况
+        List<CheckInput> list_num = checkInputMapper.getByOrderIDAndNum(orderID);
+        for(CheckInput checkInput:list_num){
+            String sid = checkInput.getSid();
+            List<String> list_ceid = saveMapper.findAllCeidByOrderIDAndSid(sid,orderID);
+            Map<String,Integer> modified_ceid = new LinkedHashMap<>();
+            int num = Math.abs(checkInput.getNum());
+            // 减少species表中的num
+            speciesMapper.reduceNum(sid,num);
+            for(String ceid:list_ceid){
+                if(saveMapper.findCountByOrderIDAndSidAndCeid(sid,orderID,ceid)>=num){
+                    modified_ceid.put(ceid,num);
+                    break;
+                }
+            }
+            if(modified_ceid.size()>0){
+                Cell cell = repositoryMapper.getCellByCeid(modified_ceid.entrySet().iterator().next().getKey(),Id.getRepositoryID());
+                cell.setRestNum(cell.getRestNum()+num);
+                if(((cell.getType().equals("s"))&&(cell.getRestNum()==16))||((cell.getType().equals("m"))&&(cell.getRestNum()==8))||((cell.getType().equals("l"))&&(cell.getRestNum()==4))){
+                    cell.setType("null");
+                    cell.setIsFull(0);
+                    repositoryMapper.updateRepositoryRestNum(Id.getRepositoryID());
+                }
+                repositoryMapper.modifyCellTypeAndRestNumAndIsFull(cell);
+            }else{
+                // 如果这个num比任何一个cell中存的这个sid的数量都多
+                for(String ceid:list_ceid){
+                    if(saveMapper.findCountByOrderIDAndSidAndCeid(sid,orderID,ceid)>=num){
+                        modified_ceid.put(ceid,num);
+                        break;
+                    }else{
+                        int num1 = num;
+                        modified_ceid.put(ceid,num1);
+                        num=num-saveMapper.findCountByOrderIDAndSidAndCeid(sid,orderID,ceid);
+                    }
+                }
+                for(String ceid2:modified_ceid.keySet()){
+                    Cell cell = repositoryMapper.getCellByCeid(ceid2,Id.getRepositoryID());
+                    cell.setRestNum(cell.getRestNum()+modified_ceid.get(ceid2));
+                    if(((cell.getType().equals("s"))&&(cell.getRestNum()==16))||((cell.getType().equals("m"))&&(cell.getRestNum()==8))||((cell.getType().equals("l"))&&(cell.getRestNum()==4))){
+                        cell.setType("null");
+                        cell.setIsFull(0);
+                        repositoryMapper.updateRepositoryRestNum(Id.getRepositoryID());
+                    }
+                    repositoryMapper.modifyCellTypeAndRestNumAndIsFull(cell);
+                }
+            }
+            // 更改cargo、save、log的state信息
+            for(String ceid:modified_ceid.keySet()){
+                List<Integer> list_cid = saveMapper.getNumCid(sid,orderID,ceid,modified_ceid.get(ceid));
+                for(int cid:list_cid){
+                    saveMapper.modifySaveState(cid);
+                    cargoMapper.modifyCargoState(cid);
+                    Log log = new Log(sid, cid, Id.getRepositoryID(), ceid, logMapper.getLogByCid(cid).getSuid(), "变更未送达",orderID);
+                    logMapper.addLog(log);
+                }
+            }
+        }
+
+        // 2.针对入库货物品类少了的情况
+        List<CheckInput> list_species = checkInputMapper.getByOrderIDAndSpecies(orderID);
+        for(CheckInput checkInput:list_species){
+            InputThings inputThings = orderMapper.getInputThingsByOrderIDAndSid(orderID,checkInput.getSid());
+            // 减少species表中的num
+            speciesMapper.reduceNum(checkInput.getSid(),inputThings.getNum());
+            // 减少所占cell的restNum
+            List<String> list_ceid = saveMapper.findAllCeidByOrderIDAndSid(checkInput.getSid(),orderID);
+            for(String ceid:list_ceid){
+                Cell cell = repositoryMapper.getCellByCeid(ceid,Id.getRepositoryID());
+                cell.setRestNum(cell.getRestNum()+saveMapper.findCountByOrderIDAndSidAndCeid(checkInput.getSid(),orderID,ceid));
+                if(((cell.getType().equals("s"))&&(cell.getRestNum()==16))||((cell.getType().equals("m"))&&(cell.getRestNum()==8))||((cell.getType().equals("l"))&&(cell.getRestNum()==4))){
+                    cell.setType("null");
+                    cell.setIsFull(0);
+                    repositoryMapper.updateRepositoryRestNum(Id.getRepositoryID());
+                }
+                repositoryMapper.modifyCellTypeAndRestNumAndIsFull(cell);
+                // 更改cargo、save、log的state信息
+                List<Integer> list_cid = saveMapper.getNumCid(checkInput.getSid(),orderID,ceid,saveMapper.findCountByOrderIDAndSidAndCeid(checkInput.getSid(),orderID,ceid));
+                for(int cid:list_cid){
+                    saveMapper.modifySaveState(cid);
+                    cargoMapper.modifyCargoState(cid);
+                    Log old_log = logMapper.getLogByCid(cid);
+                    Log log = new Log(old_log.getSid(), cid, Id.getRepositoryID(), ceid, old_log.getSuid(), "变更未送达",orderID);
+                    logMapper.addLog(log);
+                }
+            }
+        }
+
+        return "true";
+    }
+
+    public String actual_input(int orderID) throws ParseException {
+        // 实际入库：写入cargo、save的入库时间，修改state状态；插入新log
+        // 修改成“入库待确认状态”
+        Date now = new Date();
+        SimpleDateFormat tFormat = new SimpleDateFormat("yyyy-MM-dd");
+        cargoMapper.updateInputTime(orderID,tFormat.parse(tFormat.format(now)));
+        saveMapper.updateInputTimeAndState(orderID,tFormat.parse(tFormat.format(now)));
+        List<Integer> list_plan_cid = logMapper.getAllCidByOrderID(orderID);
+        List<Integer> list_release_cid = logMapper.getReleaseCidByOrderID(orderID);
+        for(int cid:list_plan_cid){
+            if(!list_release_cid.contains(cid)){
+                Log old_log = logMapper.getLogByCid(cid);
+                Log log = new Log(old_log.getSid(),cid, old_log.getRid(), old_log.getCeid(),old_log.getSuid(),"入库待确认状态",orderID);
+                logMapper.addLog(log);
+            }
+        }
+        return "true";
+    }
+    public String actual_input_confirm(int orderID) throws ParseException {
+        // 修改成“⼊库已确认状态”,更改save、log表
+        saveMapper.updateConfirmState(orderID);
+        List<Integer> list = logMapper.getConfirmCidByOrderID(orderID);
+        for(int cid:list){
+            Log old_log = logMapper.getLogByCid(cid);
+            Log log = new Log(old_log.getSid(),cid, old_log.getRid(), old_log.getCeid(),old_log.getSuid(),"⼊库已确认状态",orderID);
+            logMapper.addLog(log);
+        }
+        return "true";
     }
 
 }
