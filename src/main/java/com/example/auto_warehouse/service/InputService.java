@@ -48,6 +48,8 @@ public class InputService {
         return now_time;
     }
 
+
+    // 入库申请
     public void check(List<Map<String,String>> data) throws ParseException {
         // 写入order表，状态设为“系统审核状态”
         String suid = data.get(0).get("suid");
@@ -110,6 +112,53 @@ public class InputService {
             orderMapper.insertMessage(message3);
             // 写入入库单表
             writeInputThings(data);
+        }
+    }
+
+    // 正式到货申请
+    public void checkIn(List<Map<String,String>> data) throws ParseException {
+        // (1) 检查费用是否已缴
+
+        // (2) 检查货物信息和之前的入库申请单是否相同
+        // 先根据orderId找到上次的入库申请单信息
+        int orderId = Integer.parseInt(data.get(0).get("orderID"));
+        List<InputThings> inputThingsList = orderMapper.getInputThingsByOrderID(orderId);
+        int[] checkThing = new int[inputThingsList.size()];
+        // 遍历data
+        for(Map map: data){
+            int find = 0;
+            int index = 0;
+            // 数量检查
+            for(InputThings inputThings: inputThingsList){
+                if(inputThings.getSid()==map.get("sid")){
+                    find = 1;
+                    checkThing[index] = 1;
+                    if(inputThings.getNum()==Integer.parseInt((String) map.get("num"))){
+                        CheckInput checkInput  = new CheckInput(orderId, inputThings.getSid(), 0, "正常");
+                        checkInputMapper.insertCheckInput(checkInput);
+                    }else if(inputThings.getNum()<Integer.parseInt((String) map.get("num"))){
+                        CheckInput checkInput  = new CheckInput(orderId, inputThings.getSid(), inputThings.getNum() - Integer.parseInt((String) map.get("num")), "实际到货数量少于入库申请数量");
+                        checkInputMapper.insertCheckInput(checkInput);
+                    }else{
+                        CheckInput checkInput  = new CheckInput(orderId, inputThings.getSid(), inputThings.getNum() - Integer.parseInt((String) map.get("num")), "实际到货数量多于入库申请数量");
+                        checkInputMapper.insertCheckInput(checkInput);
+                    }
+                    break;
+                }
+                index ++;
+            }
+            // 种类检查
+            if(find==0){
+                CheckInput checkInput  = new CheckInput(orderId, (String) map.get("sid"), 0, "入库申请中无该物品");
+                checkInputMapper.insertCheckInput(checkInput);
+            }
+        }
+        // 种类检查
+        for(int i=0; i<inputThingsList.size(); i++) {
+            if (checkThing[i] == 0) {
+                CheckInput checkInput = new CheckInput(orderId, inputThingsList.get(i).getSid(), 0, "实际到货缺少该物品");
+                checkInputMapper.insertCheckInput(checkInput);
+            }
         }
     }
     public List<NotInput> allNotInput(){
