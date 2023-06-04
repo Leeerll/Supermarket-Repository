@@ -19,6 +19,7 @@ public class Order {
     private int orderID;
     private String state;
     private String others;
+    
 
     public int getActualCost() {
         return actualCost;

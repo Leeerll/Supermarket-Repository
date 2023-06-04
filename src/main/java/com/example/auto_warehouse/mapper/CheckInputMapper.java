@@ -11,4 +11,17 @@ public interface CheckInputMapper {
     List<CheckInput> getByOrderIDAndNum(int orderID);
     // 品类少
     List<CheckInput> getByOrderIDAndSpecies(int orderID);
+
+    // 通过orderID获取到货单
+    List<CheckInput> getByOrderID(int orderID);
+
+    // 通过orderID和sid获取checkInput
+    List<CheckInput> getByOrderIDAndSid(int orderId, String sid);
+
+    // 通过orderID和sid获取checkInput的状态
+    void updateCheckInputByOrderIDAndSid(int orderId, String sid);
+
+
+    // 插入到货项
+    void insertCheckInput(CheckInput checkInput);
 }
