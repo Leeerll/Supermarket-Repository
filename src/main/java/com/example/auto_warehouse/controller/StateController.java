@@ -176,9 +176,9 @@ public class StateController {
         Order order = orderMapper.getOrderByOrderID(orderID);
         OrderCostLog orderCostLog = new OrderCostLog(order.getSuid(),orderID,cost,"初始计划缴费");
         orderMapper.insertOrderCostLog(orderCostLog);
-        // 修改状态为“待缴费状态”
-        orderMapper.modifyOrderState(orderID,"待缴费状态",inputService.getNowTime());
-        Message message1 = new Message(orderID, "待缴费状态", orderMapper.getSuid(orderID));
+        // 修改状态为“待选择缴费方式”
+        orderMapper.modifyOrderState(orderID,"待选择缴费方式",inputService.getNowTime());
+        Message message1 = new Message(orderID, "待选择缴费方式", orderMapper.getSuid(orderID));
         orderMapper.insertMessage(message1);
 
         return "true";
@@ -215,11 +215,14 @@ public class StateController {
         return list;
     }
 
-    // 超市缴费成功
-    @RequestMapping("/finish_payment")
+    // 超市选择缴费方式之后
+    @RequestMapping("/choose_payMethod")
     @ResponseBody
-    public String finish_payment(@RequestBody Map<String,String> map1) throws ParseException {
+    public String choose_payMethod(@RequestBody Map<String,String> map1) throws ParseException {
         int orderID = Integer.parseInt(map1.get("orderID"));
+        // 写进order的payMethod
+
+
         return inputService.finish_payment(orderID);
     }
 

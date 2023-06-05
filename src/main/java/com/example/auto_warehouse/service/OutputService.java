@@ -76,6 +76,11 @@ public class OutputService {
         // 针对不能出库的货物
         if(notOutputData.size()>0){
             notOutput(notOutputData);
+            orderMapper.modifyOrderState(orderID,"出库请求未通过系统审核",getNowTime());
+            Message message1 = new Message(orderID, "出库请求未通过系统审核", orderMapper.getSuid(orderID));
+            orderMapper.insertMessage(message1);
+        }else{
+            
         }
 
     }
