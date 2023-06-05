@@ -37,7 +37,10 @@ public class UserController {
         supermarket.setPassword(password);
         supermarket.setSuregion("A");
         supermarket.setRid("1");
-        return userService.addSupermarket(supermarket);
+        supermarket.setBankCardNumber("6217003810026896700");
+        return userService.addSupermarket(supermarket.getSuid(),
+                supermarket.getSuregion(),supermarket.getRid(),
+                supermarket.getPassword(),supermarket.getBankCardNumber());
     }
     @PostMapping("/modifyPassword")
     public JsonResult<User>modifyPassword(@RequestBody Map<String,String>map){
