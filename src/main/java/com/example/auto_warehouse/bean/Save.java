@@ -104,4 +104,20 @@ public class Save {
 
     }
 
+    @Override
+    public String toString() {
+        return "Save{" +
+                "sid='" + sid + '\'' +
+                ", cid=" + cid +
+                ", rid='" + rid + '\'' +
+                ", ceid='" + ceid + '\'' +
+                ", suid='" + suid + '\'' +
+                ", inputTime=" + inputTime +
+                ", outputTime=" + outputTime +
+                ", stype='" + stype + '\'' +
+                ", sname='" + sname + '\'' +
+                ", state='" + state + '\'' +
+                ", orderID=" + orderID +
+                '}';
+    }
 }

@@ -103,9 +103,6 @@ public class InputService {
             orderMapper.insertMessage(message2);
             notInput(notInputData);
         }else{
-            orderMapper.modifyOrderState(orderMapper.getOrderID(),"通过系统审核状态",getNowTime());
-            Message message1 = new Message(orderMapper.getOrderID(), "通过系统审核状态",suid);
-            orderMapper.insertMessage(message1);
             // 进入人工审核状态
             orderMapper.modifyOrderState(orderMapper.getOrderID(),"人工审核状态",getNowTime());
             Message message3 = new Message(orderMapper.getOrderID(), "人工审核状态",suid);
@@ -117,6 +114,7 @@ public class InputService {
 
     // 正式到货申请
     public void checkIn(List<Map<String,String>> data) throws ParseException {
+
         // (1) 检查费用是否已缴
 
         // (2) 检查货物信息和之前的入库申请单是否相同
@@ -337,28 +335,30 @@ public class InputService {
     // 超市缴费成功
     public String finish_payment(int orderID) throws ParseException {
         // 改成“已缴费状态”
-        orderMapper.modifyOrderState(orderID,"已缴费状态",getNowTime());
-        Message message1 = new Message(orderID, "已缴费状态", orderMapper.getSuid(orderID));
+        orderMapper.modifyOrderState(orderID,"已预留库位状态",getNowTime());
+        Message message1 = new Message(orderID, "已预留库位状态", orderMapper.getSuid(orderID));
         orderMapper.insertMessage(message1);
-        // 仓库收入income表增加，repository收入增加
-        double money=orderMapper.getOrderByOrderID(orderID).getCost();
-        repositoryMapper.updateIncome(Id.getRepositoryID(), money);
-        int year = Calendar.getInstance().get(Calendar.YEAR);
-        int month = Calendar.getInstance().get(Calendar.MONTH);
-        int yearMonth = year*100+month+1;
-        List<Income> list = incomeMapper.findByYearMonth(Id.getRepositoryID(),yearMonth);
-        if(list.size()==0){
-            Income income = new Income(Id.getRepositoryID(),yearMonth,money);
-            incomeMapper.insertIncome(income);
-        }else{
-            incomeMapper.updateIncome(yearMonth,money,Id.getRepositoryID());
-        }
+
+        //------------------------------------------------------------------------------------------------移到重计费缴费那里
+//        // 仓库收入income表增加，repository收入增加
+//        double money=orderMapper.getOrderByOrderID(orderID).getCost();
+//        repositoryMapper.updateIncome(Id.getRepositoryID(), money);
+//        int year = Calendar.getInstance().get(Calendar.YEAR);
+//        int month = Calendar.getInstance().get(Calendar.MONTH);
+//        int yearMonth = year*100+month+1;
+//        List<Income> list = incomeMapper.findByYearMonth(Id.getRepositoryID(),yearMonth);
+//        if(list.size()==0){
+//            Income income = new Income(Id.getRepositoryID(),yearMonth,money);
+//            incomeMapper.insertIncome(income);
+//        }else{
+//            incomeMapper.updateIncome(yearMonth,money,Id.getRepositoryID());
+//        }
         return "true";
     }
 
     public String confirm_checkInput(int orderID) throws ParseException {
         // 根据核验单checkInput对货位进行释放（针对入库货物数量少了的情况，多了的情况需要重新提交申请走流程）
-
+        double refund = 0;
         // 1.针对入库货物数量少了的情况
         List<CheckInput> list_num = checkInputMapper.getByOrderIDAndNum(orderID);
         for(CheckInput checkInput:list_num){
@@ -368,6 +368,11 @@ public class InputService {
             int num = Math.abs(checkInput.getNum());
             // 减少species表中的num
             speciesMapper.reduceNum(sid,num);
+            // 加到退款的费用里
+            InputThings inputThings = orderMapper.getInputThingsByOrderIDAndSid(orderID,sid);
+            int day = (int) ((inputThings.getOutputTime().getTime() - inputThings.getInputTime().getTime())
+                    / (24 * 60 * 60 * 1000));
+            refund+=num*day*2;
             for(String ceid:list_ceid){
                 if(saveMapper.findCountByOrderIDAndSidAndCeid(sid,orderID,ceid)>=num){
                     modified_ceid.put(ceid,num);
@@ -420,10 +425,16 @@ public class InputService {
 
         // 2.针对入库货物品类少了的情况
         List<CheckInput> list_species = checkInputMapper.getByOrderIDAndSpecies(orderID);
+        List<CheckInput> list_species2 = checkInputMapper.getByOrderIDAndNum2(orderID);
+        list_species.addAll(list_species2);
         for(CheckInput checkInput:list_species){
             InputThings inputThings = orderMapper.getInputThingsByOrderIDAndSid(orderID,checkInput.getSid());
             // 减少species表中的num
             speciesMapper.reduceNum(checkInput.getSid(),inputThings.getNum());
+            // 加到退款的费用里
+            int day = (int) ((inputThings.getOutputTime().getTime() - inputThings.getInputTime().getTime())
+                    / (24 * 60 * 60 * 1000));
+            refund+=inputThings.getNum()*day*2;
             // 减少所占cell的restNum
             List<String> list_ceid = saveMapper.findAllCeidByOrderIDAndSid(checkInput.getSid(),orderID);
             for(String ceid:list_ceid){
@@ -446,7 +457,12 @@ public class InputService {
                 }
             }
         }
-
+        // 修改order表的cost
+        Order order = orderMapper.getOrderByOrderID(orderID);
+        orderMapper.modifyOrderCost(orderID,order.getCost()-refund);
+        // 记录cost更改日志到orderCostLog
+        OrderCostLog orderCostLog = new OrderCostLog(order.getSuid(),orderID,refund,"入库重计费退款");
+        orderMapper.insertOrderCostLog(orderCostLog);
         return "true";
     }
 

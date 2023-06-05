@@ -1,5 +1,8 @@
 package com.example.auto_warehouse.util;
 
+import java.util.List;
+import java.util.Map;
+
 public class JsonResult <T>{
     private T data;
     private String code;
@@ -44,6 +47,9 @@ public class JsonResult <T>{
         this.msg = msg;
     }
 
+    public JsonResult(String s, String 需要退款, List<Map<String, String>> resultList) {
+    }
+
     public T getData() {
         return data;
     }
@@ -66,6 +72,15 @@ public class JsonResult <T>{
 
     public void setMsg(String msg) {
         this.msg = msg;
+    }
+
+    @Override
+    public String toString() {
+        return "JsonResult{" +
+                "data=" + data +
+                ", code='" + code + '\'' +
+                ", msg='" + msg + '\'' +
+                '}';
     }
     // 省略get和set方法
 

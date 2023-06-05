@@ -70,25 +70,4 @@ public class RepositoryController {
         return list;
     }
 
-    // 更新仓库计算消耗
-    @PostMapping("/checkIncome")
-    public void checkIncome(@RequestParam("rid") String rid, @RequestParam("money") double money){
-        repositoryMapper.updateIncome(rid, money);
-        int year = Calendar.getInstance().get(Calendar.YEAR);
-        int month = Calendar.getInstance().get(Calendar.MONTH);
-        int yearMonth = year*100+month+1;
-        List<Income> list = incomeMapper.findByYearMonth(rid,yearMonth);
-        if(list.size()==0){
-            Income income = new Income(rid,yearMonth,money);
-            incomeMapper.insertIncome(income);
-        }else{
-            incomeMapper.updateIncome(yearMonth,money,rid);
-        }
-    }
-
-
-
-    //    public void checkIncome(@RequestBody Map<String,String> map){
-    //        repositoryMapper.updateIncome(map.get("rid"), Double.parseDouble(map.get("money")));
-
 }

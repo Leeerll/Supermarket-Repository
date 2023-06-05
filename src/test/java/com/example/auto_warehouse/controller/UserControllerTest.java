@@ -23,8 +23,8 @@ class UserControllerTest {
     @Test
     void login() {
         Map<String,String> map = new HashMap<>();
-        map.put("uid","123456");
-        map.put("password","123");
+        map.put("uid","1");
+        map.put("password","123456");
         JsonResult<User> res = userController.login(map);
         assertEquals("登录成功!",res.getMsg());
     }

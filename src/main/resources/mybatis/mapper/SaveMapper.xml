@@ -108,10 +108,16 @@
     <update id="modifySaveState" parameterType="com.example.auto_warehouse.bean.Save">
         update auto_warehouseDB.save set state="变更未送达" where cid=#{cid};
     </update>
+    <update id="modifySaveStateCommon" parameterType="com.example.auto_warehouse.bean.Save">
+        update auto_warehouseDB.save set state=#{state} where cid=#{cid};
+    </update>
     <update id="updateInputTimeAndState">
         update auto_warehouseDB.save set inputTime=#{inputTime},state="入库待确认状态" where orderID=#{orderID} and state!="变更未送达";
     </update>
     <update id="updateConfirmState">
         update auto_warehouseDB.save set state="⼊库已确认状态" where orderID=#{orderID} and state="入库待确认状态";
     </update>
+    <select id="findInputState" resultType="com.example.auto_warehouse.bean.Save">
+        select * from auto_warehouseDB.save where orderID=#{orderID} and state="⼊库已确认状态";
+    </select>
 </mapper>

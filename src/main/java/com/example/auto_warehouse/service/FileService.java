@@ -122,8 +122,11 @@ public class FileService {
             if(type.equals("input")){
                 ExcelMap.input_map_queue.add(dataList);
                 return true;
-            }else if(type.equals("output")){
+            }else if(type.equals("output")) {
                 ExcelMap.output_map_queue.add(dataList);
+                return true;
+            }else if(type.equals("actual_input")){
+                ExcelMap.actual_input_map_queue.add(dataList);
                 return true;
             }else{
                 logger.warn("excelToListMap()'s parameter type is wrong");
