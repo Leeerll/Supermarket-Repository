@@ -63,6 +63,10 @@
         select * from auto_warehouseDB.order where suid=#{suid} and state=#{state};
     </select>
 
+    <insert id="insertOrderCostLog" parameterType="com.example.auto_warehouse.bean.OrderCostLog">
+        insert into auto_warehouseDB.orderCostLog(suid,orderID,money,statement,time)
+        values (#{suid}, #{orderID}, #{money}, #{statement}, #{time});
+    </insert>
 
     <select id="getOrderPayment" resultType="com.example.auto_warehouse.bean.Save">
         select * from auto_warehouseDB.save where orderID=#{orderID} and state=#{state}

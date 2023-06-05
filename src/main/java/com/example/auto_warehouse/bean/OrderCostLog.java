@@ -1,59 +1,40 @@
 package com.example.auto_warehouse.bean;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
+@Entity
+@Data
+@NoArgsConstructor
 public class OrderCostLog {
 
-  private String suid;
-  private int orderID;
-  private Date time;
-  private double money;
-  private String statement;
+    public OrderCostLog(String suid, int orderID, double money, String statement) throws ParseException {
+        this.suid = suid;
+        this.orderID = orderID;
+        this.money = money;
+        this.statement = statement;
+        setTime();
+    }
 
+    @Id
+    private String suid;
+    private int orderID;
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    private Date time;
+    private double money;
+    private String statement;
 
-  public String getSuid() {
-    return suid;
-  }
-
-  public void setSuid(String suid) {
-    this.suid = suid;
-  }
-
-
-  public int getOrderId() {
-    return orderID;
-  }
-
-  public void setOrderId(int orderID) {
-    this.orderID = orderID;
-  }
-
-
-  public Date getTime() {
-    return time;
-  }
-
-  public void setTime(Date time) {
-    this.time = time;
-  }
-
-
-  public double getMoney() {
-    return money;
-  }
-
-  public void setMoney(double money) {
-    this.money = money;
-  }
-
-
-  public String getStatement() {
-    return statement;
-  }
-
-  public void setStatement(String statement) {
-    this.statement = statement;
-  }
+    public void setTime() throws ParseException {
+        Date now = new Date();
+        SimpleDateFormat tFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        this.time = tFormat.parse(tFormat.format(now));
+    }
 
 }

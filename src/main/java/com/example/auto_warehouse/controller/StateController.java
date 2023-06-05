@@ -171,8 +171,11 @@ public class StateController {
             System.out.println("day:"+day);
             cost+=day*2;
         }
-        // 计费，写入对应order的cost
+        // 计费，写入对应order的cost;写入缴费日志
         orderMapper.modifyOrderCost(orderID,cost);
+        Order order = orderMapper.getOrderByOrderID(orderID);
+        OrderCostLog orderCostLog = new OrderCostLog(order.getSuid(),orderID,cost,"初始计划缴费");
+        orderMapper.insertOrderCostLog(orderCostLog);
         // 修改状态为“待缴费状态”
         orderMapper.modifyOrderState(orderID,"待缴费状态",inputService.getNowTime());
         Message message1 = new Message(orderID, "待缴费状态", orderMapper.getSuid(orderID));
