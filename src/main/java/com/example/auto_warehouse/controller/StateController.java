@@ -3,7 +3,8 @@ package com.example.auto_warehouse.controller;
 import com.example.auto_warehouse.bean.*;
 import com.example.auto_warehouse.mapper.*;
 import com.example.auto_warehouse.service.InputService;
-import com.example.auto_warehouse.util.Id;
+import com.example.auto_warehouse.service.OutputService;
+import com.example.auto_warehouse.util.JsonResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -21,6 +22,8 @@ public class StateController {
     private OrderMapper orderMapper;
     @Autowired
     private InputService inputService;
+    @Autowired
+    private OutputService outputService;
 
     // 管理员查看需要人工审核的全部订单
     @RequestMapping("/manual_review")
@@ -168,8 +171,11 @@ public class StateController {
             System.out.println("day:"+day);
             cost+=day*2;
         }
-        // 计费，写入对应order的cost
+        // 计费，写入对应order的cost;写入缴费日志
         orderMapper.modifyOrderCost(orderID,cost);
+        Order order = orderMapper.getOrderByOrderID(orderID);
+        OrderCostLog orderCostLog = new OrderCostLog(order.getSuid(),orderID,cost,"初始计划缴费");
+        orderMapper.insertOrderCostLog(orderCostLog);
         // 修改状态为“待缴费状态”
         orderMapper.modifyOrderState(orderID,"待缴费状态",inputService.getNowTime());
         Message message1 = new Message(orderID, "待缴费状态", orderMapper.getSuid(orderID));
@@ -258,5 +264,18 @@ public class StateController {
         return inputService.actual_input_confirm(orderID);
     }
 
+    // 超市查询需要补差价或者需要退款的订单
+    @RequestMapping("/getActualOrderPayment")
+    @ResponseBody
+    public JsonResult<List<Map<String,String>>>getActualOrderPayment(@RequestBody Map<String,String> map1) throws ParseException {
+        int suid = Integer.parseInt(map1.get("suid"));
+        return outputService.getActualOrderPayment(suid);
+    }
 
+    // 获取缴费日志
+    @RequestMapping("/getPaymentOrderLog")
+    public List<OrderCostLog>getPaymentOrderLog(@RequestBody Map<String,String>map1){
+        int suid = Integer.parseInt(map1.get("suid"));
+        return outputService.getPaymentOrderLog(suid);
+    }
 }

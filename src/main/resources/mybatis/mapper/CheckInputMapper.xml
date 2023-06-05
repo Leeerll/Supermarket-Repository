@@ -3,10 +3,24 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.example.auto_warehouse.mapper.CheckInputMapper">
+    <insert id="insertCheckInput" parameterType="com.example.auto_warehouse.bean.CheckInput">
+        insert into auto_warehouseDB.checkInput(orderID, sid, num, statement, state)
+        values (#{orderID}, #{sid}, #{num}, #{statement}, #{state});
+    </insert>
+    <update id="updateCheckInputByOrderIDAndSid">
+        update auto_warehouseDB.checkInput set state="用户已确认" where orderID=#{orderID} and sid=#{sid};
+    </update>
+    <!--    <select id="getByOrderID" -->
     <select id="getByOrderIDAndNum" resultType="com.example.auto_warehouse.bean.CheckInput">
         select * from auto_warehouseDB.checkInput where orderID=#{orderID} and 0>num;
     </select>
     <select id="getByOrderIDAndSpecies" resultType="com.example.auto_warehouse.bean.CheckInput">
-        select * from auto_warehouseDB.checkInput where orderID=#{orderID} and statement="品类少";
+        select * from auto_warehouseDB.checkInput where orderID=#{orderID} and statement="实际到货缺少该物品";
+    </select>
+    <select id="getByOrderID" resultType="com.example.auto_warehouse.bean.CheckInput" parameterType="int">
+        select * from auto_warehouseDB.checkInput where orderID=#{orderID};
+    </select>
+    <select id="getByOrderIDAndSid" resultType="com.example.auto_warehouse.bean.CheckInput">
+        select * from auto_warehouseDB.checkInput where orderID=#{orderID} and sid=#{sid};
     </select>
 </mapper>

@@ -48,6 +48,8 @@ public class InputService {
         return now_time;
     }
 
+
+    // 入库申请
     public void check(List<Map<String,String>> data) throws ParseException {
         // 写入order表，状态设为“系统审核状态”
         String suid = data.get(0).get("suid");
@@ -110,6 +112,54 @@ public class InputService {
             orderMapper.insertMessage(message3);
             // 写入入库单表
             writeInputThings(data);
+        }
+    }
+
+    // 正式到货申请
+    public void checkIn(List<Map<String,String>> data) throws ParseException {
+
+        // (1) 检查费用是否已缴
+
+        // (2) 检查货物信息和之前的入库申请单是否相同
+        // 先根据orderId找到上次的入库申请单信息
+        int orderId = Integer.parseInt(data.get(0).get("orderID"));
+        List<InputThings> inputThingsList = orderMapper.getInputThingsByOrderID(orderId);
+        int[] checkThing = new int[inputThingsList.size()];
+        // 遍历data
+        for(Map map: data){
+            int find = 0;
+            int index = 0;
+            // 数量检查
+            for(InputThings inputThings: inputThingsList){
+                if(inputThings.getSid()==map.get("sid")){
+                    find = 1;
+                    checkThing[index] = 1;
+                    if(inputThings.getNum()==Integer.parseInt((String) map.get("num"))){
+                        CheckInput checkInput  = new CheckInput(orderId, inputThings.getSid(), 0, "正常", "待确认入库");
+                        checkInputMapper.insertCheckInput(checkInput);
+                    }else if(inputThings.getNum()<Integer.parseInt((String) map.get("num"))){
+                        CheckInput checkInput  = new CheckInput(orderId, inputThings.getSid(), inputThings.getNum() - Integer.parseInt((String) map.get("num")), "实际到货数量少于入库申请数量", "待确认入库");
+                        checkInputMapper.insertCheckInput(checkInput);
+                    }else{
+                        CheckInput checkInput  = new CheckInput(orderId, inputThings.getSid(), inputThings.getNum() - Integer.parseInt((String) map.get("num")), "实际到货数量多于入库申请数量", "待确认入库");
+                        checkInputMapper.insertCheckInput(checkInput);
+                    }
+                    break;
+                }
+                index ++;
+            }
+            // 种类检查
+            if(find==0){
+                CheckInput checkInput  = new CheckInput(orderId, (String) map.get("sid"), 0, "入库申请中无该物品", "待确认入库");
+                checkInputMapper.insertCheckInput(checkInput);
+            }
+        }
+        // 种类检查
+        for(int i=0; i<inputThingsList.size(); i++) {
+            if (checkThing[i] == 0) {
+                CheckInput checkInput = new CheckInput(orderId, inputThingsList.get(i).getSid(), 0, "实际到货缺少该物品", "待确认入库");
+                checkInputMapper.insertCheckInput(checkInput);
+            }
         }
     }
     public List<NotInput> allNotInput(){
@@ -306,7 +356,7 @@ public class InputService {
 
     public String confirm_checkInput(int orderID) throws ParseException {
         // 根据核验单checkInput对货位进行释放（针对入库货物数量少了的情况，多了的情况需要重新提交申请走流程）
-
+        double refund = 0;
         // 1.针对入库货物数量少了的情况
         List<CheckInput> list_num = checkInputMapper.getByOrderIDAndNum(orderID);
         for(CheckInput checkInput:list_num){
@@ -316,6 +366,11 @@ public class InputService {
             int num = Math.abs(checkInput.getNum());
             // 减少species表中的num
             speciesMapper.reduceNum(sid,num);
+            // 加到退款的费用里
+            InputThings inputThings = orderMapper.getInputThingsByOrderIDAndSid(orderID,sid);
+            int day = (int) ((inputThings.getOutputTime().getTime() - inputThings.getInputTime().getTime())
+                    / (24 * 60 * 60 * 1000));
+            refund+=num*day*2;
             for(String ceid:list_ceid){
                 if(saveMapper.findCountByOrderIDAndSidAndCeid(sid,orderID,ceid)>=num){
                     modified_ceid.put(ceid,num);
@@ -372,6 +427,10 @@ public class InputService {
             InputThings inputThings = orderMapper.getInputThingsByOrderIDAndSid(orderID,checkInput.getSid());
             // 减少species表中的num
             speciesMapper.reduceNum(checkInput.getSid(),inputThings.getNum());
+            // 加到退款的费用里
+            int day = (int) ((inputThings.getOutputTime().getTime() - inputThings.getInputTime().getTime())
+                    / (24 * 60 * 60 * 1000));
+            refund+=inputThings.getNum()*day*2;
             // 减少所占cell的restNum
             List<String> list_ceid = saveMapper.findAllCeidByOrderIDAndSid(checkInput.getSid(),orderID);
             for(String ceid:list_ceid){
@@ -394,7 +453,12 @@ public class InputService {
                 }
             }
         }
-
+        // 修改order表的cost
+        Order order = orderMapper.getOrderByOrderID(orderID);
+        orderMapper.modifyOrderCost(orderID,order.getCost()-refund);
+        // 记录cost更改日志到orderCostLog
+        OrderCostLog orderCostLog = new OrderCostLog(order.getSuid(),orderID,refund,"入库重计费退款");
+        orderMapper.insertOrderCostLog(orderCostLog);
         return "true";
     }
 

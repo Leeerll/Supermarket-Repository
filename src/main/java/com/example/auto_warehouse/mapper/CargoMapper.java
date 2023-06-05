@@ -24,10 +24,10 @@ public interface CargoMapper {
     boolean addCargo(Cargo cargo);
 
     // 未过期的货物存量
-    int getNotExpireNum(String sid, String suid);
+    int getNotExpireNum(String sid, int orderID);
 
     // 未出库、现在还未过期、但最近要过期的
-    List<Cargo> outputBatch();
+    List<Cargo> outputBatch(String sid, int orderID);
 
     // 出库时更新出库时间
     void updateOutputTime(int cid, Date outputTime);
@@ -46,5 +46,6 @@ public interface CargoMapper {
 
     void modifyCargoState(int cid);
     void updateInputTime(int orderID,Date inputTime);
+    void modifyCargoStateCommon(int cid,String state);
 
 }

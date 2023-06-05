@@ -19,6 +19,17 @@ public class Order {
     private int orderID;
     private String state;
     private String others;
+    
+
+    public int getActualCost() {
+        return actualCost;
+    }
+
+    public void setActualCost(int actualCost) {
+        this.actualCost = actualCost;
+    }
+
+    private int actualCost;
 
     public String getState() {
         return state;

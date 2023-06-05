@@ -1,13 +1,11 @@
 package com.example.auto_warehouse.mapper;
 
-import com.example.auto_warehouse.bean.InputThings;
-import com.example.auto_warehouse.bean.Message;
-import com.example.auto_warehouse.bean.Order;
-import com.example.auto_warehouse.bean.NotInput;
+import com.example.auto_warehouse.bean.*;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 @Mapper
 public interface OrderMapper {
@@ -32,4 +30,10 @@ public interface OrderMapper {
 
     List<NotInput> getNotinputByOrderID(int orderID);
     Order getOrderByOrderID(int orderID);
+    List<Save>getOrderPayment(int suid, int orderID, String state);
+    void updatePayment(int orderID,int amount);
+    List<Order>getActualOrderPayment(int suid,String state);
+    List<OrderCostLog>getOrderPaymentLog(int suid);
+    void insertOrderCostLog(OrderCostLog orderCostLog);
+    List<Order> getOrderBySuidAndstate(String suid, String state);
 }

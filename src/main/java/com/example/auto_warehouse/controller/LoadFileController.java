@@ -37,8 +37,9 @@ public class LoadFileController {
         }else{
             return new JsonResult <>("0","文件上传失败");
         }
-
     }
+
+
 
 
     @PostMapping("/importFileOutput")
@@ -50,6 +51,23 @@ public class LoadFileController {
 
         //读取excel，形成list<map>
         boolean result = fileService.excelToListMap(file,"output");
+        if(result){
+            logger.info("file is saved into queue");
+            return new JsonResult <>("1","文件上传成功");
+        }else{
+            return new JsonResult <>("0","文件上传失败");
+        }
+    }
+
+    @PostMapping("/importFileActualInput")
+    public JsonResult<String> importData_actualInput(MultipartFile file) throws IOException {
+        //MultipartFile file = ((MultipartHttpServletRequest)request).getFile("file");
+        if (file == null) {
+            return new JsonResult<>("0","文件为空，上传失败");
+        }
+
+        //读取excel，形成list<map>
+        boolean result = fileService.excelToListMap(file,"actual_input");
         if(result){
             logger.info("file is saved into queue");
             return new JsonResult <>("1","文件上传成功");

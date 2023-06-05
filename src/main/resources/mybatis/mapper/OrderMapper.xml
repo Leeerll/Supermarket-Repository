@@ -59,5 +59,26 @@
     <select id="getOrderByOrderID" resultType="com.example.auto_warehouse.bean.Order">
         select * from auto_warehouseDB.order where orderID=#{orderID};
     </select>
+    <select id="getOrderBySuidAndstate" resultType="com.example.auto_warehouse.bean.Order">
+        select * from auto_warehouseDB.order where suid=#{suid} and state=#{state};
+    </select>
+
+    <insert id="insertOrderCostLog" parameterType="com.example.auto_warehouse.bean.OrderCostLog">
+        insert into auto_warehouseDB.orderCostLog(suid,orderID,money,statement,time)
+        values (#{suid}, #{orderID}, #{money}, #{statement}, #{time});
+    </insert>
+
+    <select id="getOrderPayment" resultType="com.example.auto_warehouse.bean.Save">
+        select * from auto_warehouseDB.save where orderID=#{orderID} and state=#{state}
+    </select>
+    <update id="updatePayment">
+        update auto_warehouseDB.order set actualCost=#{amount} where orderID=#{orderID}
+    </update>
+    <select id="getActualOrderPayment" resultType="com.example.auto_warehouse.bean.Order">
+        select * from auto_warehouseDB.order where suid=#{suid} and state=#{state}
+    </select>
+    <select id="getPaymentOrderLog" resultType="com.example.auto_warehouse.bean.OrderCostLog">
+        select * from auto_warehouseDB.orderCostLog where suid=#{suid}
+    </select>
 
 </mapper>
