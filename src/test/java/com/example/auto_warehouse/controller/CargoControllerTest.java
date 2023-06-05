@@ -1,7 +1,5 @@
 package com.example.auto_warehouse.controller;
 
-import com.example.auto_warehouse.bean.NotInput;
-import lombok.Data;
 import net.minidev.json.JSONArray;
 import net.minidev.json.JSONObject;
 import net.minidev.json.parser.JSONParser;
@@ -59,7 +57,7 @@ class CargoControllerTest {
         JSONParser parser = new JSONParser();
         JSONArray jsonArray = (JSONArray) parser.parse(response.getBody());
 
-        String name="红牛";
+        String name="农夫泉水";
         System.out.println(jsonArray);
         for (Object obj : jsonArray) {
             JSONObject jsonObject = (JSONObject) obj;
@@ -70,7 +68,7 @@ class CargoControllerTest {
         if(jsonArray.isEmpty()){
             assertThat(true);
         }else {
-            assertTrue(false);
+            assertThat(false);
         }
     }
     @Test

@@ -45,7 +45,7 @@ public class OutputService {
     }
 
     // 出库data：sid、num、suid
-    public void check(List<Map<String,String>> data) throws ParseException {
+    public String check(List<Map<String,String>> data) throws ParseException {
         int orderID = Integer.parseInt(data.get(0).get("orderID"));
         // 不能出库的数据
         List<Map<String,String>> notOutputData = new ArrayList<>();
@@ -88,7 +88,7 @@ public class OutputService {
             orderMapper.insertMessage(message1);
             getOrderPayment(data);
         }
-
+        return "true";
     }
 
     public void outputThings(List<Map<String,String>> data){
