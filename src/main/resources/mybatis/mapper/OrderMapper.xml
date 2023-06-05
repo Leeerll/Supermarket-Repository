@@ -77,7 +77,7 @@
     <select id="getActualOrderPayment" resultType="com.example.auto_warehouse.bean.Order">
         select * from auto_warehouseDB.order where suid=#{suid} and state=#{state}
     </select>
-    <select id="getPaymentOrderLog" resultType="com.example.auto_warehouse.bean.OrderCostLog">
+    <select id="getOrderPaymentLog" resultType="com.example.auto_warehouse.bean.OrderCostLog">
         select * from auto_warehouseDB.orderCostLog where suid=#{suid}
     </select>
 
