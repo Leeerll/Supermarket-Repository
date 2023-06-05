@@ -188,7 +188,7 @@ public class OutputService {
         orderMapper.updatePayment(orderID,amount);
     }
     // 出库补交费用
-    public JsonResult<List<Map<String,String>>>getActualOrderPayment(int suid){
+    public JsonResult<List<Map<String,String>>>getActualOrderPayment(int suid) throws ParseException {
         // 根据超市传来的suid补交费用
         List<Order>list=orderMapper.getActualOrderPayment(suid,"待出库状态");
         List<Map<String,String>>resultList=new ArrayList<>();
@@ -207,8 +207,8 @@ public class OutputService {
                 map.put("diff",String.valueOf(diff));
                 resultList.add(map);
                 // 更新orderCostLog表
-//                OrderCostLog orderCostLog = new OrderCostLog(suid,orderID,diff, "补交差价");
-//                orderMapper.insertOrderCostLog(orderCostLog);
+                OrderCostLog orderCostLog = new OrderCostLog(String.valueOf(suid),Integer.parseInt(orderID),diff, "补交差价");
+                orderMapper.insertOrderCostLog(orderCostLog);
             }else if(diff<0){
                 // 需要退款
                 map.put("orderID",orderID);
@@ -216,8 +216,8 @@ public class OutputService {
                 map.put("diff",String.valueOf(diff));
                 resultList.add(map);
                 // 更新orderCostLog表
-//                OrderCostLog orderCostLog = new OrderCostLog(suid,orderID,diff, "补交差价");
-//                orderMapper.insertOrderCostLog(orderCostLog);
+                OrderCostLog orderCostLog = new OrderCostLog(String.valueOf(suid),Integer.parseInt(orderID),diff, "补交差价");
+                orderMapper.insertOrderCostLog(orderCostLog);
             }else {
                 return new JsonResult<>("1","正常缴费");
             }

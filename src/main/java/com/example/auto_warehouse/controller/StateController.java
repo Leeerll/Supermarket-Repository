@@ -267,7 +267,7 @@ public class StateController {
     // 超市查询需要补差价或者需要退款的订单
     @RequestMapping("/getActualOrderPayment")
     @ResponseBody
-    public JsonResult<List<Map<String,String>>>getActualOrderPayment(@RequestBody Map<String,String> map1){
+    public JsonResult<List<Map<String,String>>>getActualOrderPayment(@RequestBody Map<String,String> map1) throws ParseException {
         int suid = Integer.parseInt(map1.get("suid"));
         return outputService.getActualOrderPayment(suid);
     }

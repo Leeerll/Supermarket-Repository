@@ -35,7 +35,7 @@ class OutputServiceTest {
 //        System.out.println(orderMapper.getOrderPayment(suid,orderId,state));
     }
     @Test
-    void getActualOrderPayment(){
+    void getActualOrderPayment() throws ParseException {
         int suid = 101;
         System.out.println(outputService.getActualOrderPayment(suid).toString());
     }
