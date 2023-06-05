@@ -12,6 +12,7 @@ public class Supermarket {
     private String suregion;
     private String password;
     private String rid;
+    private String bankCardNumber;
 
     public String getPassword() {
         return password;
@@ -26,10 +27,11 @@ public class Supermarket {
 
     }
 
-    public Supermarket(String suid, String suregion, String rid) {
+    public Supermarket(String suid, String suregion, String rid,String bankCardNumber) {
         this.suid = suid;
         this.suregion = suregion;
         this.rid = rid;
+        this.bankCardNumber = bankCardNumber;
     }
 
     public String getSuid() {
