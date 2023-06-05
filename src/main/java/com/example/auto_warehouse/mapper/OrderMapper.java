@@ -29,6 +29,10 @@ public interface OrderMapper {
 
     List<NotInput> getNotinputByOrderID(int orderID);
     Order getOrderByOrderID(int orderID);
+    List<Save>getOrderPayment(int suid, int orderID, String state);
+    void updatePayment(int orderID,int amount);
+    List<Order>getActualOrderPayment(int suid,String state);
+    List<OrderCostLog>getOrderPaymentLog(int suid);
     void insertOrderCostLog(OrderCostLog orderCostLog);
     List<Order> getOrderBySuidAndstate(String suid, String state);
 }
