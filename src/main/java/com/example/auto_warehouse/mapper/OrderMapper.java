@@ -34,4 +34,6 @@ public interface OrderMapper {
     void updatePayment(int orderID,int amount);
     List<Order>getActualOrderPayment(int suid,String state);
     List<OrderCostLog>getOrderPaymentLog(int suid);
+    void insertOrderCostLog(OrderCostLog orderCostLog);
+    List<Order> getOrderBySuidAndstate(String suid, String state);
 }
