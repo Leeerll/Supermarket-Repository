@@ -117,4 +117,7 @@
     <update id="updateConfirmState">
         update auto_warehouseDB.save set state="⼊库已确认状态" where orderID=#{orderID} and state="入库待确认状态";
     </update>
+    <select id="findInputState" resultType="com.example.auto_warehouse.bean.Save">
+        select * from auto_warehouseDB.save where orderID=#{orderID} and state="⼊库已确认状态";
+    </select>
 </mapper>

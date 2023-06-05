@@ -14,8 +14,8 @@
     </select>
 
     <insert id = "addSupermarket" parameterType="com.example.auto_warehouse.bean.Supermarket">
-        insert into auto_warehouseDB.supermarket (suid,suregion,rid,password)
-        values(#{suid},#{suregion},#{rid},#{password})
+        insert into auto_warehouseDB.supermarket (suid,suregion,rid,password,bankCardNumber)
+        values(#{suid},#{suregion},#{rid},#{password},#{bankCardNumber})
     </insert>
 
     <update id = "modifyName" parameterType="com.example.auto_warehouse.bean.User">
