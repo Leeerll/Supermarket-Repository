@@ -571,7 +571,7 @@ public class InputService {
         List<Integer> list = logMapper.getConfirmCidByOrderID(orderID);
         for(int cid:list){
             Log old_log = logMapper.getLogByCid(cid);
-            Log log = new Log(old_log.getSid(),cid, old_log.getRid(), old_log.getCeid(),old_log.getSuid(),"⼊库已确认状态",orderID);
+            Log log = new Log(old_log.getSid(),cid, old_log.getRid(), old_log.getCeid(),old_log.getSuid(),"入库已确认状态",orderID);
             logMapper.addLog(log);
         }
         return "true";
