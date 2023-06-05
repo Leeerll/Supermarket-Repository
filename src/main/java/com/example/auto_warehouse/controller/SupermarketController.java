@@ -13,11 +13,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @RestController
 @RequestMapping("/supermarket")
@@ -32,6 +30,7 @@ public class SupermarketController {
     private OrderMapper orderMapper;
     @Autowired
     private CheckInputMapper checkInputMapper;
+    private Date now_time;
 
     @PostMapping("/login")
     public JsonResult<Supermarket> login(@RequestBody Map<String,String> map){
@@ -103,7 +102,7 @@ public class SupermarketController {
         List<Map<String,String>> list = new ArrayList<>();
         for(Order order: orderList) {
             int orderId = order.getOrderID();
-            List<CheckInput> checkInputList = checkInputMapper.getByOrderID(orderId);
+            List<CheckInput> checkInputList = checkInputMapper.getInformalByOrderID(orderId);
 
             for (CheckInput checkInput : checkInputList) {
                 Map<String, String> map1 = new HashMap<>();
@@ -120,15 +119,34 @@ public class SupermarketController {
 
     @RequestMapping("/show_Confirm")
     @ResponseBody
-    public void show_Confirm(@RequestBody List<Map<String,String>> mapList){
+    public void show_Confirm(@RequestBody List<Map<String,String>> mapList) throws ParseException {
+        // 重计算
+        double money;
+        int orderID = Integer.parseInt(mapList.get(0).get("orderID"));
+        // 更改正常状态的货物入库
+        List<CheckInput> formalCheckInputList = checkInputMapper.getFormalByOrderIDAndSid(orderID);
+        for(CheckInput checkInput : formalCheckInputList){
+            String sid = checkInput.getSid();
+            checkInputMapper.updateCheckInputByOrderIDAndSid(checkInput.getOrderID(), checkInput.getSid());
+            orderMapper.modifyOrderState(orderID, "核验单已审核状态", getNowTime());
+        }
+        // 核对用户新确认的货物
         for(Map map: mapList) {
-            int orderID = (int) map.get("orderID");
+//            int orderID = (int) map.get("orderID");
             String sid = (String) map.get("sid");
             List<CheckInput> checkInputList = checkInputMapper.getByOrderIDAndSid(orderID, sid);
             for (CheckInput checkInput : checkInputList) {
                 checkInputMapper.updateCheckInputByOrderIDAndSid(checkInput.getOrderID(), checkInput.getSid());
+                orderMapper.modifyOrderState(orderID, "核验单已审核状态", getNowTime());
             }
         }
+        //
+    }
+    public Date getNowTime() throws ParseException {
+        Date now = new Date();
+        SimpleDateFormat tFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        now_time = tFormat.parse(tFormat.format(now));
+        return now_time;
     }
 
 
