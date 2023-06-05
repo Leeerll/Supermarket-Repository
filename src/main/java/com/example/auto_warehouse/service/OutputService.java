@@ -80,9 +80,24 @@ public class OutputService {
             Message message1 = new Message(orderID, "出库请求未通过系统审核", orderMapper.getSuid(orderID));
             orderMapper.insertMessage(message1);
         }else{
-            
+            // 写入outputThings表
+            outputThings(data);
+            //待缴费状态
+            orderMapper.modifyOrderState(orderID,"出库待缴费状态",getNowTime());
+            Message message1 = new Message(orderID, "出库待缴费状态", orderMapper.getSuid(orderID));
+            orderMapper.insertMessage(message1);
+            getOrderPayment(data);
         }
 
+    }
+
+    public void outputThings(List<Map<String,String>> data){
+        for(Map<String,String> map:data){
+            int num = Integer.parseInt(map.get("num"));
+            int orderID = Integer.parseInt(map.get("orderID"));
+            OutputThings outputThings = new OutputThings(map.get("sid"),map.get("suid"),num,map.get("name"),orderID);
+            orderMapper.insertOutputThings(outputThings);
+        }
     }
 
     private void notOutput(List<Map<String, String>> list) {
@@ -110,18 +125,20 @@ public class OutputService {
     }
 
     // 清理货柜 写入出库时间
-    private void callOutput(Map<String,String> map) throws ParseException {
+    public void callOutput(Map<String,String> map) throws ParseException {
         int orderID = Integer.parseInt(map.get("orderID"));
         // 超市端需要的量
         int needNum = Integer.parseInt((String)map.get("num"));
         // 当前货物的sid
-        String sid = map.get("sid");
+        String sid = (String) map.get("sid");
         // (1) 对species表的操作
         speciesMapper.reduceNum((String) map.get("sid"), needNum);
         // 出库时间
         Date now = new Date();
         SimpleDateFormat tFormat = new SimpleDateFormat("yyyy-MM-dd");
         Date outputTime = tFormat.parse(tFormat.format(now));
+        // 把outputThings中的状态改成已出库
+        orderMapper.modifyOutputThingsState(orderID,sid);
 
         // 设计这个while循环的目的：从不同批次的货物中分批出货
         while(needNum>0){
@@ -197,12 +214,12 @@ public class OutputService {
     }
 
     // 在提交出库订单时，计算该费用
-    public void getOrderPayment(List<Map<String, Object>> data) {
+    public void getOrderPayment(List<Map<String, String>> data) {
         // 当前出库订单编号
-        int orderID = (int) data.get(0).get("orderID");
-        int suid = (int) data.get(0).get("suid");
+        int orderID = Integer.parseInt((String)data.get(0).get("orderID"));
+        String suid = (String)data.get(0).get("suid");
         // 根据待缴费状态状态获取实际费用
-        List<Save>list= orderMapper.getOrderPayment(suid,orderID,"待缴费状态");
+        List<Save>list= orderMapper.getOrderPayment(orderID);
         // 计算每笔费用的价钱
         int amount=0;
         for(Save save : list){
@@ -215,9 +232,9 @@ public class OutputService {
     }
 
     // 出库补交费用
-    public JsonResult<List<Map<String,String>>>getActualOrderPayment(int suid) throws ParseException {
+    public JsonResult<List<Map<String,String>>>getActualOrderPayment(String suid) throws ParseException {
         // 根据超市传来的suid补交费用
-        List<Order>list=orderMapper.getActualOrderPayment(suid,"待出库状态");
+        List<Order>list=orderMapper.getActualOrderPayment(suid);
         List<Map<String,String>>resultList=new ArrayList<>();
         SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         for (Order order : list) {
@@ -252,7 +269,7 @@ public class OutputService {
         return new JsonResult<>(resultList);
     }
     // 获取超市缴费记录
-    public List<OrderCostLog>getPaymentOrderLog(int suid){
+    public List<OrderCostLog>getPaymentOrderLog(String suid){
         List<OrderCostLog>list = orderMapper.getOrderPaymentLog(suid);
         return list;
     }
