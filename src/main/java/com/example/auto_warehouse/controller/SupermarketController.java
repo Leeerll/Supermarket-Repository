@@ -124,7 +124,7 @@ public class SupermarketController {
         for(CheckInput checkInput : formalCheckInputList){
             String sid = checkInput.getSid();
             checkInputMapper.updateCheckInputByOrderIDAndSid(checkInput.getOrderID(), checkInput.getSid());
-            orderMapper.modifyOrderState(orderID, "核验单已审核状态", getNowTime());
+            orderMapper.modifyOrderState(orderID, "核验单已确认状态", getNowTime());
         }
         // 核对用户新确认的货物
         for(Map map: mapList) {
@@ -133,7 +133,7 @@ public class SupermarketController {
             List<CheckInput> checkInputList = checkInputMapper.getByOrderIDAndSid(orderID, sid);
             for (CheckInput checkInput : checkInputList) {
                 checkInputMapper.updateCheckInputByOrderIDAndSid(checkInput.getOrderID(), checkInput.getSid());
-                orderMapper.modifyOrderState(orderID, "核验单已审核状态", getNowTime());
+                orderMapper.modifyOrderState(orderID, "核验单已确认状态", getNowTime());
             }
         }
         //
