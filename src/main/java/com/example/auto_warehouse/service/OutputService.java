@@ -62,14 +62,13 @@ public class OutputService {
                 notOutputData.add(map);
             }
             // 检查num是否够
-            else if(Integer.parseInt((String) map.get("num"))<= cargoMapper.getNotExpireNum((String) map.get("sid"), orderID)){
+            else if(Integer.parseInt((String) map.get("num"))> cargoMapper.getNotExpireNum((String) map.get("sid"), orderID)){
                 map.put("reason","余量不足");
                 notOutputData.add(map);
             }
             // 更改表
             else{
 
-                //callOutput(map);---------------------------------------------------------------------------需要修改
             }
 
         }
@@ -82,11 +81,13 @@ public class OutputService {
         }else{
             // 写入outputThings表
             outputThings(data);
-            //待缴费状态
-            orderMapper.modifyOrderState(orderID,"出库待缴费状态",getNowTime());
-            Message message1 = new Message(orderID, "出库待缴费状态", orderMapper.getSuid(orderID));
-            orderMapper.insertMessage(message1);
             getOrderPayment(data);
+            if(getActualOrderPayment(orderID)){
+                // 如果要补缴费
+                orderMapper.modifyOrderState(orderID,"出库重计费补缴费状态",getNowTime());
+                Message message1 = new Message(orderID, "出库重计费补缴费状态", orderMapper.getSuid(orderID));
+                orderMapper.insertMessage(message1);
+            }
         }
         return "true";
     }
@@ -214,59 +215,70 @@ public class OutputService {
     }
 
     // 在提交出库订单时，计算该费用
-    public void getOrderPayment(List<Map<String, String>> data) {
+    public void getOrderPayment(List<Map<String, String>> data) throws ParseException {
         // 当前出库订单编号
         int orderID = Integer.parseInt((String)data.get(0).get("orderID"));
-        String suid = (String)data.get(0).get("suid");
-        // 根据待缴费状态状态获取实际费用
-        List<Save>list= orderMapper.getOrderPayment(orderID);
-        // 计算每笔费用的价钱
-        int amount=0;
-        for(Save save : list){
-            int day = (int) ((save.getOutputTime().getTime() - save.getInputTime().getTime())
+        Order order = orderMapper.getOrderByOrderID(orderID);
+        // 出库的excel都是当前的日期
+        Date now = new Date();
+        SimpleDateFormat tFormat = new SimpleDateFormat("yyyy-MM-dd");
+        Date now_time = tFormat.parse(tFormat.format(now));
+        double amount = 0;
+        for(Map<String, String> map:data){
+            String sid = (String) map.get("sid");
+            int num = Integer.parseInt((String) map.get("num"));
+            Save save = orderMapper.getOrderPayment(orderID,sid);
+            int day = (int) ((now_time.getTime() - save.getInputTime().getTime())
                     / (24 * 60 * 60 * 1000));
-            amount = 2*day;
+            amount+=day*2*num;
         }
         // 更新出库费用
-        orderMapper.updatePayment(orderID,amount);
+        orderMapper.updatePayment(orderID,order.getActualCost()+amount);
     }
 
-    // 出库补交费用
-    public JsonResult<List<Map<String,String>>>getActualOrderPayment(String suid) throws ParseException {
-        // 根据超市传来的suid补交费用
-        List<Order>list=orderMapper.getActualOrderPayment(suid);
-        List<Map<String,String>>resultList=new ArrayList<>();
-        SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        for (Order order : list) {
-            Map<String,String>map=new HashMap<>();
-            String orderID = String.valueOf(order.getOrderID());
-            String time = sdf1.format(order.getTime());
-            int actualCost = order.getActualCost();
-            double cost = order.getCost();
-            double diff = cost-actualCost;
-            if(diff>0){
-                // actual > 0 需要补偿差价
-                map.put("orderID",orderID);
-                map.put("time",time);
-                map.put("diff",String.valueOf(diff));
-                resultList.add(map);
-                // 更新orderCostLog表
-//                OrderCostLog orderCostLog = new OrderCostLog(String.valueOf(suid),Integer.parseInt(orderID),diff, "补交差价");
-//                orderMapper.insertOrderCostLog(orderCostLog);
-            }else if(diff<0){
-                // 需要退款
-                map.put("orderID",orderID);
-                map.put("time",time);
-                map.put("diff",String.valueOf(diff));
-                resultList.add(map);
-                // 更新orderCostLog表
-//                OrderCostLog orderCostLog = new OrderCostLog(String.valueOf(suid),Integer.parseInt(orderID),diff, "补交差价");
-//                orderMapper.insertOrderCostLog(orderCostLog);
-            }else {
-                return new JsonResult<>("1","正常缴费");
+    // 出库补交费用,返回true就是要超市缴费，走确认流程的
+    public boolean getActualOrderPayment(int orderID) throws ParseException {
+        Order order = orderMapper.getOrderByOrderID(orderID);
+        // actualCost是实际累计出库需要交的费用，一个订单的货物可以分批出库
+        double actualCost = order.getActualCost();
+        double cost = order.getPaidMoney();
+        double diff = actualCost-cost;
+        if(diff>0){
+            // actual > 0 需要补偿差价
+            return true;
+        }else if(diff<0){
+            // 需要退款
+            // 更新orderCostLog表
+            OrderCostLog orderCostLog = new OrderCostLog(order.getSuid(),orderID,Math.abs(diff), "出库退款");
+            orderMapper.insertOrderCostLog(orderCostLog);
+            orderMapper.updatePaidMoney(order.getOrderID(), order.getPaidMoney()-Math.abs(diff));
+            // 执行出库操作
+            List<OutputThings> list1 = orderMapper.getOutputThingsByOrderID(orderID);
+            for(OutputThings outputThings:list1){
+                Map<String,String> map1 = new HashMap<>();
+                map1.put("sid",outputThings.getSid());
+                map1.put("suid",outputThings.getSuid());
+                map1.put("name",outputThings.getName());
+                map1.put("num",String.valueOf(outputThings.getNum()));
+                map1.put("orderID",String.valueOf(outputThings.getOrderID()));
+                callOutput(map1);
             }
+            return false;
+        }else {
+            // 不需要补缴费和退款的，直接出库
+            List<OutputThings> list1 = orderMapper.getOutputThingsByOrderID(orderID);
+            for(OutputThings outputThings:list1){
+                Map<String,String> map1 = new HashMap<>();
+                map1.put("sid",outputThings.getSid());
+                map1.put("suid",outputThings.getSuid());
+                map1.put("name",outputThings.getName());
+                map1.put("num",String.valueOf(outputThings.getNum()));
+                map1.put("orderID",String.valueOf(outputThings.getOrderID()));
+                callOutput(map1);
+            }
+            return false;
         }
-        return new JsonResult<>(resultList);
+
     }
     // 获取超市缴费记录
     public List<OrderCostLog>getPaymentOrderLog(String suid){

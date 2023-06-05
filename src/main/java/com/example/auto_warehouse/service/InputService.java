@@ -128,7 +128,7 @@ public class InputService {
             int index = 0;
             // 数量检查
             for(InputThings inputThings: inputThingsList){
-                if(inputThings.getSid()==map.get("sid")){
+                if(inputThings.getSid().equals(map.get("sid"))){
                     find = 1;
                     checkThing[index] = 1;
                     if(inputThings.getNum()==Integer.parseInt((String) map.get("num"))){
@@ -147,9 +147,27 @@ public class InputService {
             }
             // 种类检查
             if(find==0){
-                CheckInput checkInput  = new CheckInput(orderId, (String) map.get("sid"), (Integer) map.get("num"), "入库申请中无该物品", "待确认入库");
+                SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy-MM-dd");
+                String sid = (String) map.get("sid");
+                String sname = (String) map.get("sname");
+                String stype = (String) map.get("stype");
+                int num = Integer.parseInt((String) map.get("num"));
+                double weight = Double.parseDouble((String) map.get("weight"));
+                double sh = Double.parseDouble((String) map.get("sh"));
+                double sw = Double.parseDouble((String) map.get("sw"));
+                double sd = Double.parseDouble((String) map.get("sd"));
+                Date production_date = sdf1.parse((String) map.get("production_date"));
+                int shelf_life = Integer.parseInt((String) map.get("shelf_life"));
+                String suid = (String) map.get("suid");
+                String size = (String) map.get("size");
+                Date inputTime = sdf1.parse((String) map.get("input_time"));
+                Date outputTime = sdf1.parse((String) map.get("output_time"));
+                double price = Double.parseDouble((String) map.get("price"));
+                String phone = (String) map.get("phone");
+                String manufacturer = (String) map.get("manufacturer");
+                CheckInput checkInput  = new CheckInput(orderId, (String) map.get("sid"), Integer.parseInt((String) map.get("num")) , "入库申请中无该物品", "待确认入库");
                 checkInputMapper.insertCheckInput(checkInput);
-                InputThings inputThings = new InputThings(checkInput.getSid(), (String) map.get("sname"), (String) map.get("stype"), (Integer) map.get("num"), (Double) map.get("weight"), (Double) map.get("sh"), (Double) map.get("sw"), (Double) map.get("sd"), (Date) map.get("production_date"), (Integer) map.get("shelfLife"), (String) map.get("suid"), (String) map.get("size"), (Date) map.get("inputTime"), (Date) map.get("outputTime"), (Integer) map.get("orderID"), (Double) map.get("price"), (String) map.get("phone"), (String) map.get("manufacturer"));
+                InputThings inputThings = new InputThings(checkInput.getSid(), (String) map.get("sname"), (String) map.get("stype"), Integer.parseInt((String) map.get("num")), Double.parseDouble((String) map.get("weight")), Double.parseDouble((String) map.get("sh")), Double.parseDouble((String) map.get("sw")), Double.parseDouble((String) map.get("sd")), production_date, shelf_life, (String) map.get("suid"), (String) map.get("size"), inputTime, outputTime, orderId, price, (String) map.get("phone"), (String) map.get("manufacturer"));
                 orderMapper.insertInputThings(inputThings);
             }
         }
@@ -158,7 +176,6 @@ public class InputService {
             if (checkThing[i] == 0) {
                 CheckInput checkInput = new CheckInput(orderId, inputThingsList.get(i).getSid(), 0, "实际到货缺少该物品", "待确认入库");
                 checkInputMapper.insertCheckInput(checkInput);
-
             }
         }
         orderMapper.modifyOrderState(orderId,"入库清单待确认状态", getNowTime());
@@ -343,20 +360,7 @@ public class InputService {
         Message message1 = new Message(orderID, "已预留库位状态", orderMapper.getSuid(orderID));
         orderMapper.insertMessage(message1);
 
-        //------------------------------------------------------------------------------------------------移到重计费缴费那里
-//        // 仓库收入income表增加，repository收入增加
-//        double money=orderMapper.getOrderByOrderID(orderID).getCost();
-//        repositoryMapper.updateIncome(Id.getRepositoryID(), money);
-//        int year = Calendar.getInstance().get(Calendar.YEAR);
-//        int month = Calendar.getInstance().get(Calendar.MONTH);
-//        int yearMonth = year*100+month+1;
-//        List<Income> list = incomeMapper.findByYearMonth(Id.getRepositoryID(),yearMonth);
-//        if(list.size()==0){
-//            Income income = new Income(Id.getRepositoryID(),yearMonth,money);
-//            incomeMapper.insertIncome(income);
-//        }else{
-//            incomeMapper.updateIncome(yearMonth,money,Id.getRepositoryID());
-//        }
+
         return "true";
     }
 
@@ -477,10 +481,10 @@ public class InputService {
             int day = (int) ((inputThings.getOutputTime().getTime() - inputThings.getInputTime().getTime())
                     / (24 * 60 * 60 * 1000));
             int num = 0;
-            if(checkInput.getState().equals("实际到货数量多于入库申请数量")){
+            if(checkInput.getStatement().equals("实际到货数量多于入库申请数量")){
                 num = checkInput.getNum();
             }
-            if(checkInput.getState().equals("入库申请中无该物品")){
+            if(checkInput.getStatement().equals("入库申请中无该物品")){
                 num = inputThings.getNum();
             }
             pay_add+=num*day*2;
@@ -500,11 +504,11 @@ public class InputService {
         }else{
             // 需要补缴费
             Order order = orderMapper.getOrderByOrderID(orderID);
-            orderMapper.modifyOrderCost(orderID,order.getCost()+refund);
-            orderMapper.modifyOrderState(orderID,"入库缴费状态",getNowTime());
-            Message message1 = new Message(orderID, "入库缴费状态", orderMapper.getSuid(orderID));
-            orderMapper.insertMessage(message1);
+            orderMapper.modifyOrderCost(orderID,order.getCost()-refund);
         }
+        orderMapper.modifyOrderState(orderID,"入库缴费状态",getNowTime());
+        Message message1 = new Message(orderID, "入库缴费状态", orderMapper.getSuid(orderID));
+        orderMapper.insertMessage(message1);
         return "true";
     }
 
@@ -525,10 +529,10 @@ public class InputService {
             map.put("production_date", sdf1.format(inputThings.getProductionDate()));
             map.put("shelf_life",String.valueOf(inputThings.getShelfLife()));
             map.put("suid",inputThings.getSuid()); // suid是超市id
-            if(checkInput.getState().equals("实际到货数量多于入库申请数量")){
+            if(checkInput.getStatement().equals("实际到货数量多于入库申请数量")){
                 map.put("num",String.valueOf(checkInput.getNum()));
             }
-            if(checkInput.getState().equals("入库申请中无该物品")){
+            if(checkInput.getStatement().equals("入库申请中无该物品")){
                 map.put("num",String.valueOf(inputThings.getNum()));
             }
             list.add(map);
@@ -539,6 +543,9 @@ public class InputService {
     public String actual_input(int orderID) throws ParseException {
         // 实际入库：写入cargo、save的入库时间，修改state状态；插入新log
         // 修改成“入库待确认状态”
+        orderMapper.modifyOrderState(orderID,"入库待确认状态",getNowTime());
+        Message message1 = new Message(orderID, "入库待确认状态", orderMapper.getSuid(orderID));
+        orderMapper.insertMessage(message1);
         Date now = new Date();
         SimpleDateFormat tFormat = new SimpleDateFormat("yyyy-MM-dd");
         cargoMapper.updateInputTime(orderID,tFormat.parse(tFormat.format(now)));
@@ -556,6 +563,10 @@ public class InputService {
     }
     public String actual_input_confirm(int orderID) throws ParseException {
         // 修改成“⼊库已确认状态”,更改save、log表
+        orderMapper.modifyOrderState(orderID,"入库已确认状态",getNowTime());
+        Message message1 = new Message(orderID, "入库已确认状态", orderMapper.getSuid(orderID));
+        orderMapper.insertMessage(message1);
+
         saveMapper.updateConfirmState(orderID);
         List<Integer> list = logMapper.getConfirmCidByOrderID(orderID);
         for(int cid:list){
@@ -564,6 +575,22 @@ public class InputService {
             logMapper.addLog(log);
         }
         return "true";
+    }
+
+    public void income(double money){
+        // 仓库收入income表增加，repository收入增加
+        //double money=orderMapper.getOrderByOrderID(orderID).getCost();
+        repositoryMapper.updateIncome(Id.getRepositoryID(), money);
+        int year = Calendar.getInstance().get(Calendar.YEAR);
+        int month = Calendar.getInstance().get(Calendar.MONTH);
+        int yearMonth = year*100+month+1;
+        List<Income> list = incomeMapper.findByYearMonth(Id.getRepositoryID(),yearMonth);
+        if(list.size()==0){
+            Income income = new Income(Id.getRepositoryID(),yearMonth,money);
+            incomeMapper.insertIncome(income);
+        }else{
+            incomeMapper.updateIncome(yearMonth,money,Id.getRepositoryID());
+        }
     }
 
 }

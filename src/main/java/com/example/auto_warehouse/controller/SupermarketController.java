@@ -44,9 +44,10 @@ public class SupermarketController {
 
     @RequestMapping("/get_storage")
     @ResponseBody
-    public List<Map<String,String>> get_storage(){
+    public List<Map<String,String>> get_storage(@RequestBody Map<String,String> map1){
         List<Map<String,String>> list = new ArrayList<>();
-        List<ShopStorage> list_shopStorage = supermarketMapper.getStorage(Id.getShopID());
+        String suid = map1.get("suid");
+        List<ShopStorage> list_shopStorage = supermarketMapper.getStorage(suid);
         //List<ShopStorage> list_shopStorage = supermarketMapper.getStorage("101");
         for(ShopStorage shopStorage:list_shopStorage){
             Map<String,String> map = new HashMap<>();
@@ -111,7 +112,7 @@ public class SupermarketController {
                 Map<String, String> map1 = new HashMap<>();
                 map1.put("orderID", String.valueOf(orderId));
                 map1.put("sid", checkInput.getSid());
-                map1.put("num", String.valueOf(checkInput.getNum()));
+                map1.put("num", String.valueOf(Math.abs(checkInput.getNum())));
                 map1.put("statement", checkInput.getStatement());
                 map1.put("state", checkInput.getState());
                 list.add(map1);
@@ -126,6 +127,7 @@ public class SupermarketController {
         // 重计算
         double money;
         int orderID = Integer.parseInt(mapList.get(0).get("orderID"));
+        checkInputMapper.updateCheckInputByOrderIDAndSid2(orderID);
         // 更改正常状态的货物入库
         List<CheckInput> formalCheckInputList = checkInputMapper.getFormalByOrderIDAndSid(orderID);
         for(CheckInput checkInput : formalCheckInputList){

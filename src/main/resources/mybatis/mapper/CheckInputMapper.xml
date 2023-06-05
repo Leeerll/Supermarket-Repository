@@ -7,6 +7,9 @@
         insert into auto_warehouseDB.checkInput(orderID, sid, num, statement, state)
         values (#{orderID}, #{sid}, #{num}, #{statement}, #{state});
     </insert>
+    <update id="updateCheckInputByOrderIDAndSid2">
+        update auto_warehouseDB.checkInput set state="用户未确认" where orderID=#{orderID};
+    </update>
     <update id="updateCheckInputByOrderIDAndSid">
         update auto_warehouseDB.checkInput set state="用户已确认" where orderID=#{orderID} and sid=#{sid};
     </update>
@@ -24,7 +27,7 @@
         select * from auto_warehouseDB.checkInput where orderID=#{orderID} and num>0 and state="用户已确认";
     </select>
     <select id="getByOrderIDAndSpeciesAdd" resultType="com.example.auto_warehouse.bean.CheckInput">
-        select * from auto_warehouseDB.checkInput where orderID=#{orderID} and statement="实际到货缺少该物品" and state="用户已确认";
+        select * from auto_warehouseDB.checkInput where orderID=#{orderID} and statement="入库申请中无该物品" and state="用户已确认";
     </select>
 
     <select id="getByOrderIDAndSid" resultType="com.example.auto_warehouse.bean.CheckInput">
@@ -32,7 +35,7 @@
     </select>
     <select id="getInformalByOrderID" resultType="com.example.auto_warehouse.bean.CheckInput"
             parameterType="int">
-        select * from auto_warehouseDB.checkInput where orderID=#{orderID} and statement!="正常";
+        select * from auto_warehouseDB.checkInput where orderID=#{orderID} and statement!="正常" and state="待确认入库";
     </select>
     <select id="getFormalByOrderIDAndSid" resultType="com.example.auto_warehouse.bean.CheckInput"
             parameterType="int">

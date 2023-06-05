@@ -169,7 +169,7 @@ public class StateController {
             int day = (int) ((inputThings.getOutputTime().getTime() - inputThings.getInputTime().getTime())
                                 / (24 * 60 * 60 * 1000));
             System.out.println("day:"+day);
-            cost+=day*2;
+            cost+=day*2*inputThings.getNum();
         }
         // 计费，写入对应order的cost;写入缴费日志
         orderMapper.modifyOrderCost(orderID,cost);
@@ -207,11 +207,17 @@ public class StateController {
         List<Map<String,String>> list = new ArrayList<>();
         SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         for(Order order:list_order){
+            double method = order.getPayMethod();
             Map<String,String> map = new HashMap<>();
             map.put("orderID",String.valueOf(order.getOrderID()));
-            map.put("cost",String.valueOf(order.getCost()-order.getActualCost()));// 返回的cost应该是需要交的费用：cost-actual_cost
             map.put("time", sdf1.format(order.getTime()));
             map.put("statement",order.getState());// 对于缴费的说明，是哪一阶段的
+            if(order.getState().equals("入库缴费状态")){
+                map.put("cost",String.valueOf((order.getCost())*method));
+            }
+            if(order.getState().equals("出库重计费补缴费状态")){
+                map.put("cost",String.valueOf(order.getActualCost()-order.getPaidMoney()));
+            }
             list.add(map);
         }
         return list;
@@ -222,10 +228,30 @@ public class StateController {
     @ResponseBody
     public String choose_payMethod(@RequestBody Map<String,String> map1) throws ParseException {
         int orderID = Integer.parseInt(map1.get("orderID"));
+
         double payMethod = Double.parseDouble(map1.get("payMethod"));
+        System.out.println("1111111111111111111"+payMethod);
         // 写进order的payMethod
         orderMapper.setPayMethod(orderID, payMethod);
         return inputService.finish_payment(orderID);
+    }
+
+    // 显示需要选择缴费方式的订单
+    @RequestMapping("/show_choose_payMethod")
+    @ResponseBody
+    public List<Map<String,String>> show_choose_payMethod(@RequestBody Map<String,String> map1) throws ParseException {
+        String suid = map1.get("suid");
+        List<Order> orderList = orderMapper.showNonePayMethod(suid);
+        SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        List<Map<String,String>> list = new ArrayList<>();
+        for(Order order: orderList) {
+            Map<String, String> map = new HashMap<>();
+            map.put("orderID", String.valueOf(order.getOrderID()));
+            map.put("time", sdf1.format(order.getTime()));
+            map.put("state", order.getState());
+            list.add(map);
+        }
+        return list;
     }
 
 
@@ -248,12 +274,12 @@ public class StateController {
     }
 
     // 超市查询需要补差价或者需要退款的订单
-    @RequestMapping("/getActualOrderPayment")
-    @ResponseBody
-    public JsonResult<List<Map<String,String>>>getActualOrderPayment(@RequestBody Map<String,String> map1) throws ParseException {
-        String suid = map1.get("suid");
-        return outputService.getActualOrderPayment(suid);
-    }
+//    @RequestMapping("/getActualOrderPayment")
+//    @ResponseBody
+//    public JsonResult<List<Map<String,String>>>getActualOrderPayment(@RequestBody Map<String,String> map1) throws ParseException {
+//        String suid = map1.get("suid");
+//        return outputService.getActualOrderPayment(suid);
+//    }
 
     // 获取缴费日志
     @RequestMapping("/getPaymentOrderLog")
@@ -267,17 +293,40 @@ public class StateController {
     @ResponseBody
     public String finish_payment(@RequestBody Map<String,String> map1) throws ParseException {
         int orderID = Integer.parseInt(map1.get("orderID"));
-        // 实际出库
-        List<OutputThings> list = orderMapper.getOutputThingsByOrderID(orderID);
-        for(OutputThings outputThings:list){
-            Map<String,String> map = new HashMap<>();
-            map.put("sid",outputThings.getSid());
-            map.put("suid",outputThings.getSuid());
-            map.put("name",outputThings.getName());
-            map.put("num",String.valueOf(outputThings.getNum()));
-            map.put("orderID",String.valueOf(outputThings.getOrderID()));
-            outputService.callOutput(map);
+        Order order = orderMapper.getOrderByOrderID(orderID);
+        double money = 0;
+        if(order.getState().equals("入库缴费状态")){
+            double pay = order.getCost()*order.getPayMethod();
+            money = pay;
+            // 之前不会缴费，所以直接把pay写入就行
+            orderMapper.updatePaidMoney(orderID,pay);
+            OrderCostLog orderCostLog = new OrderCostLog(order.getSuid(),orderID,pay,"入库缴费");
+            orderMapper.insertOrderCostLog(orderCostLog);
+
         }
+
+        // 出库的缴费状态判断
+        if(order.getState().equals("出库重计费补缴费状态")){
+            double pay = order.getActualCost()-order.getPaidMoney();
+            money = pay;
+            orderMapper.updatePaidMoney(orderID,order.getPaidMoney()+pay);
+            OrderCostLog orderCostLog = new OrderCostLog(order.getSuid(),orderID,pay,"出库补缴费");
+            orderMapper.insertOrderCostLog(orderCostLog);
+            // 实际出库
+            List<OutputThings> list = orderMapper.getOutputThingsByOrderID(orderID);
+            for(OutputThings outputThings:list){
+                Map<String,String> map = new HashMap<>();
+                map.put("sid",outputThings.getSid());
+                map.put("suid",outputThings.getSuid());
+                map.put("name",outputThings.getName());
+                map.put("num",String.valueOf(outputThings.getNum()));
+                map.put("orderID",String.valueOf(outputThings.getOrderID()));
+                outputService.callOutput(map);
+            }
+        }
+        //------------------------------------------------------------------------------------------------移到重计费缴费那里
+        // 仓库收入income表增加，repository收入增加
+        inputService.income(money);
         return "true";
     }
 }
