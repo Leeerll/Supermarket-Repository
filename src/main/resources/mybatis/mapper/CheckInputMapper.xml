@@ -12,7 +12,10 @@
     </update>
     <!--    <select id="getByOrderID" -->
     <select id="getByOrderIDAndNum" resultType="com.example.auto_warehouse.bean.CheckInput">
-        select * from auto_warehouseDB.checkInput where orderID=#{orderID} and 0>num;
+        select * from auto_warehouseDB.checkInput where orderID=#{orderID} and 0>num and state="用户已确认";
+    </select>
+    <select id="getByOrderIDAndNum2" resultType="com.example.auto_warehouse.bean.CheckInput">
+        select * from auto_warehouseDB.checkInput where orderID=#{orderID} and 0>num and state is null;
     </select>
     <select id="getByOrderIDAndSpecies" resultType="com.example.auto_warehouse.bean.CheckInput">
         select * from auto_warehouseDB.checkInput where orderID=#{orderID} and statement="实际到货缺少该物品";

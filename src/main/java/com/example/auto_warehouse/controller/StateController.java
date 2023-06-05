@@ -176,9 +176,9 @@ public class StateController {
         Order order = orderMapper.getOrderByOrderID(orderID);
         OrderCostLog orderCostLog = new OrderCostLog(order.getSuid(),orderID,cost,"初始计划缴费");
         orderMapper.insertOrderCostLog(orderCostLog);
-        // 修改状态为“待缴费状态”
-        orderMapper.modifyOrderState(orderID,"待缴费状态",inputService.getNowTime());
-        Message message1 = new Message(orderID, "待缴费状态", orderMapper.getSuid(orderID));
+        // 修改状态为“待选择缴费方式”
+        orderMapper.modifyOrderState(orderID,"待选择缴费方式",inputService.getNowTime());
+        Message message1 = new Message(orderID, "待选择缴费方式", orderMapper.getSuid(orderID));
         orderMapper.insertMessage(message1);
 
         return "true";
@@ -215,11 +215,14 @@ public class StateController {
         return list;
     }
 
-    // 超市缴费成功
-    @RequestMapping("/finish_payment")
+    // 超市选择缴费方式之后
+    @RequestMapping("/choose_payMethod")
     @ResponseBody
-    public String finish_payment(@RequestBody Map<String,String> map1) throws ParseException {
+    public String choose_payMethod(@RequestBody Map<String,String> map1) throws ParseException {
         int orderID = Integer.parseInt(map1.get("orderID"));
+        // 写进order的payMethod
+
+
         return inputService.finish_payment(orderID);
     }
 
@@ -238,14 +241,6 @@ public class StateController {
 
     // 返回给超市核验单表，进行确认
 
-
-    // 超市确认核验单
-    @RequestMapping("/confirm_checkInput")
-    @ResponseBody
-    public String confirm_checkInput(@RequestBody Map<String,String> map1) throws ParseException {
-        int orderID = Integer.parseInt(map1.get("orderID"));
-        return inputService.confirm_checkInput(orderID);
-    }
 
     // 实际入库（python发送，orderID需要去数据库中看）
     @RequestMapping("/actual_input")
@@ -268,14 +263,33 @@ public class StateController {
     @RequestMapping("/getActualOrderPayment")
     @ResponseBody
     public JsonResult<List<Map<String,String>>>getActualOrderPayment(@RequestBody Map<String,String> map1) throws ParseException {
-        int suid = Integer.parseInt(map1.get("suid"));
+        String suid = map1.get("suid");
         return outputService.getActualOrderPayment(suid);
     }
 
     // 获取缴费日志
     @RequestMapping("/getPaymentOrderLog")
     public List<OrderCostLog>getPaymentOrderLog(@RequestBody Map<String,String>map1){
-        int suid = Integer.parseInt(map1.get("suid"));
+        String suid = map1.get("suid");
         return outputService.getPaymentOrderLog(suid);
+    }
+
+    // 超市缴费完成之后
+    @RequestMapping("/finish_payment")
+    @ResponseBody
+    public String finish_payment(@RequestBody Map<String,String> map1) throws ParseException {
+        int orderID = Integer.parseInt(map1.get("orderID"));
+        // 实际出库
+        List<OutputThings> list = orderMapper.getOutputThingsByOrderID(orderID);
+        for(OutputThings outputThings:list){
+            Map<String,String> map = new HashMap<>();
+            map.put("sid",outputThings.getSid());
+            map.put("suid",outputThings.getSuid());
+            map.put("name",outputThings.getName());
+            map.put("num",String.valueOf(outputThings.getNum()));
+            map.put("orderID",String.valueOf(outputThings.getOrderID()));
+            outputService.callOutput(map);
+        }
+        return "true";
     }
 }

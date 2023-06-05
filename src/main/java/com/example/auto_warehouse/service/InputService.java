@@ -103,9 +103,6 @@ public class InputService {
             orderMapper.insertMessage(message2);
             notInput(notInputData);
         }else{
-            orderMapper.modifyOrderState(orderMapper.getOrderID(),"通过系统审核状态",getNowTime());
-            Message message1 = new Message(orderMapper.getOrderID(), "通过系统审核状态",suid);
-            orderMapper.insertMessage(message1);
             // 进入人工审核状态
             orderMapper.modifyOrderState(orderMapper.getOrderID(),"人工审核状态",getNowTime());
             Message message3 = new Message(orderMapper.getOrderID(), "人工审核状态",suid);
@@ -338,22 +335,24 @@ public class InputService {
     // 超市缴费成功
     public String finish_payment(int orderID) throws ParseException {
         // 改成“已缴费状态”
-        orderMapper.modifyOrderState(orderID,"已缴费状态",getNowTime());
-        Message message1 = new Message(orderID, "已缴费状态", orderMapper.getSuid(orderID));
+        orderMapper.modifyOrderState(orderID,"已预留库位状态",getNowTime());
+        Message message1 = new Message(orderID, "已预留库位状态", orderMapper.getSuid(orderID));
         orderMapper.insertMessage(message1);
-        // 仓库收入income表增加，repository收入增加
-        double money=orderMapper.getOrderByOrderID(orderID).getCost();
-        repositoryMapper.updateIncome(Id.getRepositoryID(), money);
-        int year = Calendar.getInstance().get(Calendar.YEAR);
-        int month = Calendar.getInstance().get(Calendar.MONTH);
-        int yearMonth = year*100+month+1;
-        List<Income> list = incomeMapper.findByYearMonth(Id.getRepositoryID(),yearMonth);
-        if(list.size()==0){
-            Income income = new Income(Id.getRepositoryID(),yearMonth,money);
-            incomeMapper.insertIncome(income);
-        }else{
-            incomeMapper.updateIncome(yearMonth,money,Id.getRepositoryID());
-        }
+
+        //------------------------------------------------------------------------------------------------移到重计费缴费那里
+//        // 仓库收入income表增加，repository收入增加
+//        double money=orderMapper.getOrderByOrderID(orderID).getCost();
+//        repositoryMapper.updateIncome(Id.getRepositoryID(), money);
+//        int year = Calendar.getInstance().get(Calendar.YEAR);
+//        int month = Calendar.getInstance().get(Calendar.MONTH);
+//        int yearMonth = year*100+month+1;
+//        List<Income> list = incomeMapper.findByYearMonth(Id.getRepositoryID(),yearMonth);
+//        if(list.size()==0){
+//            Income income = new Income(Id.getRepositoryID(),yearMonth,money);
+//            incomeMapper.insertIncome(income);
+//        }else{
+//            incomeMapper.updateIncome(yearMonth,money,Id.getRepositoryID());
+//        }
         return "true";
     }
 
@@ -426,6 +425,8 @@ public class InputService {
 
         // 2.针对入库货物品类少了的情况
         List<CheckInput> list_species = checkInputMapper.getByOrderIDAndSpecies(orderID);
+        List<CheckInput> list_species2 = checkInputMapper.getByOrderIDAndNum2(orderID);
+        list_species.addAll(list_species2);
         for(CheckInput checkInput:list_species){
             InputThings inputThings = orderMapper.getInputThingsByOrderIDAndSid(orderID,checkInput.getSid());
             // 减少species表中的num

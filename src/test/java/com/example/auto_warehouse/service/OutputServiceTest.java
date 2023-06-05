@@ -24,10 +24,10 @@ class OutputServiceTest {
     OutputService outputService;
     @Test
     void getOrderPayment() throws ParseException {
-        List<Map<String,Object>>list = new ArrayList<>();
-        Map<String,Object>map = new HashMap<>();
-        map.put("suid",101);
-        map.put("orderID",59);
+        List<Map<String,String>>list = new ArrayList<>();
+        Map<String,String>map = new HashMap<>();
+        map.put("suid","101");
+        map.put("orderID","59");
         map.put("state","待缴费状态");
         list.add(map);
         outputService.getOrderPayment(list);
@@ -36,7 +36,7 @@ class OutputServiceTest {
     }
     @Test
     void getActualOrderPayment() throws ParseException {
-        int suid = 101;
+        String suid = "101";
         System.out.println(outputService.getActualOrderPayment(suid).toString());
     }
 

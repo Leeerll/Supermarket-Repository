@@ -5,6 +5,7 @@ import com.example.auto_warehouse.mapper.CargoStatusMapper;
 import com.example.auto_warehouse.mapper.CheckInputMapper;
 import com.example.auto_warehouse.mapper.OrderMapper;
 import com.example.auto_warehouse.mapper.SupermarketMapper;
+import com.example.auto_warehouse.service.InputService;
 import com.example.auto_warehouse.service.SupermarketService;
 import com.example.auto_warehouse.util.Id;
 import com.example.auto_warehouse.util.JsonResult;
@@ -30,6 +31,8 @@ public class SupermarketController {
     private OrderMapper orderMapper;
     @Autowired
     private CheckInputMapper checkInputMapper;
+    @Autowired
+    private InputService inputService;
     private Date now_time;
 
     @PostMapping("/login")
@@ -119,7 +122,7 @@ public class SupermarketController {
 
     @RequestMapping("/show_Confirm")
     @ResponseBody
-    public void show_Confirm(@RequestBody List<Map<String,String>> mapList) throws ParseException {
+    public String show_Confirm(@RequestBody List<Map<String,String>> mapList) throws ParseException {
         // 重计算
         double money;
         int orderID = Integer.parseInt(mapList.get(0).get("orderID"));
@@ -140,7 +143,8 @@ public class SupermarketController {
                 orderMapper.modifyOrderState(orderID, "核验单已审核状态", getNowTime());
             }
         }
-        //
+        //调用释放货位
+        return inputService.confirm_checkInput(orderID);
     }
     public Date getNowTime() throws ParseException {
         Date now = new Date();
@@ -148,7 +152,6 @@ public class SupermarketController {
         now_time = tFormat.parse(tFormat.format(now));
         return now_time;
     }
-
 
 
 }
