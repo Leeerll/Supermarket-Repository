@@ -76,7 +76,7 @@
     </insert>
 
     <select id="getOrderPayment" resultType="com.example.auto_warehouse.bean.Save">
-        select * from auto_warehouseDB.save where orderID=#{orderID} and sid=#{sid} and state="入库已确认状态" LIMIT 1
+        select * from auto_warehouseDB.save where orderID=#{orderID} and sid=#{sid} and state="⼊库已确认状态" LIMIT 1
     </select>
     <update id="updatePayment">
         update auto_warehouseDB.order set actualCost=#{amount} where orderID=#{orderID}

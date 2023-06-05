@@ -219,16 +219,16 @@ public class OutputService {
         // 当前出库订单编号
         int orderID = Integer.parseInt((String)data.get(0).get("orderID"));
         Order order = orderMapper.getOrderByOrderID(orderID);
-        // 出库的excel都是当前的日期
-        Date now = new Date();
-        SimpleDateFormat tFormat = new SimpleDateFormat("yyyy-MM-dd");
-        Date now_time = tFormat.parse(tFormat.format(now));
+        // 出库的excel中的出库日期
+        SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy-MM-dd");
+
         double amount = 0;
         for(Map<String, String> map:data){
+            Date outputTime = sdf1.parse((String) map.get("output_time"));
             String sid = (String) map.get("sid");
             int num = Integer.parseInt((String) map.get("num"));
             Save save = orderMapper.getOrderPayment(orderID,sid);
-            int day = (int) ((now_time.getTime() - save.getInputTime().getTime())
+            int day = (int) ((outputTime.getTime() - save.getInputTime().getTime())
                     / (24 * 60 * 60 * 1000));
             amount+=day*2*num;
         }
