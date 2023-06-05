@@ -63,11 +63,11 @@ public class UserService {
     }
 
     //添加用户
-    public JsonResult<User> addSupermarket(Supermarket supermarket){
+    public JsonResult<User> addSupermarket(String suid,String suregion,String rid,String password,String bankCardNumber){
         int num = 0;
-        if(supermarket.getSuid()!=null && supermarket.getPassword()!=null){
-            num = userMapper.addSupermarket(supermarket);
-        }
+        //if((suid!=null) && (password=null)){
+            num = userMapper.addSupermarket(suid,suregion,rid,password,bankCardNumber);
+        //}
         if(num==0){
             return new JsonResult<>("0","添加失败！");
         }else{
