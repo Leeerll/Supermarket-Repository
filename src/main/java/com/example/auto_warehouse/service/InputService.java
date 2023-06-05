@@ -147,8 +147,10 @@ public class InputService {
             }
             // 种类检查
             if(find==0){
-                CheckInput checkInput  = new CheckInput(orderId, (String) map.get("sid"), 0, "入库申请中无该物品", "待确认入库");
+                CheckInput checkInput  = new CheckInput(orderId, (String) map.get("sid"), (Integer) map.get("num"), "入库申请中无该物品", "待确认入库");
                 checkInputMapper.insertCheckInput(checkInput);
+                InputThings inputThings = new InputThings(checkInput.getSid(), (String) map.get("sname"), (String) map.get("stype"), (Integer) map.get("num"), (Double) map.get("weight"), (Double) map.get("sh"), (Double) map.get("sw"), (Double) map.get("sd"), (Date) map.get("production_date"), (Integer) map.get("shelfLife"), (String) map.get("suid"), (String) map.get("size"), (Date) map.get("inputTime"), (Date) map.get("outputTime"), (Integer) map.get("orderID"), (Double) map.get("price"), (String) map.get("phone"), (String) map.get("manufacturer"));
+                orderMapper.insertInputThings(inputThings);
             }
         }
         // 种类检查
@@ -156,6 +158,7 @@ public class InputService {
             if (checkThing[i] == 0) {
                 CheckInput checkInput = new CheckInput(orderId, inputThingsList.get(i).getSid(), 0, "实际到货缺少该物品", "待确认入库");
                 checkInputMapper.insertCheckInput(checkInput);
+
             }
         }
         orderMapper.modifyOrderState(orderId,"入库清单待确认状态", getNowTime());
