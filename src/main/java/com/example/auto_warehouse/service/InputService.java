@@ -332,6 +332,7 @@ public class InputService {
 
     }
 
+
     // 超市缴费成功
     public String finish_payment(int orderID) throws ParseException {
         // 改成“已缴费状态”
@@ -357,7 +358,7 @@ public class InputService {
     }
 
     public String confirm_checkInput(int orderID) throws ParseException {
-        // 根据核验单checkInput对货位进行释放（针对入库货物数量少了的情况，多了的情况需要重新提交申请走流程）
+        // 根据核验单checkInput对货位进行释放/增加
         double refund = 0;
         // 1.针对入库货物数量少了的情况
         List<CheckInput> list_num = checkInputMapper.getByOrderIDAndNum(orderID);
@@ -457,13 +458,79 @@ public class InputService {
                 }
             }
         }
-        // 修改order表的cost
-        Order order = orderMapper.getOrderByOrderID(orderID);
-        orderMapper.modifyOrderCost(orderID,order.getCost()-refund);
-        // 记录cost更改日志到orderCostLog
-        OrderCostLog orderCostLog = new OrderCostLog(order.getSuid(),orderID,refund,"入库重计费退款");
-        orderMapper.insertOrderCostLog(orderCostLog);
+
+        // 3.针对入库货物品类多了/数量多了的情况
+        double pay_add = 0; // 需要补缴费的金额
+        List<CheckInput> list_num_add = checkInputMapper.getByOrderIDAndNumAdd(orderID);
+        List<CheckInput> list_species_add = checkInputMapper.getByOrderIDAndSpeciesAdd(orderID);
+        list_num_add.addAll(list_species_add);
+        List<Map<String,String>> list_pack = pack(list_num_add);
+        for(Map<String,String> map:list_pack){
+            callInput(map,orderID);
+        }
+        for(CheckInput checkInput:list_num_add){
+            InputThings inputThings = orderMapper.getInputThingsByOrderIDAndSid(orderID,checkInput.getSid());
+            // 加到退款的费用里
+            int day = (int) ((inputThings.getOutputTime().getTime() - inputThings.getInputTime().getTime())
+                    / (24 * 60 * 60 * 1000));
+            int num = 0;
+            if(checkInput.getState().equals("实际到货数量多于入库申请数量")){
+                num = checkInput.getNum();
+            }
+            if(checkInput.getState().equals("入库申请中无该物品")){
+                num = inputThings.getNum();
+            }
+            pay_add+=num*day*2;
+            refund-=num*day*2;
+        }
+        if(refund>0){
+            // 需要退款
+            // 修改order表的cost
+            Order order = orderMapper.getOrderByOrderID(orderID);
+            orderMapper.modifyOrderCost(orderID,order.getCost()-refund);
+            // 记录cost更改日志到orderCostLog
+//            OrderCostLog orderCostLog = new OrderCostLog(order.getSuid(),orderID,refund,"入库重计费退款");
+//            orderMapper.insertOrderCostLog(orderCostLog);
+
+        }else if(refund==0){
+            // 什么都不需要
+        }else{
+            // 需要补缴费
+            Order order = orderMapper.getOrderByOrderID(orderID);
+            orderMapper.modifyOrderCost(orderID,order.getCost()+refund);
+            orderMapper.modifyOrderState(orderID,"入库缴费状态",getNowTime());
+            Message message1 = new Message(orderID, "入库缴费状态", orderMapper.getSuid(orderID));
+            orderMapper.insertMessage(message1);
+        }
         return "true";
+    }
+
+    public List<Map<String,String>> pack(List<CheckInput> list_para){
+        List<Map<String,String>> list = new ArrayList<>();
+        SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy-MM-dd");
+        for(CheckInput checkInput:list_para){
+            Map<String,String> map = new HashMap<>();
+            map.put("sid",checkInput.getSid());
+            InputThings inputThings = orderMapper.getInputThingsByOrderIDAndSid(checkInput.getOrderID(), checkInput.getSid());
+            map.put("sname",inputThings.getSname());
+            map.put("stype",inputThings.getStype());
+            map.put("weight",String.valueOf(inputThings.getWeight()));
+            map.put("sh",String.valueOf(inputThings.getSh()));
+            map.put("sw",String.valueOf(inputThings.getSw()));
+            map.put("sd",String.valueOf(inputThings.getSd()));
+            map.put("size",inputThings.getSize());
+            map.put("production_date", sdf1.format(inputThings.getProductionDate()));
+            map.put("shelf_life",String.valueOf(inputThings.getShelfLife()));
+            map.put("suid",inputThings.getSuid()); // suid是超市id
+            if(checkInput.getState().equals("实际到货数量多于入库申请数量")){
+                map.put("num",String.valueOf(checkInput.getNum()));
+            }
+            if(checkInput.getState().equals("入库申请中无该物品")){
+                map.put("num",String.valueOf(inputThings.getNum()));
+            }
+            list.add(map);
+        }
+        return list;
     }
 
     public String actual_input(int orderID) throws ParseException {

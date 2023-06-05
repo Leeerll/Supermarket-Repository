@@ -203,13 +203,15 @@ public class StateController {
     public List<Map<String,String>> show_payment(@RequestBody Map<String,String> map1){
         String suid = map1.get("suid");
         List<Order> list_order = orderMapper.getOrderByStatePay(suid);
+        list_order.addAll(orderMapper.getOrderByStatePay2(suid));
         List<Map<String,String>> list = new ArrayList<>();
         SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         for(Order order:list_order){
             Map<String,String> map = new HashMap<>();
             map.put("orderID",String.valueOf(order.getOrderID()));
-            map.put("cost",String.valueOf(order.getCost()));
+            map.put("cost",String.valueOf(order.getCost()-order.getActualCost()));// 返回的cost应该是需要交的费用：cost-actual_cost
             map.put("time", sdf1.format(order.getTime()));
+            map.put("statement",order.getState());// 对于缴费的说明，是哪一阶段的
             list.add(map);
         }
         return list;
@@ -226,20 +228,6 @@ public class StateController {
         return inputService.finish_payment(orderID);
     }
 
-    // 到货接口(python程序调用)，传到货清单excel
-    @RequestMapping("/arrival")
-    @ResponseBody
-    public String arrival(@RequestBody Map<String,String> map1) throws ParseException {
-        // 处理excel
-
-        // 改成“到货检查状态”
-
-        // 调用核验函数
-
-        return "true";
-    }
-
-    // 返回给超市核验单表，进行确认
 
 
     // 实际入库（python发送，orderID需要去数据库中看）
@@ -274,7 +262,7 @@ public class StateController {
         return outputService.getPaymentOrderLog(suid);
     }
 
-    // 超市缴费完成之后
+    // 出库超市缴费完成之后
     @RequestMapping("/finish_payment")
     @ResponseBody
     public String finish_payment(@RequestBody Map<String,String> map1) throws ParseException {

@@ -20,6 +20,12 @@
     <select id="getByOrderIDAndSpecies" resultType="com.example.auto_warehouse.bean.CheckInput">
         select * from auto_warehouseDB.checkInput where orderID=#{orderID} and statement="实际到货缺少该物品";
     </select>
+    <select id="getByOrderIDAndNumAdd" resultType="com.example.auto_warehouse.bean.CheckInput">
+        select * from auto_warehouseDB.checkInput where orderID=#{orderID} and num>0 and state="用户已确认";
+    </select>
+    <select id="getByOrderIDAndSpeciesAdd" resultType="com.example.auto_warehouse.bean.CheckInput">
+        select * from auto_warehouseDB.checkInput where orderID=#{orderID} and statement="实际到货缺少该物品" and state="用户已确认";
+    </select>
 
     <select id="getByOrderIDAndSid" resultType="com.example.auto_warehouse.bean.CheckInput">
         select * from auto_warehouseDB.checkInput where orderID=#{orderID} and sid=#{sid};

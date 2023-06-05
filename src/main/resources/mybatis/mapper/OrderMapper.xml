@@ -18,7 +18,10 @@
         select * from auto_warehouseDB.order where state="人工审核状态";
     </select>
     <select id="getOrderByStatePay" resultType="com.example.auto_warehouse.bean.Order">
-        select * from auto_warehouseDB.order where state="待缴费状态" and suid=#{suid};
+        select * from auto_warehouseDB.order where state="入库缴费状态" and suid=#{suid};
+    </select>
+    <select id="getOrderByStatePay2" resultType="com.example.auto_warehouse.bean.Order">
+        select * from auto_warehouseDB.order where state="出库重计费补缴费状态" and suid=#{suid};
     </select>
     <select id="getSuid" parameterType="com.example.auto_warehouse.bean.Order" resultType="java.lang.String">
         select suid from auto_warehouseDB.order where orderID=#{orderID};
