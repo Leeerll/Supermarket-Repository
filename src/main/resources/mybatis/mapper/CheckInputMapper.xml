@@ -17,10 +17,16 @@
     <select id="getByOrderIDAndSpecies" resultType="com.example.auto_warehouse.bean.CheckInput">
         select * from auto_warehouseDB.checkInput where orderID=#{orderID} and statement="品类少";
     </select>
-    <select id="getByOrderID" resultType="com.example.auto_warehouse.bean.CheckInput" parameterType="int">
-        select * from auto_warehouseDB.checkInput where orderID=#{orderID};
-    </select>
+
     <select id="getByOrderIDAndSid" resultType="com.example.auto_warehouse.bean.CheckInput">
         select * from auto_warehouseDB.checkInput where orderID=#{orderID} and sid=#{sid};
+    </select>
+    <select id="getInformalByOrderID" resultType="com.example.auto_warehouse.bean.CheckInput"
+            parameterType="int">
+        select * from auto_warehouseDB.checkInput where orderID=#{orderID} and statement!="正常";
+    </select>
+    <select id="getFormalByOrderIDAndSid" resultType="com.example.auto_warehouse.bean.CheckInput"
+            parameterType="int">
+        select * from auto_warehouseDB.checkInput where orderID=#{orderID} and statement="正常";
     </select>
 </mapper>

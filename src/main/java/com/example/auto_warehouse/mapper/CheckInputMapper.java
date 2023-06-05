@@ -13,7 +13,9 @@ public interface CheckInputMapper {
     List<CheckInput> getByOrderIDAndSpecies(int orderID);
 
     // 通过orderID获取到货单
-    List<CheckInput> getByOrderID(int orderID);
+    List<CheckInput> getInformalByOrderID(int orderID);
+
+    List<CheckInput> getFormalByOrderIDAndSid(int orderID);
 
     // 通过orderID和sid获取checkInput
     List<CheckInput> getByOrderIDAndSid(int orderId, String sid);

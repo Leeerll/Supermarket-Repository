@@ -160,6 +160,9 @@ public class InputService {
                 checkInputMapper.insertCheckInput(checkInput);
             }
         }
+        orderMapper.modifyOrderState(orderId,"入库清单待确认状态", getNowTime());
+        Message message1 = new Message(orderId, "入库清单待确认状态", orderMapper.getSuid(orderId));
+        orderMapper.insertMessage(message1);
     }
     public List<NotInput> allNotInput(){
         return cargoStatusMapper.allNotInput();
