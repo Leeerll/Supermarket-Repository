@@ -5,6 +5,7 @@ import org.apache.ibatis.annotations.Mapper;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 @Mapper
 public interface OrderMapper {
@@ -29,6 +30,8 @@ public interface OrderMapper {
 
     List<NotInput> getNotinputByOrderID(int orderID);
     Order getOrderByOrderID(int orderID);
-    void insertOrderCostLog(OrderCostLog orderCostLog);
-    List<Order> getOrderBySuidAndstate(String suid, String state);
+    List<Save>getOrderPayment(int suid, int orderID, String state);
+    void updatePayment(int orderID,int amount);
+    List<Order>getActualOrderPayment(int suid,String state);
+    List<OrderCostLog>getOrderPaymentLog(int suid);
 }
