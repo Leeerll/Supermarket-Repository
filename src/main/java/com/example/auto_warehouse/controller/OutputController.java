@@ -19,8 +19,8 @@ public class OutputController {
 
     @PostMapping("/check")
     @ResponseBody
-    public void check(List<Map<String,String>> data) throws ParseException {
-        outputService.check(data);
+    public String check(List<Map<String, String>> data) throws ParseException {
+       return outputService.check(data);
     }
 
 }

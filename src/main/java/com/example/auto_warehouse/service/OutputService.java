@@ -38,7 +38,7 @@ public class OutputService {
     private static final Logger logger = LoggerFactory.getLogger(LoadFileController.class);
 
     // 出库data：sid、num、suid
-    public void check(List<Map<String,String>> data) throws ParseException {
+    public String check(List<Map<String,String>> data) throws ParseException {
         int orderID = Integer.parseInt(data.get(0).get("orderID"));
         // 不能出库的数据
         List<Map<String,String>> notOutputData = new ArrayList<>();
@@ -70,7 +70,7 @@ public class OutputService {
         if(notOutputData.size()>0){
             notOutput(notOutputData);
         }
-
+        return "true";
     }
 
     private void notOutput(List<Map<String, String>> list) {
