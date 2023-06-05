@@ -196,7 +196,7 @@ public class OutputService {
         for (Order order : list) {
             Map<String,String>map=new HashMap<>();
             String orderID = String.valueOf(order.getOrderID());
-            String time = String.valueOf(sdf1.format(order.getTime()));
+            String time = sdf1.format(order.getTime());
             int actualCost = order.getActualCost();
             double cost = order.getCost();
             double diff = cost-actualCost;

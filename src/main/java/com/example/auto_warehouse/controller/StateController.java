@@ -273,7 +273,7 @@ public class StateController {
     }
 
     // 获取缴费日志
-    @RequestMapping("/getPaymentOrderLLog")
+    @RequestMapping("/getPaymentOrderLog")
     public List<OrderCostLog>getPaymentOrderLog(@RequestBody Map<String,String>map1){
         int suid = Integer.parseInt(map1.get("suid"));
         return outputService.getPaymentOrderLog(suid);
