@@ -58,5 +58,11 @@ public class Supermarket {
         this.rid = rid;
     }
 
+    public void setBankCardNumber(String bankCardNumber){
+        this.bankCardNumber=bankCardNumber;
+    }
 
+    public String getBankCardNumber(){
+        return bankCardNumber;
+    }
 }

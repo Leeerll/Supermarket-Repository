@@ -40,4 +40,6 @@ public interface OrderMapper {
     void insertOutputThings(OutputThings outputThings);
     List<OutputThings> getOutputThingsByOrderID(int orderID);
     void modifyOutputThingsState(int orderID,String sid);
+    void setPayMethod(int orderID, double payMethod);
+
 }

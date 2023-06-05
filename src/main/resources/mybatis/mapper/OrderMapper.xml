@@ -40,6 +40,10 @@
     <update id="modifyOrderOthers" parameterType="com.example.auto_warehouse.bean.Order">
         update auto_warehouseDB.order set others=#{others} where orderID=#{orderID};
     </update>
+    <update id="setPayMethod">
+        update auto_warehouseDB.order set payMethod=#{payMethod} where orderID=#{orderID};
+    </update>
+
     <insert id="insertMessage" parameterType="com.example.auto_warehouse.bean.Message">
         insert into auto_warehouseDB.message(orderID,action,suid,time)
         values (#{orderID}, #{action}, #{suid}, #{time});
