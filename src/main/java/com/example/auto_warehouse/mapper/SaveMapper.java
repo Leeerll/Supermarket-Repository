@@ -64,5 +64,7 @@ public interface SaveMapper {
     void modifySaveStateCommon(int cid,String state);
     void updateInputTimeAndState(int orderID,Date inputTime);
     void updateConfirmState(int orderID);
+    // 查询这个order中有没有还未出库的货物
+    List<Save> findInputState(int orderID);
 
 }

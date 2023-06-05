@@ -9,6 +9,7 @@ import java.util.List;
 public interface CheckInputMapper {
     // 数量少
     List<CheckInput> getByOrderIDAndNum(int orderID);
+    List<CheckInput> getByOrderIDAndNum2(int orderID);
     // 品类少
     List<CheckInput> getByOrderIDAndSpecies(int orderID);
 

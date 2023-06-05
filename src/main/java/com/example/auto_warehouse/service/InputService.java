@@ -423,6 +423,8 @@ public class InputService {
 
         // 2.针对入库货物品类少了的情况
         List<CheckInput> list_species = checkInputMapper.getByOrderIDAndSpecies(orderID);
+        List<CheckInput> list_species2 = checkInputMapper.getByOrderIDAndNum2(orderID);
+        list_species.addAll(list_species2);
         for(CheckInput checkInput:list_species){
             InputThings inputThings = orderMapper.getInputThingsByOrderIDAndSid(orderID,checkInput.getSid());
             // 减少species表中的num

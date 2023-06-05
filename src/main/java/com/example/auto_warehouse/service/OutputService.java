@@ -36,8 +36,15 @@ public class OutputService {
     private CargoStatusMapper cargoStatusMapper;
     @Autowired
     private OrderMapper orderMapper;
+    public Date now_time;
 
     private static final Logger logger = LoggerFactory.getLogger(LoadFileController.class);
+    public Date getNowTime() throws ParseException {
+        Date now = new Date();
+        SimpleDateFormat tFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        now_time = tFormat.parse(tFormat.format(now));
+        return now_time;
+    }
 
     // 出库data：sid、num、suid
     public void check(List<Map<String,String>> data) throws ParseException {
@@ -156,6 +163,20 @@ public class OutputService {
 //        double cost = needNum * 1;
 //        Order order = new Order((String)map.get("suid"), Id.getRepositoryID(), cost);
 //        orderMapper.insertOrder(order);
+
+        // 修改order的状态为“部分出库状态”、“已出库结束状态”
+        List<Save> list = saveMapper.findInputState(orderID);
+        if(list.size()!=0){
+            // “部分出库状态”
+            orderMapper.modifyOrderState(orderID,"部分出库状态",getNowTime());
+            Message message1 = new Message(orderID, "部分出库状态", orderMapper.getSuid(orderID));
+            orderMapper.insertMessage(message1);
+        }else{
+            // “已出库结束状态”
+            orderMapper.modifyOrderState(orderID,"已出库结束状态",getNowTime());
+            Message message1 = new Message(orderID, "已出库结束状态", orderMapper.getSuid(orderID));
+            orderMapper.insertMessage(message1);
+        }
     }
 
     // 清空仓库柜
