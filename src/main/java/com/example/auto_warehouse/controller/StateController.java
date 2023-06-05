@@ -220,9 +220,9 @@ public class StateController {
     @ResponseBody
     public String choose_payMethod(@RequestBody Map<String,String> map1) throws ParseException {
         int orderID = Integer.parseInt(map1.get("orderID"));
+        double payMethod = Double.parseDouble(map1.get("payMethod"));
         // 写进order的payMethod
-
-
+        orderMapper.setPayMethod(orderID, payMethod);
         return inputService.finish_payment(orderID);
     }
 
