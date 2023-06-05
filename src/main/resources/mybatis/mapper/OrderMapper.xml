@@ -8,8 +8,8 @@
         values (#{suid}, #{rid}, #{time}, #{cost});
     </insert>
     <insert id="insertOrder2" parameterType="com.example.auto_warehouse.bean.Order">
-        insert into auto_warehouseDB.order(suid,rid,time,state)
-        values (#{suid}, #{rid}, #{time}, #{state});
+        insert into auto_warehouseDB.order(suid,rid,time,state,actualCost,paidMoney)
+        values (#{suid}, #{rid}, #{time}, #{state}, #{actualCost}, #{paidMoney});
     </insert>
     <select id="getOrderID" resultType="java.lang.Integer">
         select Max(orderID) from auto_warehouseDB.order;
@@ -18,7 +18,10 @@
         select * from auto_warehouseDB.order where state="人工审核状态";
     </select>
     <select id="getOrderByStatePay" resultType="com.example.auto_warehouse.bean.Order">
-        select * from auto_warehouseDB.order where state="待缴费状态" and suid=#{suid};
+        select * from auto_warehouseDB.order where state="入库缴费状态" and suid=#{suid};
+    </select>
+    <select id="getOrderByStatePay2" resultType="com.example.auto_warehouse.bean.Order">
+        select * from auto_warehouseDB.order where state="出库重计费补缴费状态" and suid=#{suid};
     </select>
     <select id="getSuid" parameterType="com.example.auto_warehouse.bean.Order" resultType="java.lang.String">
         select suid from auto_warehouseDB.order where orderID=#{orderID};
@@ -73,16 +76,19 @@
     </insert>
 
     <select id="getOrderPayment" resultType="com.example.auto_warehouse.bean.Save">
-        select * from auto_warehouseDB.save where orderID=#{orderID}
+        select * from auto_warehouseDB.save where orderID=#{orderID} and sid=#{sid} and state="入库已确认状态" LIMIT 1
     </select>
     <update id="updatePayment">
         update auto_warehouseDB.order set actualCost=#{amount} where orderID=#{orderID}
     </update>
+    <update id="updatePaidMoney">
+        update auto_warehouseDB.order set paidMoney=#{paidMoney} where orderID=#{orderID}
+    </update>
     <select id="getActualOrderPayment" resultType="com.example.auto_warehouse.bean.Order">
-        select * from auto_warehouseDB.order where suid=#{suid} and state="出库待缴费状态"
+        select * from auto_warehouseDB.order where suid=#{suid} and state="出库重计费补缴费状态"
     </select>
     <select id="getOrderPaymentLog" resultType="com.example.auto_warehouse.bean.OrderCostLog">
-        select * from auto_warehouseDB.orderCostLog where suid=#{suid}
+        select * from auto_warehouseDB.orderCostLog where suid=#{suid} order by orderID
     </select>
 
     <insert id="insertOutputThings" parameterType="com.example.auto_warehouse.bean.OutputThings">
@@ -96,5 +102,10 @@
     <update id="modifyOutputThingsState" parameterType="com.example.auto_warehouse.bean.OutputThings">
         update auto_warehouseDB.outputThings set state="已出库" where orderID=#{orderID} and sid=#{sid}
     </update>
+
+    <select id="showNonePayMethod" resultType="com.example.auto_warehouse.bean.Order"
+            parameterType="java.lang.String">
+        select * from auto_warehouseDB.order where state="待选择缴费方式" and suid=#{suid};
+    </select>
 
 </mapper>

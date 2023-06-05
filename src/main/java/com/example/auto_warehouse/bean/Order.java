@@ -19,18 +19,36 @@ public class Order {
     private int orderID;
     private String state;
     private String others;
+    private double paidMoney;
     private double payMethod;
-    
+    private double actualCost;
 
-    public int getActualCost() {
+    public double getPaidMoney() {
+        return paidMoney;
+    }
+
+    public void setPaidMoney(double paidMoney) {
+        this.paidMoney = paidMoney;
+    }
+
+    public double getPayMethod() {
+        return payMethod;
+    }
+
+    public void setPayMethod(double payMethod) {
+        this.payMethod = payMethod;
+    }
+
+
+    public double getActualCost() {
         return actualCost;
     }
 
-    public void setActualCost(int actualCost) {
+    public void setActualCost(double actualCost) {
         this.actualCost = actualCost;
     }
 
-    private int actualCost;
+
 
     public String getState() {
         return state;
@@ -81,6 +99,8 @@ public class Order {
         this.rid = rid;
         setTime();
         this.state = state;
+        this.actualCost=0;
+        this.paidMoney=0;
     }
 
     public String getSuid() {

@@ -37,7 +37,7 @@ class OutputServiceTest {
     @Test
     void getActualOrderPayment() throws ParseException {
         String suid = "101";
-        System.out.println(outputService.getActualOrderPayment(suid).toString());
+        //System.out.println(outputService.getActualOrderPayment(suid).toString());
     }
 
 }
