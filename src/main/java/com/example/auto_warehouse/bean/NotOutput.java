@@ -17,6 +17,12 @@ public class NotOutput {
     private String name;
     private int orderID;
 
+
+    public int getOrderID() {
+        return orderID;
+    }
+
+
     public String getName() {
         return name;
     }
