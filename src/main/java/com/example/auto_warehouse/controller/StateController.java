@@ -4,7 +4,6 @@ import com.example.auto_warehouse.bean.*;
 import com.example.auto_warehouse.mapper.*;
 import com.example.auto_warehouse.service.InputService;
 import com.example.auto_warehouse.service.OutputService;
-import com.example.auto_warehouse.util.JsonResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -173,9 +172,9 @@ public class StateController {
         }
         // 计费，写入对应order的cost;写入缴费日志
         orderMapper.modifyOrderCost(orderID,cost);
-        Order order = orderMapper.getOrderByOrderID(orderID);
-        OrderCostLog orderCostLog = new OrderCostLog(order.getSuid(),orderID,cost,"初始计划缴费");
-        orderMapper.insertOrderCostLog(orderCostLog);
+//        Order order = orderMapper.getOrderByOrderID(orderID);
+//        OrderCostLog orderCostLog = new OrderCostLog(order.getSuid(),orderID,cost,"初始计划缴费");
+//        orderMapper.insertOrderCostLog(orderCostLog);
         // 修改状态为“待选择缴费方式”
         orderMapper.modifyOrderState(orderID,"待选择缴费方式",inputService.getNowTime());
         Message message1 = new Message(orderID, "待选择缴费方式", orderMapper.getSuid(orderID));
@@ -202,8 +201,9 @@ public class StateController {
     @ResponseBody
     public List<Map<String,String>> show_payment(@RequestBody Map<String,String> map1){
         String suid = map1.get("suid");
-        List<Order> list_order = orderMapper.getOrderByStatePay(suid);
-        list_order.addAll(orderMapper.getOrderByStatePay2(suid));
+//        List<Order> list_order = orderMapper.getOrderByStatePay(suid);
+//        list_order.addAll(orderMapper.getOrderByStatePay2(suid));
+        List<Order> list_order = orderMapper.getOrderBySuid(suid);
         List<Map<String,String>> list = new ArrayList<>();
         SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         for(Order order:list_order){
@@ -293,7 +293,7 @@ public class StateController {
         return outputService.getPaymentOrderLog(suid);
     }
 
-    // 出库超市缴费完成之后
+    // 超市缴费完成之后
     @RequestMapping("/finish_payment")
     @ResponseBody
     public String finish_payment(@RequestBody Map<String,String> map1) throws ParseException {
