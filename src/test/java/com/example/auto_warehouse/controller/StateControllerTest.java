@@ -56,7 +56,8 @@ class StateControllerTest {
     void manual_review_detail() throws ParseException {
         // 构造请求体
         Map<String, String> requestBody = new HashMap<>();
-        requestBody.put("orderID", "64");
+        requestBody.put("orderID", "63");
+        requestBody.put("reason", "人工审核不通过");
         //发送POST请求，获取响应结果下
         ResponseEntity<String> response = restTemplate.postForEntity("/state/manual_review_detail",requestBody, String.class);
         assertThat(response.getStatusCode().value()).isEqualTo(200);
@@ -70,7 +71,7 @@ class StateControllerTest {
         JSONArray jsonArray = (JSONArray) parser.parse(response.getBody());
 
 //        String orderID="64";
-//        System.out.println(jsonArray);
+        System.out.println(jsonArray);
 //        for (Object obj : jsonArray) {
 //            JSONObject jsonObject = (JSONObject) obj;
 //
