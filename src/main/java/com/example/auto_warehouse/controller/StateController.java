@@ -209,15 +209,20 @@ public class StateController {
         for(Order order:list_order){
             double method = order.getPayMethod();
             Map<String,String> map = new HashMap<>();
+            if(order.getState().equals("入库缴费状态")){
+                map.put("cost",String.valueOf((order.getCost())*method));
+            }else if(order.getState().equals("出库重计费补缴费状态")){
+                map.put("cost",String.valueOf(order.getActualCost()-order.getPaidMoney()));
+            }else if(order.getState().equals("待选择缴费方式")){
+                map.put("cost",String.valueOf(order.getCost()));
+            }else{
+                continue;
+            }
             map.put("orderID",String.valueOf(order.getOrderID()));
             map.put("time", sdf1.format(order.getTime()));
             map.put("statement",order.getState());// 对于缴费的说明，是哪一阶段的
-            if(order.getState().equals("入库缴费状态")){
-                map.put("cost",String.valueOf((order.getCost())*method));
-            }
-            if(order.getState().equals("出库重计费补缴费状态")){
-                map.put("cost",String.valueOf(order.getActualCost()-order.getPaidMoney()));
-            }
+            map.put("payMethod",String.valueOf(order.getPayMethod()));
+
             list.add(map);
         }
         return list;
