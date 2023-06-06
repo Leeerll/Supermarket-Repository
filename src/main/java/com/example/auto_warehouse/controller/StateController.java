@@ -172,9 +172,9 @@ public class StateController {
         }
         // 计费，写入对应order的cost;写入缴费日志
         orderMapper.modifyOrderCost(orderID,cost);
-        Order order = orderMapper.getOrderByOrderID(orderID);
-        OrderCostLog orderCostLog = new OrderCostLog(order.getSuid(),orderID,cost,"初始计划缴费");
-        orderMapper.insertOrderCostLog(orderCostLog);
+//        Order order = orderMapper.getOrderByOrderID(orderID);
+//        OrderCostLog orderCostLog = new OrderCostLog(order.getSuid(),orderID,cost,"初始计划缴费");
+//        orderMapper.insertOrderCostLog(orderCostLog);
         // 修改状态为“待选择缴费方式”
         orderMapper.modifyOrderState(orderID,"待选择缴费方式",inputService.getNowTime());
         Message message1 = new Message(orderID, "待选择缴费方式", orderMapper.getSuid(orderID));
