@@ -22,6 +22,7 @@ public interface OrderMapper {
     String getSuid(int orderID);
     List<Order> getOrderByStatePeople();
     List<Order> getOrderByStatePay(String suid);
+    List<Order> getOrderByStatePay2(String suid);
     List<InputThings> getInputThingsByOrderID(int orderID);
     InputThings getInputThingsByOrderIDAndSid(int orderID,String sid);
     List<Order> getOrderBySuid(String suid);
@@ -29,8 +30,9 @@ public interface OrderMapper {
 
     List<NotInput> getNotinputByOrderID(int orderID);
     Order getOrderByOrderID(int orderID);
-    List<Save>getOrderPayment(int orderID);
-    void updatePayment(int orderID,int amount);
+    Save getOrderPayment(int orderID,String sid);
+    void updatePayment(int orderID,double amount);
+    void updatePaidMoney(int orderID,double paidMoney);
     List<Order>getActualOrderPayment(String suid);
     List<OrderCostLog>getOrderPaymentLog(String suid);
     void insertOrderCostLog(OrderCostLog orderCostLog);
@@ -40,5 +42,6 @@ public interface OrderMapper {
     List<OutputThings> getOutputThingsByOrderID(int orderID);
     void modifyOutputThingsState(int orderID,String sid);
     void setPayMethod(int orderID, double payMethod);
+    List<Order> showNonePayMethod(String suid);
 
 }
