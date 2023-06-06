@@ -290,6 +290,10 @@ public class StateController {
             OrderCostLog orderCostLog = new OrderCostLog(order.getSuid(),orderID,pay,"入库缴费");
             orderMapper.insertOrderCostLog(orderCostLog);
 
+            orderMapper.modifyOrderState(orderID,"入库缴费已完成",inputService.getNowTime());
+            Message message1 = new Message(orderID, "入库缴费已完成", orderMapper.getSuid(orderID));
+            orderMapper.insertMessage(message1);
+
         }
 
         // 出库的缴费状态判断
