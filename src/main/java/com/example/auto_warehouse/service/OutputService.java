@@ -202,13 +202,13 @@ public class OutputService {
     }
     // 清空仓库柜
     boolean clearCell(Cell cell){
-        if(cell.getType()=="s" && cell.getRestNum()==3){
+        if(cell.getType()=="l" && cell.getRestNum()==3){
             return true;
         }
-        if(cell.getType()=="m" && cell.getRestNum()==1){
+        if(cell.getType()=="m" && cell.getRestNum()==7){
             return true;
         }
-        if(cell.getType()=="l" && cell.getRestNum()==0){
+        if(cell.getType()=="s" && cell.getRestNum()==15){
             return true;
         }
         return false;
