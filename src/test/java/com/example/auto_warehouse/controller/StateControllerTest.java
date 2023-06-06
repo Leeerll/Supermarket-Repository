@@ -223,12 +223,12 @@ class StateControllerTest {
     }
 
     @Test
-    void show_payment() throws ParseException {
+    void show_choose_payMethod() throws ParseException {
         // 构造请求体
         Map<String, String> requestBody = new HashMap<>();
         requestBody.put("suid", "101");
         //发送POST请求，获取响应结果下
-        ResponseEntity<String> response = restTemplate.postForEntity("/state/show_payment",requestBody, String.class);
+        ResponseEntity<String> response = restTemplate.postForEntity("/state/show_choose_payMethod",requestBody, String.class);
         assertThat(response.getStatusCode().value()).isEqualTo(200);
         assertThat(response.getBody()).isNotEmpty();
         System.out.println("-------response----------");
