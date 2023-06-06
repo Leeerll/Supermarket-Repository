@@ -4,7 +4,6 @@ import com.example.auto_warehouse.bean.*;
 import com.example.auto_warehouse.mapper.*;
 import com.example.auto_warehouse.service.InputService;
 import com.example.auto_warehouse.service.OutputService;
-import com.example.auto_warehouse.util.JsonResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -202,8 +201,9 @@ public class StateController {
     @ResponseBody
     public List<Map<String,String>> show_payment(@RequestBody Map<String,String> map1){
         String suid = map1.get("suid");
-        List<Order> list_order = orderMapper.getOrderByStatePay(suid);
-        list_order.addAll(orderMapper.getOrderByStatePay2(suid));
+//        List<Order> list_order = orderMapper.getOrderByStatePay(suid);
+//        list_order.addAll(orderMapper.getOrderByStatePay2(suid));
+        List<Order> list_order = orderMapper.getOrderBySuid(suid);
         List<Map<String,String>> list = new ArrayList<>();
         SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         for(Order order:list_order){
@@ -293,7 +293,7 @@ public class StateController {
         return outputService.getPaymentOrderLog(suid);
     }
 
-    // 出库超市缴费完成之后
+    // 超市缴费完成之后
     @RequestMapping("/finish_payment")
     @ResponseBody
     public String finish_payment(@RequestBody Map<String,String> map1) throws ParseException {

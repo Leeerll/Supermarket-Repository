@@ -123,9 +123,10 @@ public class SupermarketController {
 
     @RequestMapping("/show_Confirm")
     @ResponseBody
-    public String show_Confirm(@RequestBody List<Map<String,String>> mapList) throws ParseException {
+    public String show_Confirm(@RequestBody Map<String,List<Map<String,String>>>maplistmap) throws ParseException {
         // 重计算
         double money;
+        List<Map<String,String>> mapList = maplistmap.get("array");
         int orderID = Integer.parseInt(mapList.get(0).get("orderID"));
         checkInputMapper.updateCheckInputByOrderIDAndSid2(orderID);
         // 更改正常状态的货物入库
