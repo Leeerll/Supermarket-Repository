@@ -46,6 +46,7 @@ public class CargoController {
             map.put("shelf_life",String.valueOf(notInput.getShelf_life()));
             map.put("suid",notInput.getSuid());
             map.put("reason",notInput.getReason());
+            map.put("orderID",String.valueOf(notInput.getOrderID()));
             list.add(map);
             cargoStatusMapper.modifyIsReadInput(notInput.getNotInputID());
         }
@@ -64,6 +65,7 @@ public class CargoController {
             map.put("suid",notOutput.getSuid());
             map.put("reason",notOutput.getReason());
             map.put("name", notOutput.getName());
+            map.put("orderID",String.valueOf(notOutput.getOrderID()));
             list.add(map);
             cargoStatusMapper.modifyIsReadOutput(notOutput.getNotOutputID());
         }
