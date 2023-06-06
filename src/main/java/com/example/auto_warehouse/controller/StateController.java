@@ -197,9 +197,9 @@ public class StateController {
     }
 
     // 超市查看需要缴费的订单
-    @RequestMapping("/show_payment")
+    @RequestMapping("/show_choose_payMethod")
     @ResponseBody
-    public List<Map<String,String>> show_payment(@RequestBody Map<String,String> map1){
+    public List<Map<String,String>> show_choose_payMethod(@RequestBody Map<String,String> map1){
         String suid = map1.get("suid");
 //        List<Order> list_order = orderMapper.getOrderByStatePay(suid);
 //        list_order.addAll(orderMapper.getOrderByStatePay2(suid));
@@ -239,24 +239,6 @@ public class StateController {
         // 写进order的payMethod
         orderMapper.setPayMethod(orderID, payMethod);
         return inputService.finish_payment(orderID);
-    }
-
-    // 显示需要选择缴费方式的订单
-    @RequestMapping("/show_choose_payMethod")
-    @ResponseBody
-    public List<Map<String,String>> show_choose_payMethod(@RequestBody Map<String,String> map1) throws ParseException {
-        String suid = map1.get("suid");
-        List<Order> orderList = orderMapper.showNonePayMethod(suid);
-        SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        List<Map<String,String>> list = new ArrayList<>();
-        for(Order order: orderList) {
-            Map<String, String> map = new HashMap<>();
-            map.put("orderID", String.valueOf(order.getOrderID()));
-            map.put("time", sdf1.format(order.getTime()));
-            map.put("state", order.getState());
-            list.add(map);
-        }
-        return list;
     }
 
 
