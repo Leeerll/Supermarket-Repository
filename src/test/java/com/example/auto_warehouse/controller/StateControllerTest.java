@@ -56,9 +56,9 @@ class StateControllerTest {
     void manual_review_detail() throws ParseException {
         // 构造请求体
         Map<String, String> requestBody = new HashMap<>();
-        requestBody.put("orderID", "人工审核状态");
+        requestBody.put("orderID", "64");
         //发送POST请求，获取响应结果下
-        ResponseEntity<String> response = restTemplate.postForEntity("/state/manual_review",requestBody, String.class);
+        ResponseEntity<String> response = restTemplate.postForEntity("/state/manual_review_detail",requestBody, String.class);
         assertThat(response.getStatusCode().value()).isEqualTo(200);
         assertThat(response.getBody()).isNotEmpty();
         System.out.println("-------response----------");
@@ -113,9 +113,9 @@ class StateControllerTest {
     void show_supermarket_order_allState()throws ParseException {
         // 构造请求体
         Map<String, String> requestBody = new HashMap<>();
-        requestBody.put("suid", "101");
+        requestBody.put("orderID", "64");
         //发送POST请求，获取响应结果下
-        ResponseEntity<String> response = restTemplate.postForEntity("/state/show_supermarket_allOrder",requestBody, String.class);
+        ResponseEntity<String> response = restTemplate.postForEntity("/state/show_supermarket_order_allState",requestBody, String.class);
         assertThat(response.getStatusCode().value()).isEqualTo(200);
         assertThat(response.getBody()).isNotEmpty();
         System.out.println("-------response----------");
@@ -227,7 +227,7 @@ class StateControllerTest {
         Map<String, String> requestBody = new HashMap<>();
         requestBody.put("suid", "101");
         //发送POST请求，获取响应结果下
-        ResponseEntity<String> response = restTemplate.postForEntity("/state/show_supermarket_allOrder",requestBody, String.class);
+        ResponseEntity<String> response = restTemplate.postForEntity("/state/show_payment",requestBody, String.class);
         assertThat(response.getStatusCode().value()).isEqualTo(200);
         assertThat(response.getBody()).isNotEmpty();
         System.out.println("-------response----------");
