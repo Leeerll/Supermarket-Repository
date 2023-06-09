@@ -64,11 +64,41 @@ class RepositoryControllerTest {
     }
 
     @Test
+    void selectRateByRid_wrong() {
+        Map<String,String> map = new HashMap<>();
+        map.put("rid", "1367846237846238");
+
+        Map<String,String> res = repositoryController.selectRateByRid(map);
+        System.out.println(res);
+        assertEquals("0",res.get("machine_health_rate"));
+        assertEquals("0",res.get("takerate"));
+    }
+
+    @Test
     void getMonthIncome() {
         Map<String,String> map = new HashMap<>();
         map.put("rid", "1");
 
         List<Map<String, String>> res = repositoryController.getMonthIncome(map);
+        String income = res.get(0).get("income");
+        System.out.println(res);
+        if(!income.isEmpty()){
+            assertThat(true);
+        }else {
+            assertTrue(false);
+        }
+    }
+
+    @Test
+    void getMonthIncome_wrong() {
+        Map<String,String> map = new HashMap<>();
+        map.put("rid", "17482974238947239");
+
+        List<Map<String, String>> res = repositoryController.getMonthIncome(map);
+        if (res.isEmpty()){
+            assertThat(true);
+            return;
+        }
         String income = res.get(0).get("income");
         System.out.println(res);
         if(!income.isEmpty()){

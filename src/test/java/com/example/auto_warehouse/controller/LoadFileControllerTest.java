@@ -37,9 +37,19 @@ class LoadFileControllerTest {
         MockMultipartFile multipartFile = new MockMultipartFile("file", file.getName(), "text/plain", input);
 
         JsonResult response = loadFileController.importData_input(multipartFile);
-        System.out.println(response);
-        System.out.println("99999999999999999999999");
         System.out.println(response.getCode());
+        assertThat(response.getCode()).isEqualTo("1");
+    }
+
+    @Test
+    public void testimportData_input_wrongfile() throws ParseException, IOException {
+        File file = ResourceUtils.getFile("D:\\A\\repository\\nullfile.xlsx");
+        FileInputStream input = new FileInputStream(file);
+        MockMultipartFile multipartFile = new MockMultipartFile("file", file.getName(), "text/plain", input);
+
+        JsonResult response = loadFileController.importData_input(multipartFile);
+        System.out.println("99999999999999999999999999");
+        System.out.println(response);
         assertThat(response.getCode()).isEqualTo("1");
     }
 
@@ -59,6 +69,19 @@ class LoadFileControllerTest {
     @Test
     public void testimportFileActualInput() throws ParseException, IOException {
         File file = ResourceUtils.getFile("D:\\A\\repository\\in1.xlsx");
+        FileInputStream input = new FileInputStream(file);
+        MockMultipartFile multipartFile = new MockMultipartFile("file", file.getName(), "text/plain", input);
+
+        JsonResult response = loadFileController.importData_actualInput(multipartFile);
+        System.out.println(response);
+        System.out.println("99999999999999999999999");
+        System.out.println(response.getCode());
+        assertThat(response.getCode()).isEqualTo("1");
+    }
+
+    @Test
+    public void testimportFileActualInput_wrongfile() throws ParseException, IOException {
+        File file = ResourceUtils.getFile("D:\\A\\repository\\nullfile.xlsx");
         FileInputStream input = new FileInputStream(file);
         MockMultipartFile multipartFile = new MockMultipartFile("file", file.getName(), "text/plain", input);
 

@@ -45,6 +45,5 @@ public class RuleController {
         }else {
             return new JsonResult<>("0","查询失败,空值");
         }
-
     }
 }

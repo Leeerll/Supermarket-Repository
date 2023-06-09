@@ -43,6 +43,12 @@ public class RepositoryController {
     public Map<String,String> selectRateByRid(@RequestBody Map<String,String> map){
         String rid = map.get("rid");
         List<Repository> result = repositoryMapper.selectRateByRid(rid);
+        if(result.isEmpty()){
+            Map<String,String> stypemap = new HashMap<>();
+            stypemap.put("machine_health_rate","0");
+            stypemap.put("takerate","0");
+            return stypemap;
+        }
         double temp = 1-((double)result.get(0).getRestNum()/(double)result.get(0).getTotalNum());
         temp = temp*100;
         String rate = String.valueOf(temp);
