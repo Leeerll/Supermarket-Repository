@@ -36,11 +36,30 @@ class OutputControllerTest {
     public void testcheck() throws ParseException, java.text.ParseException {
         List<Map<String,String>> data=new ArrayList<>();
         Map<String,String> map = new HashMap<>();
-        map.put("sid", "1");
-        map.put("num", "12");
+        map.put("sid", "4");
+        map.put("num", "4");
         map.put("suid", "101");
-        map.put("orderID", "59");
-        map.put("name", "农夫泉水");
+        map.put("orderID", "63");
+        map.put("name", "中桶矿泉水");
+        map.put("output_time","2023-06-06 15:40:23");
+        data.add(map);
+
+        String res = outputController.check(data);
+        System.out.println(res);
+        assertEquals("true",res);
+
+    }
+
+    @Test
+    public void testcheck_wrong() throws ParseException, java.text.ParseException {
+        List<Map<String,String>> data=new ArrayList<>();
+        Map<String,String> map = new HashMap<>();
+        map.put("sid", "9 ");
+        map.put("num", "4");
+        map.put("suid", "101");
+        map.put("orderID", "63");
+        map.put("name", "中桶矿泉水");
+        map.put("output_time","2023-06-06 15:40:23");
         data.add(map);
 
         String res = outputController.check(data);

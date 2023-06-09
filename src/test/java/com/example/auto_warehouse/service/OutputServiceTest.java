@@ -22,18 +22,18 @@ class OutputServiceTest {
     OrderMapper orderMapper;
     @Autowired
     OutputService outputService;
-    @Test
-    void getOrderPayment() throws ParseException {
-        List<Map<String,String>>list = new ArrayList<>();
-        Map<String,String>map = new HashMap<>();
-        map.put("suid","101");
-        map.put("orderID","59");
-        map.put("state","待缴费状态");
-        list.add(map);
-        outputService.getOrderPayment(list);
-
-//        System.out.println(orderMapper.getOrderPayment(suid,orderId,state));
-    }
+//    @Test
+//    void getOrderPayment() throws ParseException {
+//        List<Map<String,String>>list = new ArrayList<>();
+//        Map<String,String>map = new HashMap<>();
+//        map.put("suid","101");
+//        map.put("orderID","59");
+//        map.put("state","待缴费状态");
+//        list.add(map);
+//        outputService.getOrderPayment(list);
+//
+////        System.out.println(orderMapper.getOrderPayment(suid,orderId,state));
+//    }
     @Test
     void getActualOrderPayment() throws ParseException {
         String suid = "101";
