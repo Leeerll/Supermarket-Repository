@@ -358,6 +358,9 @@ public class InputService {
         // 改成“已缴费状态”
         orderMapper.modifyOrderState(orderID,"已预留库位状态",getNowTime());
         Message message1 = new Message(orderID, "已预留库位状态", orderMapper.getSuid(orderID));
+        if  (message1.getSuid()==null){
+            return "flase";
+        }
         orderMapper.insertMessage(message1);
 
 
@@ -545,6 +548,9 @@ public class InputService {
         // 修改成“入库待确认状态”
         orderMapper.modifyOrderState(orderID,"入库待确认状态",getNowTime());
         Message message1 = new Message(orderID, "入库待确认状态", orderMapper.getSuid(orderID));
+        if(message1.getSuid()==null){
+            return "flase";
+        }
         orderMapper.insertMessage(message1);
         Date now = new Date();
         SimpleDateFormat tFormat = new SimpleDateFormat("yyyy-MM-dd");
@@ -565,6 +571,9 @@ public class InputService {
         // 修改成“⼊库已确认状态”,更改save、log表
         orderMapper.modifyOrderState(orderID,"入库已确认状态",getNowTime());
         Message message1 = new Message(orderID, "入库已确认状态", orderMapper.getSuid(orderID));
+        if (message1.getSuid()==null){
+            return "flase";
+        }
         orderMapper.insertMessage(message1);
 
         saveMapper.updateConfirmState(orderID);

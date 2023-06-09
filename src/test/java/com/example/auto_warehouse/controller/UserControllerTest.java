@@ -31,7 +31,7 @@ class UserControllerTest {
     @Test
     void addSupermarket() {
         Map<String,String> map = new HashMap<>();
-        map.put("suid","110");
+        map.put("suid","111");
         map.put("password","123456");
         JsonResult<User> res = userController.addSupermarket(map);
         System.out.println(res.getMsg());

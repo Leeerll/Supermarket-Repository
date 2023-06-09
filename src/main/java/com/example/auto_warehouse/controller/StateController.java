@@ -232,9 +232,16 @@ public class StateController {
     @RequestMapping("/choose_payMethod")
     @ResponseBody
     public String choose_payMethod(@RequestBody Map<String,String> map1) throws ParseException {
-        int orderID = Integer.parseInt(map1.get("orderID"));
-
+        int orderID;
+        try {
+            orderID = Integer.parseInt(map1.get("orderID"));
+        }catch (NumberFormatException e){
+            return "false";
+        }
         double payMethod = Double.parseDouble(map1.get("payMethod"));
+        if (payMethod>1||payMethod<0){
+            return "flase";
+        }
         System.out.println("1111111111111111111"+payMethod);
         // 写进order的payMethod
         orderMapper.setPayMethod(orderID, payMethod);
@@ -256,7 +263,12 @@ public class StateController {
     @RequestMapping("/actual_input_confirm")
     @ResponseBody
     public String actual_input_confirm(@RequestBody Map<String,String> map1) throws ParseException {
-        int orderID = Integer.parseInt(map1.get("orderID"));
+        int orderID;
+        try {
+            orderID = Integer.parseInt(map1.get("orderID"));
+        }catch (NumberFormatException e){
+            return "false";
+        }
         return inputService.actual_input_confirm(orderID);
     }
 
@@ -281,6 +293,9 @@ public class StateController {
     public String finish_payment(@RequestBody Map<String,String> map1) throws ParseException {
         int orderID = Integer.parseInt(map1.get("orderID"));
         Order order = orderMapper.getOrderByOrderID(orderID);
+        if (order==null){
+            return "flase";
+        }
         double money = 0;
         if(order.getState().equals("入库缴费状态")){
             double pay = order.getCost()*order.getPayMethod();
