@@ -1,0 +1,14 @@
+inputSet:
+  name: Build_Supermarket_Repository_1686415584399-pr-trigger-input-set
+  identifier: Build_Supermarket_Repository_1686415584399prtriggerinputset
+  orgIdentifier: default
+  projectIdentifier: default_project
+  pipeline:
+    identifier: Build_Supermarket_Repository_1686415584399
+    properties:
+      ci:
+        codebase:
+          build:
+            type: PR
+            spec:
+              number: <+trigger.prNumber>
