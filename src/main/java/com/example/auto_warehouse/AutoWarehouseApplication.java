@@ -8,12 +8,16 @@ import com.example.auto_warehouse.util.Id;
 import com.example.auto_warehouse.util.SpringContextUtil;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.web.servlet.ServletComponentScan;
 import org.springframework.context.ApplicationContext;
 
 import java.text.ParseException;
 import java.util.Timer;
 import java.util.TimerTask;
 
+@MapperScan(basePackages={"com.example.repository"})
+//使过滤器生效
+@ServletComponentScan(basePackages = "com.example.auto_warehouse.util")
 @SpringBootApplication
 @MapperScan("com.example.auto_warehouse.mapper")
 public class AutoWarehouseApplication {

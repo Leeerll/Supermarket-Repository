@@ -6,10 +6,13 @@ import com.example.auto_warehouse.mapper.SupermarketMapper;
 import com.example.auto_warehouse.mapper.UserMapper;
 import com.example.auto_warehouse.util.Id;
 import com.example.auto_warehouse.util.JsonResult;
+import com.example.auto_warehouse.util.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class SupermarketService {
@@ -19,15 +22,23 @@ public class SupermarketService {
     public Supermarket findById(String uid){
         return SupermarketMapper.findById(uid);
     }
-    public JsonResult<Supermarket> login(String userid, String password){
+//    public JsonResult<Supermarket> login(String userid, String password){
+    public JsonResult login(String userid, String password){
         // 检查该用户是否存在
         Supermarket supermarket = findById(userid);
         if(supermarket != null){
             //用户存在 匹配密码
             // 相等
             if(supermarket.getPassword().equals(password)){
-                Id.setShopID(userid);
-                return new JsonResult<>(supermarket,"登录成功!");
+                String token = JwtUtil.createToken(supermarket);
+
+                Map<String, Object> dataMap = new HashMap<>();
+                dataMap.put("supermarket",supermarket);
+                dataMap.put("token",token);
+
+                Id.setRepositoryID(userid);
+                return new JsonResult<>(dataMap,"登录成功!");
+
             }else {
                 //密码不相等
                 return new JsonResult<>("0","密码错误!");

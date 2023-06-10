@@ -5,10 +5,13 @@ import com.example.auto_warehouse.bean.User;
 import com.example.auto_warehouse.mapper.UserMapper;
 import com.example.auto_warehouse.util.Id;
 import com.example.auto_warehouse.util.JsonResult;
+import com.example.auto_warehouse.util.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class UserService {
@@ -24,15 +27,21 @@ public class UserService {
     }
 
     //登录
-    public JsonResult<User> login(String userid, String password){
+//    public JsonResult<User> login(String userid, String password){
+    public JsonResult login(String userid, String password){
         // 检查该用户是否存在
         User user = findById(userid);
         if(user != null){
             // 用户存在 匹配密码
             // 相等
             if(user.getPassword().equals(password)){
+                String token = JwtUtil.createToken(user);
+
+                Map<String, Object> dataMap = new HashMap<>();
+                dataMap.put("user",user);
+                dataMap.put("token",token);
                 Id.setRepositoryID(userid);
-                return new JsonResult<>(user,"登录成功!");
+                return new JsonResult<>(dataMap,"登录成功!");
             }else {
                 //密码不相等
                 return new JsonResult<>("0","密码错误!");
