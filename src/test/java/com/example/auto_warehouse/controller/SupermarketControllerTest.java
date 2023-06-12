@@ -133,6 +133,35 @@ class SupermarketControllerTest {
     }
 
     @Test
+    void show_notOutput_wrong() throws ParseException {
+
+        // 构造请求体
+        Map<String, String> requestBody = new HashMap<>();
+        requestBody.put("suid", "101");
+        //发送POST请求，获取响应结果下
+        ResponseEntity<String> response = restTemplate.postForEntity("/supermarket/show_notOutput",requestBody, String.class);
+        assertThat(response.getStatusCode().value()).isEqualTo(200);
+        assertThat(response.getBody()).isNotEmpty();
+        System.out.println("-------response----------");
+        System.out.println(response);
+
+//        //采用parse处理
+//        System.out.println(response.getBody());
+//        JSONParser parser = new JSONParser();
+//        JSONArray jsonArray = (JSONArray) parser.parse(response.getBody());
+//
+//        String cost="80";
+//        System.out.println(jsonArray);
+//        for (Object obj : jsonArray) {
+//            JSONObject jsonObject = (JSONObject) obj;
+//
+//            System.out.println(jsonObject);
+//            String actualSuid = jsonObject.getAsString("cost");
+
+        }
+
+
+    @Test
     void show_notConfirm() throws ParseException {
 
         // 构造请求体
@@ -145,20 +174,19 @@ class SupermarketControllerTest {
         System.out.println("-------response----------");
         System.out.println(response);
 
-        //采用parse处理
-        System.out.println(response.getBody());
-        JSONParser parser = new JSONParser();
-        JSONArray jsonArray = (JSONArray) parser.parse(response.getBody());
-
-        String cost="80";
-        System.out.println(jsonArray);
-        for (Object obj : jsonArray) {
-            JSONObject jsonObject = (JSONObject) obj;
-
-            System.out.println(jsonObject);
-//            String actualSuid = jsonObject.getAsString("cost");
-
-        }
+//        //采用parse处理
+//        System.out.println(response.getBody());
+//        JSONParser parser = new JSONParser();
+//        JSONArray jsonArray = (JSONArray) parser.parse(response.getBody());
+//
+//        String cost="80";
+//        System.out.println(jsonArray);
+//        for (Object obj : jsonArray) {
+//            JSONObject jsonObject = (JSONObject) obj;
+//
+//            System.out.println(jsonObject);
+////            String actualSuid = jsonObject.getAsString("cost");
+//        }
     }
 
     @Test

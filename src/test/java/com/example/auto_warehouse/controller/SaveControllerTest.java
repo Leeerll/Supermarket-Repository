@@ -64,6 +64,31 @@ class SaveControllerTest {
     }
 
     @Test
+    void findByStype_wrong() throws ParseException {
+        // 构造请求体
+        Map<String, String> requestBody = new HashMap<>();
+        requestBody.put("stype", "玩具");
+        //发送POST请求，获取响应结果下
+        ResponseEntity<String> response = restTemplate.postForEntity("/save/findByStype",requestBody, String.class);
+        assertThat(response.getStatusCode().value()).isEqualTo(200);
+        assertThat(response.getBody()).isNotEmpty();
+
+//        //采用parse处理
+//        System.out.println(response.getBody());
+//        JSONParser parser = new JSONParser();
+//        JSONArray jsonArray = (JSONArray) parser.parse(response.getBody());
+//
+//        String stype="零食";
+//
+//        for (Object obj : jsonArray) {
+//            JSONObject jsonObject = (JSONObject) obj;
+//
+//            String actualStype = jsonObject.getAsString("stype");
+//            assertThat("stype should be " + stype, actualStype, equalTo(stype));
+//        }
+    }
+
+    @Test
     void findByCid() throws ParseException {
 
         // 构造请求体
@@ -89,6 +114,34 @@ class SaveControllerTest {
             String actualStype = jsonObject.getAsString("sname");
             assertThat("cid should be " + name, actualStype, equalTo(name));
         }
+    }
+
+    @Test
+    void findByCid_wrong() throws ParseException {
+
+        // 构造请求体
+        Map<String, String> requestBody = new HashMap<>();
+        requestBody.put("cid", "0000");
+        //发送POST请求，获取响应结果下
+        ResponseEntity<String> response = restTemplate.postForEntity("/save/findByCid",requestBody, String.class);
+        assertThat(response.getStatusCode().value()).isEqualTo(200);
+        assertThat(response.getBody()).isNotEmpty();
+        System.out.println("-------response----------");
+        System.out.println(response);
+
+        //采用parse处理
+        System.out.println(response.getBody());
+        JSONParser parser = new JSONParser();
+        JSONArray jsonArray = (JSONArray) parser.parse(response.getBody());
+
+        String name="农夫山泉";
+        System.out.println(jsonArray);
+//        for (Object obj : jsonArray) {
+//            JSONObject jsonObject = (JSONObject) obj;
+//
+//            String actualStype = jsonObject.getAsString("sname");
+//            assertThat("cid should be " + name, actualStype, equalTo(name));
+//        }
     }
 
     @Test
