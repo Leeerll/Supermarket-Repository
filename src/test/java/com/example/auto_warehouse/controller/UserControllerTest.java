@@ -9,6 +9,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
@@ -29,13 +30,23 @@ class UserControllerTest {
     }
 
     @Test
+    void testLogin_wrong() {
+        Map<String,String> map = new HashMap<>();
+        map.put("uid","1");
+        map.put("password","000000");
+        JsonResult<User> res = userController.login(map);
+        assertEquals("登录成功!",res.getMsg());
+    }
+
+    @Test
     void addSupermarket() {
         Map<String,String> map = new HashMap<>();
-        map.put("suid","1111");
+        int randomSuid = (int)(Math.random() * 1000000);
+        map.put("suid",String.valueOf(randomSuid));
         map.put("password","123456");
         JsonResult<User> res = userController.addSupermarket(map);
         System.out.println(res.getMsg());
-        //assertEquals("登录成功!",res.getMsg());
+        //assertEquals("密码错误！",res.getMsg());
     }
 
     @Test
