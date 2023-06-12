@@ -13,7 +13,8 @@ import java.io.IOException;
 import java.util.Map;
 
 
-@WebFilter(filterName = "JwtFilter", urlPatterns = "/*")
+//@WebFilter(filterName = "JwtFilter", urlPatterns = "/*")
+@WebFilter(filterName = "JwtFilter", urlPatterns = "/user/login")
 public class JwtFilter implements Filter{
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
@@ -42,10 +43,10 @@ public class JwtFilter implements Filter{
         String requestURI = request.getRequestURI();
 
         //让行
-        if(requestURI=="/cargo/show_notInput"||requestURI=="/cargo/show_notOutput"){
+        /*if(requestURI=="/cargo/show_notInput"||requestURI=="/cargo/show_notOutput"){
             chain.doFilter(request, response);
             System.out.println("66666666666666"+requestURI);
-        }
+        }*/
 
         response.setCharacterEncoding("UTF-8");
         /// 从 http 请求头中获取 header里的token
