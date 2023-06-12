@@ -46,14 +46,28 @@ class StateControllerTest {
         JSONParser parser = new JSONParser();
         JSONArray jsonArray = (JSONArray) parser.parse(response.getBody());
 
-//        String sid="1";
-//        System.out.println(jsonArray);
-//        for (Object obj : jsonArray) {
-//            JSONObject jsonObject = (JSONObject) obj;
-//
-//            String actualStype = jsonObject.getAsString("sid");
-//            MatcherAssert.assertThat("sid should be " + sid, actualStype, equalTo(sid));
-//        }
+        String sid="1";
+        System.out.println(jsonArray);
+        for (Object obj : jsonArray) {
+            JSONObject jsonObject = (JSONObject) obj;
+
+            String actualStype = jsonObject.getAsString("sid");
+            MatcherAssert.assertThat("sid should be " + sid, actualStype, equalTo(sid));
+        }
+    }
+
+    @Test
+    void manual_review_wrong() throws ParseException {
+        // 构造请求体
+        Map<String, String> requestBody = new HashMap<>();
+        requestBody.put("state", "无状态");
+        //发送POST请求，获取响应结果下
+        ResponseEntity<String> response = restTemplate.postForEntity("/state/manual_review",requestBody, String.class);
+        assertThat(response.getStatusCode().value()).isEqualTo(200);
+        assertThat(response.getBody()).isNotEmpty();
+        System.out.println("-------response----------");
+        System.out.println(response);
+
     }
 
 
@@ -86,33 +100,75 @@ class StateControllerTest {
 
     }
 
-//    @Test
-//    void show_supermarket_allOrder() throws ParseException {
-//        // 构造请求体
-//        Map<String, String> requestBody = new HashMap<>();
-//        requestBody.put("suid", "101");
-//        //发送POST请求，获取响应结果下
-//        ResponseEntity<String> response = restTemplate.postForEntity("/state/show_supermarket_allOrder",requestBody, String.class);
-//        assertThat(response.getStatusCode().value()).isEqualTo(200);
-//        assertThat(response.getBody()).isNotEmpty();
-//        System.out.println("-------response----------");
-//        System.out.println(response);
-////
-//        //采用parse处理
-//        System.out.println(response.getBody());
-//        JSONParser parser = new JSONParser();
-//        JSONArray jsonArray = (JSONArray) parser.parse(response.getBody());
+    @Test
+    void manual_review_detail_wrong() throws ParseException {
+        // 构造请求体
+        Map<String, String> requestBody = new HashMap<>();
+        requestBody.put("orderID", "63");
+        requestBody.put("reason", "无状态");
+        //发送POST请求，获取响应结果下
+        ResponseEntity<String> response = restTemplate.postForEntity("/state/manual_review_detail",requestBody, String.class);
+        assertThat(response.getStatusCode().value()).isEqualTo(200);
+        assertThat(response.getBody()).isNotEmpty();
+        System.out.println("-------response----------");
+        System.out.println(response);
+    }
+
+    //该方法需要根据数据集变化而改变数据
+    @Test
+    void show_supermarket_allOrder() throws ParseException {
+        // 构造请求体
+        Map<String, String> requestBody = new HashMap<>();
+        requestBody.put("suid", "101");
+        //发送POST请求，获取响应结果下
+        ResponseEntity<String> response = restTemplate.postForEntity("/state/show_supermarket_allOrder",requestBody, String.class);
+        assertThat(response.getStatusCode().value()).isEqualTo(200);
+        assertThat(response.getBody()).isNotEmpty();
+        System.out.println("-------response----------");
+        System.out.println(response);
 //
-//        String orderID="63";
-//        System.out.println(jsonArray);
-//        for (Object obj : jsonArray) {
-//            JSONObject jsonObject = (JSONObject) obj;
+        //采用parse处理
+        System.out.println(response.getBody());
+        JSONParser parser = new JSONParser();
+        JSONArray jsonArray = (JSONArray) parser.parse(response.getBody());
+
+        String orderID="63";
+        System.out.println(jsonArray);
+        for (Object obj : jsonArray) {
+            JSONObject jsonObject = (JSONObject) obj;
+
+            String actualStype = jsonObject.getAsString("orderID");
+            MatcherAssert.assertThat("orderID should be " + orderID, actualStype, equalTo(orderID));
+        }
+    }
+
+    @Test
+    void show_supermarket_allOrder_wrong() throws ParseException {
+        // 构造请求体
+        Map<String, String> requestBody = new HashMap<>();
+        requestBody.put("suid", "000");
+        //发送POST请求，获取响应结果下
+        ResponseEntity<String> response = restTemplate.postForEntity("/state/show_supermarket_allOrder",requestBody, String.class);
+        assertThat(response.getStatusCode().value()).isEqualTo(200);
+        assertThat(response.getBody()).isNotEmpty();
+        System.out.println("-------response----------");
+        System.out.println(response);
 //
-//            String actualStype = jsonObject.getAsString("orderID");
-//            MatcherAssert.assertThat("orderID should be " + orderID, actualStype, equalTo(orderID));
-//        }
-//
-//    }
+        //采用parse处理
+        System.out.println(response.getBody());
+        JSONParser parser = new JSONParser();
+        JSONArray jsonArray = (JSONArray) parser.parse(response.getBody());
+
+        String orderID="63";
+        System.out.println(jsonArray);
+        for (Object obj : jsonArray) {
+            JSONObject jsonObject = (JSONObject) obj;
+
+            String actualStype = jsonObject.getAsString("orderID");
+            assertThat(actualStype == null);
+        }
+
+    }
 
 
     @Test
@@ -140,6 +196,33 @@ class StateControllerTest {
 //            String actualStype = jsonObject.getAsString("orderID");
 //            MatcherAssert.assertThat("orderID should be " + orderID, actualStype, equalTo(orderID));
 //        }
+
+    }
+
+    @Test
+    void show_supermarket_order_allState_wrong()throws ParseException {
+        // 构造请求体
+        Map<String, String> requestBody = new HashMap<>();
+        requestBody.put("orderID", "64");
+        //发送POST请求，获取响应结果下
+        ResponseEntity<String> response = restTemplate.postForEntity("/state/show_supermarket_order_allState",requestBody, String.class);
+        assertThat(response.getStatusCode().value()).isEqualTo(200);
+        assertThat(response.getBody()).isNotEmpty();
+        System.out.println("-------response----------");
+        System.out.println(response);
+//
+        //采用parse处理
+        System.out.println(response.getBody());
+        JSONParser parser = new JSONParser();
+        JSONArray jsonArray = (JSONArray) parser.parse(response.getBody());
+
+        System.out.println(jsonArray);
+        for (Object obj : jsonArray) {
+            JSONObject jsonObject = (JSONObject) obj;
+
+            String actualStype = jsonObject.getAsString("orderID");
+            assertThat(actualStype == null);
+        }
 
     }
 
@@ -172,6 +255,32 @@ class StateControllerTest {
     }
 
     @Test
+    void show_supermarket_order_notInput_wrong()  throws ParseException {
+        // 构造请求体
+        Map<String, String> requestBody = new HashMap<>();
+        requestBody.put("orderID", "64");
+        //发送POST请求，获取响应结果下
+        ResponseEntity<String> response = restTemplate.postForEntity("/state/show_supermarket_order_notInput",requestBody, String.class);
+        assertThat(response.getStatusCode().value()).isEqualTo(200);
+        assertThat(response.getBody()).isNotEmpty();
+        System.out.println("-------response----------");
+        System.out.println(response);
+
+        //采用parse处理
+        System.out.println(response.getBody());
+        JSONParser parser = new JSONParser();
+        JSONArray jsonArray = (JSONArray) parser.parse(response.getBody());
+
+        System.out.println(jsonArray);
+        for (Object obj : jsonArray) {
+            JSONObject jsonObject = (JSONObject) obj;
+
+            String actualStype = jsonObject.getAsString("orderID");
+            assertThat(actualStype == null);
+        }
+    }
+
+    @Test
     void manual_review_passed()  throws ParseException {
         // 构造请求体
         Map<String, String> requestBody = new HashMap<>();
@@ -199,6 +308,33 @@ class StateControllerTest {
 
     }
 
+    //这个test需要确定数据库中有哪些订单需要pass
+//    @Test
+//    void manual_review_passed_wrong()  throws ParseException {
+//        // 构造请求体
+//        Map<String, String> requestBody = new HashMap<>();
+//        requestBody.put("orderID", "63");
+//        //发送POST请求，获取响应结果下
+//        ResponseEntity<String> response = restTemplate.postForEntity("/state/manual_review_passed",requestBody, String.class);
+//        assertThat(response.getStatusCode().value()).isEqualTo(200);
+//        assertThat(response.getBody()).isNotEmpty();
+//        System.out.println("-------response----------");
+//        System.out.println(response);
+//
+//        //采用parse处理
+////        System.out.println(response.getBody());
+////        JSONParser parser = new JSONParser();
+////        JSONArray jsonArray = (JSONArray) parser.parse(response.getBody());
+////
+////        System.out.println(jsonArray);
+////        for (Object obj : jsonArray) {
+////            JSONObject jsonObject = (JSONObject) obj;
+////
+////            String actualStype = jsonObject.getAsString("orderID");
+////            assertThat(actualStype == null);
+////        }
+//    }
+
     @Test
     void manual_review_failed()  throws ParseException {
         // 构造请求体
@@ -224,7 +360,6 @@ class StateControllerTest {
 //            String actualStype = jsonObject.getAsString("orderID");
 //            MatcherAssert.assertThat("orderID should be " + orderID, actualStype, equalTo(orderID));
 //        }
-
     }
 
     @Test

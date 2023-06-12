@@ -45,6 +45,15 @@ class SupermarketControllerTest {
         assertEquals("登录成功!",res.getMsg());
     }
 
+    @Test
+    void login_wrong() {
+        Map<String,String> map = new HashMap<>();
+        map.put("uid","101");
+        map.put("password","00000");
+        JsonResult<Supermarket> res = supermarketController.login(map);
+        assertEquals("密码错误!",res.getMsg());
+    }
+
 
     @Test
     void get_storage() throws ParseException {
@@ -63,6 +72,21 @@ class SupermarketControllerTest {
         System.out.println(response.getBody());
         JSONParser parser = new JSONParser();
         JSONArray jsonArray = (JSONArray) parser.parse(response.getBody());
+
+    }
+
+    @Test
+    void get_storage_wrong() throws ParseException {
+
+        // 构造请求体
+        Map<String, String> requestBody = new HashMap<>();
+        requestBody.put("suid", "000");
+        //发送POST请求，获取响应结果下
+        ResponseEntity<String> response = restTemplate.postForEntity("/supermarket/get_storage",requestBody, String.class);
+        assertThat(response.getStatusCode().value()).isEqualTo(200);
+        assertThat(response.getBody()).isNotEmpty();
+        System.out.println("-------response----------");
+        System.out.println(response);
 
     }
 
