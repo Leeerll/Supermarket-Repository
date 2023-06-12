@@ -46,33 +46,25 @@ class SupermarketControllerTest {
     }
 
 
-//    @Test
-//    void get_storage() throws ParseException {
-//
-//        // 构造请求体
-//        Map<String, String> requestBody = new HashMap<>();
-//        requestBody.put("suid", "101");
-//        //发送POST请求，获取响应结果下
-//        ResponseEntity<String> response = restTemplate.postForEntity("/supermarket/get_storage",requestBody, String.class);
-//        assertThat(response.getStatusCode().value()).isEqualTo(200);
-//        assertThat(response.getBody()).isNotEmpty();
-//        System.out.println("-------response----------");
-//        System.out.println(response);
-//
-//        //采用parse处理
-//        System.out.println(response.getBody());
-//        JSONParser parser = new JSONParser();
-//        JSONArray jsonArray = (JSONArray) parser.parse(response.getBody());
-//
-//        String suid="101";
-//        System.out.println(jsonArray);
-//        for (Object obj : jsonArray) {
-//            JSONObject jsonObject = (JSONObject) obj;
-//
-//            String actualSuid = jsonObject.getAsString("suid");
-//            MatcherAssert.assertThat("suid should be " + suid, actualSuid, equalTo(suid));
-//        }
-//    }
+    @Test
+    void get_storage() throws ParseException {
+
+        // 构造请求体
+        Map<String, String> requestBody = new HashMap<>();
+        requestBody.put("suid", "101");
+        //发送POST请求，获取响应结果下
+        ResponseEntity<String> response = restTemplate.postForEntity("/supermarket/get_storage",requestBody, String.class);
+        assertThat(response.getStatusCode().value()).isEqualTo(200);
+        assertThat(response.getBody()).isNotEmpty();
+        System.out.println("-------response----------");
+        System.out.println(response);
+
+        //采用parse处理
+        System.out.println(response.getBody());
+        JSONParser parser = new JSONParser();
+        JSONArray jsonArray = (JSONArray) parser.parse(response.getBody());
+
+    }
 
     @Test
     void get_order() throws ParseException {

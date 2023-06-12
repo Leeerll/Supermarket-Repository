@@ -234,6 +234,39 @@ class SaveControllerTest {
     }
 
     @Test
+    void findByStypeAndInputTime_wrong() throws ParseException {
+
+        // 构造请求体
+        Map<String, String> requestBody = new HashMap<>();
+        requestBody.put("stype", "玩具");
+        requestBody.put("inputTime", "2023-06-04");
+        //发送POST请求，获取响应结果下
+        ResponseEntity<String> response = restTemplate.postForEntity("/save/findByStypeAndInputTime",requestBody, String.class);
+        assertThat(response.getStatusCode().value()).isEqualTo(200);
+        assertThat(response.getBody()).isNotEmpty();
+        System.out.println("-------response----------");
+        System.out.println(response);
+
+//        //采用parse处理
+//        System.out.println(response.getBody());
+//        JSONParser parser = new JSONParser();
+//        JSONArray jsonArray = (JSONArray) parser.parse(response.getBody());
+//
+//        String stype="饮品";
+//        String date="2023-06-04";
+//        System.out.println(jsonArray);
+//        for (Object obj : jsonArray) {
+//            JSONObject jsonObject = (JSONObject) obj;
+//
+//            String actualStype = jsonObject.getAsString("stype");
+//            assertThat("style should be " + stype, actualStype, equalTo(stype));
+//
+//            String actualDate = jsonObject.getAsString("input_time");
+//            assertThat("inputTime should be " + date, actualDate, equalTo(date));
+//        }
+    }
+
+    @Test
     void findByStypeAndOutputTime() throws ParseException {
 
         // 构造请求体

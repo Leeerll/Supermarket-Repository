@@ -57,6 +57,17 @@ class SpeciesControllerTest {
     }
 
     @Test
+    void findByType_wrong() throws ParseException {
+        // 构造请求体
+        Map<String, String> requestBody = new HashMap<>();
+        requestBody.put("type", "玩具");
+        //发送POST请求，获取响应结果下
+        ResponseEntity<String> response = restTemplate.postForEntity("/species/findByType",requestBody, String.class);
+        assertThat(response.getStatusCode().value()).isEqualTo(200);
+        assertThat(response.getBody()).isNotEmpty();
+    }
+
+    @Test
     void findById() throws ParseException {
         // 构造请求体
         Map<String, String> requestBody = new HashMap<>();
@@ -81,4 +92,16 @@ class SpeciesControllerTest {
         }
     }
 
+    @Test
+    void findById_wrong() throws ParseException {
+        // 构造请求体
+        Map<String, String> requestBody = new HashMap<>();
+        requestBody.put("sid", "0");
+        //发送POST请求，获取响应结果下
+        ResponseEntity<String> response = restTemplate.postForEntity("/species/findById", requestBody, String.class);
+        assertThat(response.getStatusCode().value()).isEqualTo(200);
+        assertThat(response.getBody()).isNotEmpty();
+
+
+    }
 }
