@@ -19,6 +19,6 @@ https://github.com/Leeerll/Supermarket-Repository
 2.拆分微服务之后的仓库
 https://github.com/xuelingzou/auto_warehouse_microservices
 
-项目文档也在仓库中（存放于document文件夹中）
+项目文档也在仓库中（存放于document文件夹中），项目前端存放于web文件夹中
 
 
